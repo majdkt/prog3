@@ -8,8 +8,8 @@ import java.util.List;
 public class Manager {
     private List<AudioImpl> audioList = new ArrayList<>();
 
-    Audio create(int SamplingRate, String adress){
-        AudioImpl ai = new AudioImpl(SamplingRate,adress); // Pass the SamplingRate to the AudioImpl constructor
+    Audio create(int SamplingRate, String adress, long size){
+        AudioImpl ai = new AudioImpl(SamplingRate, adress, size); // Pass the SamplingRate to the AudioImpl constructor
         audioList.add(ai);
         return null;
     }

@@ -13,11 +13,13 @@ import java.util.List;
     private long accessCount;
     private int samplingRate;
     private String adress;
+    private long size;
 
      // Constructor to initialize the AudioImpl object with a sampling rate
-     public AudioImpl(int samplingRate, String adress) {
+     public AudioImpl(int samplingRate, String adress, long size) {
          this.samplingRate = samplingRate;
          this.adress = adress;
+         this.size = size;
      }
 
     @Override
@@ -47,7 +49,7 @@ import java.util.List;
 
     @Override
     public long getSize() {
-        return 0;
+        return this.size;
     }
 
     @Override
