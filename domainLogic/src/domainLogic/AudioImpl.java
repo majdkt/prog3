@@ -12,10 +12,12 @@ import java.util.List;
  class AudioImpl implements Audio {
     private long accessCount;
     private int samplingRate;
+    private String adress;
 
      // Constructor to initialize the AudioImpl object with a sampling rate
-     public AudioImpl(int samplingRate) {
+     public AudioImpl(int samplingRate, String adress) {
          this.samplingRate = samplingRate;
+         this.adress = adress;
      }
 
     @Override
@@ -26,7 +28,7 @@ import java.util.List;
 
     @Override
     public String getAddress() {
-        return "";
+        return this.adress;
     }
 
     @Override
