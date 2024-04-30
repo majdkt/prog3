@@ -1,16 +1,32 @@
 package domainLogic;
 
 import contract.Audio;
+import contract.MediaContent;
+import contract.Uploadable;
+import contract.Uploader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class Manager {
-    private List<AudioImpl> audioList = new ArrayList<>();
+class Manager {
+    private List<Audio> audioList = new ArrayList<>();
+    private Map<Audio, Uploadable> taskAssignments = new HashMap<>();
 
-    Audio create(int SamplingRate, String adress, long size){
-        AudioImpl ai = new AudioImpl(SamplingRate, adress, size); // Pass the SamplingRate to the AudioImpl constructor
-        audioList.add(ai);
+    MediaContent create1(Uploadable uploadable) {
+
+
+
+        return null;
+    }
+
+
+
+    Audio create(int SamplingRate, String adress, long size,Uploadable uploadable){
+        Audio audioFile = new AudioImpl(SamplingRate, adress, size); // Pass the values to the AudioImpl constructor
+        audioList.add(audioFile);
+        taskAssignments.put(audioFile, uploadable);
         return null;
     }
 
@@ -19,14 +35,13 @@ public class Manager {
     }
 
     Audio update(int i){
-        AudioImpl audio = audioList.get(i);
-        long ac = audio.getAccessCount();
-        audio.setAccessCount(ac+1);
-        return audio;
+        Audio audioFile = audioList.get(i);
+        long ac = audioFile.getAccessCount();
+        return audioFile;
     }
 
-    boolean delete(Audio audio){
-        return audioList.remove(audio);
+    boolean delete(Audio audioFile){
+        return audioList.remove(audioFile);
     }
-
+    
 }

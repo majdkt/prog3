@@ -10,54 +10,41 @@ import java.util.Collection;
 import java.util.List;
 
  class AudioImpl implements Audio {
-    private long accessCount;
+    private long accessCount = 0;
     private int samplingRate;
     private String adress;
     private long size;
 
      // Constructor to initialize the AudioImpl object with a sampling rate
-     public AudioImpl(int samplingRate, String adress, long size) {
+     AudioImpl(int samplingRate, String adress, long size) {
          this.samplingRate = samplingRate;
          this.adress = adress;
          this.size = size;
      }
 
     @Override
-    public int getSamplingRate() {
-        // Return the stored sampling rate
-        return this.samplingRate;
+    public int getSamplingRate() {return this.samplingRate;}
+
+    @Override
+    public String getAddress() {return this.adress;}
+
+    @Override
+    public Collection<Tag> getTags() {return List.of();
     }
 
     @Override
-    public String getAddress() {
-        return this.adress;
-    }
+    public long getAccessCount() {return this.accessCount++;} // Solution for now to count each time we call the method
 
     @Override
-    public Collection<Tag> getTags() {
-        return List.of();
+    public long getSize() {return this.size;
     }
 
-    protected void setAccessCount(long value){
-        this.accessCount=value;
-    }
+     @Override
+     public Uploader getUploader() {
+         return null;
+     }
 
-    @Override
-    public long getAccessCount() {
-        return this.accessCount;
-    }
-
-    @Override
-    public long getSize() {
-        return this.size;
-    }
-
-    @Override
-    public Uploader getUploader() {
-        return null;
-    }
-
-    @Override
+     @Override
     public Duration getAvailability() {
         return null;
     }

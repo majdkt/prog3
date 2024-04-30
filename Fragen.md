@@ -1,22 +1,21 @@
 - Was ist der Unterschied, wenn ich eine Liste von Audio habe und wenn
-ich eine Liste von AudioImp habe?
-- Ich brauche eine Erklärung von den Begriffen in den Interfaces:
+ich eine Liste von AudioImpl habe?
+
+
 
 
 
     Uplaodable interface:
 
-  - Uploader: ist die Person die was hochgeladen hat?
-  - Availability: ?
-  - Cost: ?
+  - Uploader: ist die Person die was hochgeladen hat? ja
+  - Availability: Differenz zwischen heute und hochladedatum
+  - Cost: Fantasie Wert
 
     
     Uploader interface:
-  - Name: Name der Person, die hochgeladen hat?
+  - Name: Name der Person, die hochgeladen hat? ja
 
 
     MediaContent interface:
-  - Adress: Adresse wie Berlin oder sowas?
-  - AccsessCount: Wie viel Mals ein Datei angefasst/bearbeitet wurde?
-
-Helloo??
+  - Adress: Wo ist das im Speicher, wie beim Lager vorher.
+  - AccsessCount: Wie viel Mals ein Datei angefasst/bearbeitet wurde? Ja

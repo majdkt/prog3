@@ -1,6 +1,8 @@
 package domainLogic;
 
 import contract.Audio;
+import contract.Uploadable;
+import contract.Uploader;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -9,13 +11,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ManagerTest {
 
+
+    @Test
+    void testManager() {
+        Manager manager = new Manager();
+        Uploadable audio = new AudioImpl(2,"m",2);
+        audio.getUploader().getName();
+
+        assertEquals("majd", audio.getUploader().getName());
+    }
+
     @Test
     void create() {
         Manager m = new Manager();
-        AudioImpl a = new AudioImpl(2000, "whatever", 80);
-        m.create(19, "whatever", 21);
+        Audio a = new AudioImpl(2000, "whatever", 80);
+        m.create();
+        a.ge
         m.update(0);
-        a.setAccessCount(99);
         assertEquals(1,m.read().get(0).getAccessCount());
     }
 
@@ -63,7 +75,10 @@ class ManagerTest {
         String expectedAdress= "Berlin";
         long expectedSize = 80;
         m.create(expectedSamplingRate,expectedAdress, expectedSize);
+        m.update(0);
         Audio audio = m.read().get(0);
+        assertEquals(1,audio.getAccessCount());
+        assertEquals(2,audio.getAccessCount());
         assertEquals(expectedSamplingRate,audio.getSamplingRate());
         assertEquals(expectedAdress,audio.getAddress());
         assertEquals(80,audio.getSize());
