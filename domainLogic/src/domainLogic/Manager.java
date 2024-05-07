@@ -11,37 +11,29 @@ import java.util.List;
 import java.util.Map;
 
 class Manager {
-    private List<Audio> audioList = new ArrayList<>();
-    private Map<Audio, Uploadable> taskAssignments = new HashMap<>();
-
-    MediaContent create1(Uploadable uploadable) {
+    private List<MediaContent> mediaList = new ArrayList<>();
+    private Map<MediaContent, Uploadable> taskAssignments = new HashMap<>();
 
 
 
+    Audio create(MediaContent content, Uploadable uploadable){
+        mediaList.add(content);
+        taskAssignments.put(content, uploadable);
         return null;
     }
 
-
-
-    Audio create(int SamplingRate, String adress, long size,Uploadable uploadable){
-        Audio audioFile = new AudioImpl(SamplingRate, adress, size); // Pass the values to the AudioImpl constructor
-        audioList.add(audioFile);
-        taskAssignments.put(audioFile, uploadable);
-        return null;
+    public List<MediaContent> read(){
+        return new ArrayList<>(this.mediaList);
     }
 
-    public List<Audio> read(){
-        return new ArrayList<>(this.audioList);
+    MediaContent update(int i){
+        MediaContent content = mediaList.get(i);
+        long ac = content.getAccessCount();
+        return content;
     }
 
-    Audio update(int i){
-        Audio audioFile = audioList.get(i);
-        long ac = audioFile.getAccessCount();
-        return audioFile;
-    }
-
-    boolean delete(Audio audioFile){
-        return audioList.remove(audioFile);
+    boolean delete(MediaContent content){
+        return mediaList.remove(content);
     }
     
 }
