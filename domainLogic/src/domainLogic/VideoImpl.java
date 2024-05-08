@@ -7,27 +7,27 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 
-public class AudioImpl implements Audio {
-    private int samplingRate;
+public class VideoImpl implements Video {
+    private int resolution;
     private String address;
     private long accessCount;
     private long size;
     private Uploader uploader;
 
-    public AudioImpl(int samplingRate, String address, long size, Uploader uploader) {
-        this.samplingRate = samplingRate;
+    public VideoImpl(int resolution, String address, long size, Uploader uploader) {
+        this.resolution = resolution;
         this.address = address;
         this.size = size;
         this.uploader = uploader;
     }
 
-    public void updateSamplingRate(int newSamplingRate) {
-        this.samplingRate = newSamplingRate;
+    public void updateResolution(int newResolution) {
+        this.resolution = newResolution;
     }
 
     @Override
-    public int getSamplingRate() {
-        return this.samplingRate;
+    public int getResolution() {
+        return this.resolution;
     }
 
     @Override
@@ -57,12 +57,13 @@ public class AudioImpl implements Audio {
 
     @Override
     public Duration getAvailability() {
+        // Implement if needed
         return null;
     }
 
     @Override
     public BigDecimal getCost() {
+        // Implement if needed
         return null;
     }
-
 }

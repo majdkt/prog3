@@ -7,7 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="cliModul" exported="" />
     <orderEntry type="module" module-name="domainLogic" />
+    <orderEntry type="module" module-name="contract" />
   </component>
 </module>

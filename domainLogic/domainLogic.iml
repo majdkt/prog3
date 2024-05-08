@@ -8,6 +8,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="cliModul" />
     <orderEntry type="module" module-name="contract" />
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit5.8.1">
