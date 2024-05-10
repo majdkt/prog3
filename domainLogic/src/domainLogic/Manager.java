@@ -12,21 +12,65 @@ public class Manager {
     private List<MediaContent> mediaList = new ArrayList<>();
     private Map<MediaContent, Uploadable> taskAssignments = new HashMap<>();
 
-    public void create(MediaContent content, Uploadable uploadable) {
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    private String currentUser;
+
+    public Manager(String currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public void create(String currentUser, MediaContent content, Uploadable uploadable) {
+        if (!currentUser.equals(this.currentUser)) {
+            System.err.println("Error: Unauthorized operation.");
+            return;
+        }
         mediaList.add(content);
         taskAssignments.put(content, uploadable);
     }
 
-    public Uploadable createSampleUploadable(String uploaderName) {
-        Uploader uploader = new UploaderImpl(uploaderName);
+    public MediaContent createSampleMediaContentAndUploadable(String currentUser, String mediaType) {
+        if (!currentUser.equals(this.currentUser)) {
+            System.err.println("Error: Unauthorized operation.");
+        }
+        Uploader uploader = new UploaderImpl(currentUser);
+        Random random = new Random();
+        Duration availability = Duration.ofHours(random.nextInt(24) + 1);
+        BigDecimal cost = BigDecimal.valueOf(random.nextDouble() * 100);
+        Uploadable uploadable = new UploadableImpl(uploader, availability, cost);
+
+        String address = "NULL";
+        long size = 0;
+        MediaContent mediaContent = null;
+
+        switch (mediaType) {
+            case "audio":
+                int samplingRate = random.nextInt(10) + 1;
+                mediaContent = new AudioImpl(samplingRate, address, size, uploader);
+                break;
+            case "video":
+                int resolution = random.nextInt(10) + 1;
+                mediaContent = new VideoImpl(resolution, address, size, uploader);
+                break;
+            default:
+                System.out.println("Invalid media type.");
+        }
+        return mediaContent;
+    }
+
+
+    public Uploadable createSampleUploadable() {
+        Uploader uploader = new UploaderImpl(currentUser);
         Random random = new Random();
         Duration availability = Duration.ofHours(random.nextInt(24) + 1);
         BigDecimal cost = BigDecimal.valueOf(random.nextDouble() * 100);
         return new UploadableImpl(uploader, availability, cost);
     }
 
-    public MediaContent createSampleMediaContent(String uploaderName, String mediaType) {
-        Uploader uploader = createSampleUploadable(uploaderName).getUploader();
+    public MediaContent createSampleMediaContent(String mediaType) {
+        Uploader uploader = createSampleUploadable().getUploader();
         String address = "NULL";
         long size = 0;
         MediaContent mediaContent = null;

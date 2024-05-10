@@ -8,7 +8,14 @@ import domainLogic.VideoImpl;
 import java.util.List;
 
 class read1 {
-    public void run(Manager manager) {
+    private final Manager manager;
+
+    public read1(Manager manager) {
+        this.manager = manager;
+    }
+
+
+    public void run() {
         List<MediaContent> userMediaList = manager.read();
 
         if (userMediaList.isEmpty()) {

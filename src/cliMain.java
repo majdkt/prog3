@@ -1,9 +1,14 @@
 import general.CLIControl;
 import domainLogic.Manager;
 
+import java.util.Scanner;
+
 public class cliMain {
     public static void main(String[] args) {
-        Manager manager = new Manager();
+        System.out.println("Username: ");
+        Scanner scanner = new Scanner(System.in);
+        String username = scanner.next();
+        Manager manager = new Manager(username);
         CLIControl cli = new CLIControl(manager);
         cli.run();
     }

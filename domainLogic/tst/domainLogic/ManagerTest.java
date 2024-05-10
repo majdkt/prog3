@@ -5,6 +5,7 @@ import contract.Uploadable;
 import contract.Uploader;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.namespace.QName;
 import java.math.BigDecimal;
 import java.time.Duration;
 
@@ -15,7 +16,7 @@ class ManagerTest {
     @Test
     void create() {
         // Create a Manager instance
-        Manager manager = new Manager();
+        Manager manager = new Manager("");
 
         // Create sample Uploader
         Uploader uploader = new UploaderImpl("Majd");
@@ -32,7 +33,7 @@ class ManagerTest {
         MediaContent mediaContent = new AudioImpl(samplingRate, address, size, uploader);
 
         // Call the create method
-        manager.create(mediaContent, uploadable);
+        manager.create(uploader.getName(),mediaContent, uploadable);
 
         // Check if the mediaList contains the newly created mediaContent
         assertTrue(manager.read().contains(mediaContent));
