@@ -13,16 +13,14 @@ public class AudioImpl implements Audio {
     private long accessCount;
     private long size;
     private Uploader uploader;
+    private String username;
 
-    public AudioImpl(int samplingRate, String address, long size, Uploader uploader) {
+
+    public AudioImpl(int samplingRate, String address, long size, String username) {
         this.samplingRate = samplingRate;
         this.address = address;
         this.size = size;
-        this.uploader = uploader;
-    }
-
-    public void updateSamplingRate(int newSamplingRate) {
-        this.samplingRate = newSamplingRate;
+        this.username = username;
     }
 
     @Override
@@ -64,5 +62,6 @@ public class AudioImpl implements Audio {
     public BigDecimal getCost() {
         return null;
     }
+
 
 }

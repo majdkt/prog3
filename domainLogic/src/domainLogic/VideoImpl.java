@@ -13,12 +13,14 @@ public class VideoImpl implements Video {
     private long accessCount;
     private long size;
     private Uploader uploader;
+    public String username;
 
-    public VideoImpl(int resolution, String address, long size, Uploader uploader) {
+
+    public VideoImpl(int resolution, String address, long size, String username) {
         this.resolution = resolution;
         this.address = address;
         this.size = size;
-        this.uploader = uploader;
+        this.username = username;
     }
 
     public void updateResolution(int newResolution) {

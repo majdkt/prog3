@@ -1,50 +1,52 @@
 package general;
 
 import contract.MediaContent;
+import domainLogic.AudioImpl;
 import domainLogic.Manager;
+import domainLogic.VideoImpl;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class updateCommand {
-    private final Manager manager;
+    public MediaContent mediaContent;
+    List<MediaContent> userMediaList;
+    public int index;
+    public int type;
+    public String strType;
 
-    public updateCommand(Manager manager) {
-        this.manager = manager;
+    public String username;
+
+    public updateCommand(String username,List<MediaContent> userMediaList, int index, int type) {
+        this.index = index;
+        this.userMediaList = userMediaList;
+        this.type = type;
+        this.username = username;
     }
-
-    public void run() {
-        // Obtain user's media list from the manager
-        List<MediaContent> userMediaList = manager.read();
-
-        if (userMediaList.isEmpty()) {
-            System.out.println("No media content found.");
-            return;
+    MediaContent toUpdate = userMediaList.get(index-1);
+    public MediaContent run(){
+        if (type == 1){
+            System.out.println("For now you only can edit the sampling rate.");
+            System.out.println("Please add new sampling rate: ");
+            Scanner scanner = new Scanner(System.in);
+            int newSamp = scanner.nextInt();
+            mediaContent = new AudioImpl(newSamp,toUpdate.getAddress(),toUpdate.getSize(),username);
+            strType = "audio";
         }
-
-        // Display user's media content
-        System.out.println("Your media content:");
-        for (int i = 0; i < userMediaList.size(); i++) {
-            MediaContent mediaContent = userMediaList.get(i);
-            System.out.println((i + 1) + ". " + mediaContent.getAddress());
+        if (type == 2){
+            System.out.println("For now you only can edit the resolution.");
+            System.out.println("Please add new resolution: ");
+            Scanner scanner = new Scanner(System.in);
+            int newRes = scanner.nextInt();
+            mediaContent = new VideoImpl(newRes,toUpdate.getAddress(),toUpdate.getSize(),username);
+            strType = "video";
         }
-
-        // Prompt user to select content to update
-        System.out.println("Enter the index of the content you want to update:");
-        Scanner scanner = new Scanner(System.in);
-        int selectedIndex = Integer.parseInt(scanner.nextLine()) - 1;
-        if (selectedIndex < 0 || selectedIndex >= userMediaList.size()) {
-            System.out.println("Invalid index.");
-            return;
+        else{
+            System.out.println("invalid index.");
         }
-
-        // Prompt user to specify attribute and new value
-        MediaContent selectedContent = userMediaList.get(selectedIndex);
-        System.out.println("Enter the attribute you want to update (sampling rate, resolution):");
-        String attribute = scanner.nextLine().trim().toLowerCase();
-        System.out.println("Enter the new value:");
-        Object value = scanner.nextInt();
-        manager.update(selectedContent, attribute, value);
-        System.out.println("Content updated successfully.");
+        return mediaContent;
+    }
+    public String getStrType() {
+        return strType;
     }
 }
