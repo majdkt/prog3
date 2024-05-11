@@ -42,7 +42,7 @@ public class AudioImpl implements Audio {
 
     @Override
     public long getAccessCount() {
-        return this.accessCount;
+        return this.accessCount++;
     }
 
     @Override

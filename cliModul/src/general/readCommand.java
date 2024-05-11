@@ -7,10 +7,10 @@ import domainLogic.VideoImpl;
 
 import java.util.List;
 
-class read1 {
+class readCommand {
     private final Manager manager;
 
-    public read1(Manager manager) {
+    public readCommand(Manager manager) {
         this.manager = manager;
     }
 
@@ -24,7 +24,6 @@ class read1 {
             System.out.println("Your media content:");
 
             for (MediaContent mediaContent : userMediaList) {
-                // Determine the type of media content
                 String contentType;
                 if (mediaContent instanceof AudioImpl) {
                     contentType = "Audio";

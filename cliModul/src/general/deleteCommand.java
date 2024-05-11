@@ -1,15 +1,14 @@
 package general;
 
-import contract.MediaContent;
 import domainLogic.Manager;
-
+import contract.MediaContent;
 import java.util.List;
 import java.util.Scanner;
 
-public class updateCommand {
+class deleteCommand {
     private final Manager manager;
 
-    public updateCommand(Manager manager) {
+    public deleteCommand(Manager manager) {
         this.manager = manager;
     }
 
@@ -18,19 +17,18 @@ public class updateCommand {
         List<MediaContent> userMediaList = manager.read();
 
         if (userMediaList.isEmpty()) {
-            System.out.println("No media content found.");
+            System.out.println("No media content found for user: " + manager.getCurrentUser());
             return;
         }
 
-        // Display user's media content
         System.out.println("Your media content:");
         for (int i = 0; i < userMediaList.size(); i++) {
             MediaContent mediaContent = userMediaList.get(i);
-            System.out.println((i + 1) + ". " + mediaContent.getAddress());
+            System.out.println((i + 1) + ". " + mediaContent);
         }
 
-        // Prompt user to select content to update
-        System.out.println("Enter the index of the content you want to update:");
+        // Prompt user to select content to delete
+        System.out.println("Enter the index of the content you want to delete:");
         Scanner scanner = new Scanner(System.in);
         int selectedIndex = Integer.parseInt(scanner.nextLine()) - 1;
         if (selectedIndex < 0 || selectedIndex >= userMediaList.size()) {
@@ -38,13 +36,13 @@ public class updateCommand {
             return;
         }
 
-        // Prompt user to specify attribute and new value
+        // Delete the selected content
         MediaContent selectedContent = userMediaList.get(selectedIndex);
-        System.out.println("Enter the attribute you want to update (sampling rate, resolution):");
-        String attribute = scanner.nextLine().trim().toLowerCase();
-        System.out.println("Enter the new value:");
-        Object value = scanner.nextInt();
-        manager.update(selectedContent, attribute, value);
-        System.out.println("Content updated successfully.");
+        boolean deleted = manager.delete(selectedContent);
+        if (deleted) {
+            System.out.println("Content deleted successfully.");
+        } else {
+            System.out.println("Failed to delete content.");
+        }
     }
 }

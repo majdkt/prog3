@@ -42,7 +42,7 @@ public class VideoImpl implements Video {
 
     @Override
     public long getAccessCount() {
-        return this.accessCount;
+        return this.accessCount++;
     }
 
     @Override
@@ -57,13 +57,11 @@ public class VideoImpl implements Video {
 
     @Override
     public Duration getAvailability() {
-        // Implement if needed
         return null;
     }
 
     @Override
     public BigDecimal getCost() {
-        // Implement if needed
         return null;
     }
 }

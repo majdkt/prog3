@@ -1,8 +1,7 @@
 package general;
 
-import contract.MediaContent;
 import domainLogic.*;
-import java.util.List;
+
 import java.util.Scanner;
 
 public class CLIControl {
@@ -33,13 +32,13 @@ public class CLIControl {
                     new createCommand(manager,type).run();
                     break;
                 case "2":
-                    new read1(manager).run();
+                    new readCommand(manager).run();
                     break;
                 case "3":
                     new updateCommand(manager).run();
                     break;
                 case "4":
-                    deleteCommand();
+                    new deleteCommand(manager).run();
                     break;
                 case "0":
                     running = false;
@@ -49,13 +48,4 @@ public class CLIControl {
             }
         }
     }
-
-
-
-
-
-    private void deleteCommand() {
-        // Implement logic to remove a media file
-    }
-
 }
