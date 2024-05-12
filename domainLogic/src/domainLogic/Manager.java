@@ -12,7 +12,7 @@ public class Manager {
         return currentUser;
     }
 
-    private String currentUser;
+    private final String currentUser;
 
     public Manager(String currentUser) {
         this.currentUser = currentUser;

@@ -63,14 +63,14 @@ public class CLIControl {
                     {
                         System.out.println("Select address to delete: ");
                         int indx = scanner.nextInt();
-                        if(indx > userMediaList.size() ){
+                        if(indx > userMediaList.size() || indx <= 0 ){
                             System.out.println("Invalid address.");
                         }
                         else{
                             MediaContent toDelete = new deleteCommand(userMediaList,indx).getToDelete();
                             boolean deleted = manager.delete(toDelete);
                             if (deleted) {
-                                System.out.println("Content deleted successfully.");
+                                System.out.println("Content deleted successfully.\n");
                             } else {
                                 System.out.println("Failed to delete content.");
                             }
@@ -80,9 +80,10 @@ public class CLIControl {
                 case "0":
                     running = false;
                     break;
-                default:
+                    default:
                     System.out.println("Invalid command.");
             }
+
         }
     }
 }

@@ -13,8 +13,6 @@ class deleteCommand {
         }
 
     public MediaContent getToDelete() {
-        if (userMediaList.isEmpty()){
-            return null;
-        }
-       else return userMediaList.get(indx-1);}
+        if (userMediaList.isEmpty()){return null;}
+        else return userMediaList.get(indx-1);}
 }
