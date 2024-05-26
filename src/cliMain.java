@@ -8,8 +8,8 @@ public class cliMain {
         System.out.println("Username: ");
         Scanner scanner = new Scanner(System.in);
         String username = scanner.next();
-        Manager manager = new Manager(username);
-        CLIControl cli = new CLIControl(manager);
-        cli.run();
+       // Manager manager = new Manager();
+       // CLIControl cli = new CLIControl(manager);
+       // cli.run();
     }
 }

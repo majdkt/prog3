@@ -13,11 +13,12 @@ public class CLIControl {
 
     private final String username;
 
-    public CLIControl(Manager manager) {
+    public CLIControl(Manager manager, Scanner scanner, String username) {
         this.manager = manager;
-        this.scanner = new Scanner(System.in);
-        this.username = this.manager.getCurrentUser();
+        this.scanner = scanner;
+        this.username = username;
     }
+
 
     public void run() {
         System.out.println("Welcome " + username + "!");

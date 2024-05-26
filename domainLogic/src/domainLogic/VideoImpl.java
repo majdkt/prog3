@@ -5,70 +5,70 @@ import contract.*;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collection;
-import java.util.List;
 
 public class VideoImpl implements Video {
-    private int resolution;
+    private Uploader uploader;
+    private Duration availability;
+    private BigDecimal cost;
     private String address;
+    private Collection<Tag> tags;
     private long accessCount;
     private long size;
-    private Uploader uploader;
-    public String username;
+    private int resolution;
 
-
-    public VideoImpl(int resolution, String address, long size, String username) {
-        this.resolution = resolution;
+    public VideoImpl(Uploader uploader, Duration availability, BigDecimal cost, String address, Collection<Tag> tags, long size, int resolution) {
+        this.uploader = uploader;
+        this.availability = availability;
+        this.cost = cost;
         this.address = address;
+        this.tags = tags;
         this.size = size;
-        this.username = username;
-    }
-
-    public void updateResolution(int newResolution) {
-        this.resolution = newResolution;
-    }
-
-    @Override
-    public int getResolution() {
-        return this.resolution;
-    }
-
-    @Override
-    public String getAddress() {
-        return this.address;
-    }
-
-    @Override
-    public Collection<Tag> getTags() {
-        return List.of();
-    }
-
-    @Override
-    public long getAccessCount() {
-        return this.accessCount++;
-    }
-
-    @Override
-    public long getSize() {
-        return this.size;
-    }
-
-    @Override
-    public void setAccessCount() {
-        this.accessCount++;
+        this.resolution = resolution;
+        this.accessCount = 0;
     }
 
     @Override
     public Uploader getUploader() {
-        return this.uploader;
+        return uploader;
     }
 
     @Override
     public Duration getAvailability() {
-        return null;
+        return availability;
     }
 
     @Override
     public BigDecimal getCost() {
-        return null;
+        return cost;
+    }
+
+    @Override
+    public String getAddress() {
+        return address;
+    }
+
+    @Override
+    public Collection<Tag> getTags() {
+        return tags;
+    }
+
+    @Override
+    public long getAccessCount() {
+        return accessCount;
+    }
+
+    @Override
+    public long getSize() {
+        return size;
+    }
+
+    @Override
+    public void setAccessCount(long accessCount) {
+        this.accessCount = accessCount;
+    }
+
+    @Override
+    public int getResolution() {
+        return resolution;
     }
 }

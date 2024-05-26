@@ -8,62 +8,68 @@ import java.util.Collection;
 import java.util.List;
 
 public class AudioImpl implements Audio {
-    private int samplingRate;
+    private Uploader uploader;
+    private Duration availability;
+    private BigDecimal cost;
     private String address;
+    private Collection<Tag> tags;
     private long accessCount;
     private long size;
-    private Uploader uploader;
-    private String username;
+    private int samplingRate;
 
-
-    public AudioImpl(int samplingRate, String address, long size, String username) {
-        this.samplingRate = samplingRate;
+    public AudioImpl(Uploader uploader, Duration availability, BigDecimal cost, String address, Collection<Tag> tags, long size, int samplingRate) {
+        this.uploader = uploader;
+        this.availability = availability;
+        this.cost = cost;
         this.address = address;
+        this.tags = tags;
         this.size = size;
-        this.username = username;
-    }
-
-    @Override
-    public int getSamplingRate() {
-        return this.samplingRate;
-    }
-
-    @Override
-    public String getAddress() {
-        return this.address;
-    }
-
-    @Override
-    public Collection<Tag> getTags() {
-        return List.of();
-    }
-
-    @Override
-    public long getAccessCount() {return this.accessCount;}
-
-    @Override
-    public long getSize() {
-        return this.size;
-    }
-
-    @Override
-    public void setAccessCount() {
-        this.accessCount++;
+        this.samplingRate = samplingRate;
+        this.accessCount = 0;
     }
 
     @Override
     public Uploader getUploader() {
-        return this.uploader;
+        return uploader;
     }
 
     @Override
     public Duration getAvailability() {
-        return null;
+        return availability;
     }
 
     @Override
     public BigDecimal getCost() {
-        return null;
+        return cost;
     }
 
+    @Override
+    public String getAddress() {
+        return address;
+    }
+
+    @Override
+    public Collection<Tag> getTags() {
+        return tags;
+    }
+
+    @Override
+    public long getAccessCount() {
+        return accessCount;
+    }
+
+    @Override
+    public long getSize() {
+        return size;
+    }
+
+    @Override
+    public void setAccessCount(long l) {
+        this.accessCount = accessCount;
+    }
+
+    @Override
+    public int getSamplingRate() {
+        return samplingRate;
+    }
 }

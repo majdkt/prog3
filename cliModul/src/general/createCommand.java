@@ -31,12 +31,12 @@ class createCommand {
         switch (type) {
             case "audio":
                 int samplingRate = random.nextInt(10) + 1;
-                mediaContent = new AudioImpl(samplingRate, address, size, CurrentUser);
+               // mediaContent = new AudioImpl(samplingRate, address, size, CurrentUser);
                 System.out.println("Audio file added.");
                 break;
             case "video":
                 int resolution = random.nextInt(10) + 1;
-                mediaContent = new VideoImpl(resolution, address, size, CurrentUser);
+                //mediaContent = new VideoImpl(resolution, address, size, CurrentUser);
                 System.out.println("Video file added.");
                 break;
             default:
