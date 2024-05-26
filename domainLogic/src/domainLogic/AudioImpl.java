@@ -39,13 +39,16 @@ public class AudioImpl implements Audio {
     }
 
     @Override
-    public long getAccessCount() {
-        return this.accessCount++;
-    }
+    public long getAccessCount() {return this.accessCount;}
 
     @Override
     public long getSize() {
         return this.size;
+    }
+
+    @Override
+    public void setAccessCount() {
+        this.accessCount++;
     }
 
     @Override
@@ -62,6 +65,5 @@ public class AudioImpl implements Audio {
     public BigDecimal getCost() {
         return null;
     }
-
 
 }

@@ -27,16 +27,18 @@ class readCommand {
                 } else {
                     contentType = "Unknown";
                 }
-                System.out.print("Type: " + contentType);
-                System.out.print("| Address: " + mediaContent.getAddress());
+                System.out.print("Address: " + mediaContent.getAddress());
+                System.out.print("| Type: " + contentType);
                 System.out.print("| Size: " + mediaContent.getSize() + "| ");
 
                 if (mediaContent instanceof AudioImpl) {
                     AudioImpl audio = (AudioImpl) mediaContent;
-                    System.out.print("Sampling Rate: " + audio.getSamplingRate());
+                    System.out.print("Sampling Rate: " + audio.getSamplingRate()+ "| ");
+                    System.out.println("Access count: " + audio.getAccessCount());
                 } else if (mediaContent instanceof VideoImpl) {
                     VideoImpl video = (VideoImpl) mediaContent;
-                    System.out.print("Resolution: " + video.getResolution());
+                    System.out.print("Resolution: " + video.getResolution()+ "| ");
+                    System.out.println("Access count: " + video.getAccessCount());
                 }
 
                 System.out.println();

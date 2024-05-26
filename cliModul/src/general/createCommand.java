@@ -12,7 +12,6 @@ import java.util.Random;
 
 class createCommand {
     private final String CurrentUser;
-    public String getType() {return type;}
     public String type;
     public MediaContent mediaContent;
     List<MediaContent> userMediaList;
@@ -58,6 +57,10 @@ class createCommand {
 
     public MediaContent getMediaContent() {
         return createUserMedia(type);
+    }
+
+    private Uploader createUploader() {
+         return null;
     }
 
 }

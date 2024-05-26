@@ -36,7 +36,7 @@ public class CLIControl {
                     if (type.equals("audio") || type.equals("video")) {
                         MediaContent mediaContent = new createCommand(username,userMediaList,type).getMediaContent();
                         Uploadable uploadable = new createCommand(username,userMediaList,type).getUploadable();
-                        manager.create(mediaContent,uploadable);
+                       // manager.create(mediaContent,uploadable);
                     } else {
                         System.out.println("Invalid type. Please enter either 'audio' or 'video'.");
                     }
@@ -49,12 +49,9 @@ public class CLIControl {
                     if (!userMediaList.isEmpty()){
                         System.out.println("Choose address to edit: ");
                         int i = scanner.nextInt();
-                        System.out.println("Please choose type:\n1. Audio\n2. Video");
-                        int typo = scanner.nextInt();
-                        MediaContent updated = new updateCommand(username,userMediaList,i,typo).run();
-                        String typ = new updateCommand(username,userMediaList,i,typo).getStrType();
-                        Uploadable uploadable = new createCommand(username,userMediaList,typ).getUploadable();
-                        manager.create(updated,uploadable);
+                        manager.update(i);
+                        System.out.println("Access count updated! ");
+                        new readCommand(userMediaList).run();
                     }
                     break;
                 case "4": //delete

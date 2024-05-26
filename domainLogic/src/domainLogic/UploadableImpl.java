@@ -6,7 +6,7 @@ import contract.Uploader;
 import java.math.BigDecimal;
 import java.time.Duration;
 
-public class UploadableImpl implements Uploadable, Uploader {
+public class UploadableImpl implements Uploadable {
     private Uploader uploader;
     private Duration availability;
     private BigDecimal cost;
@@ -30,10 +30,5 @@ public class UploadableImpl implements Uploadable, Uploader {
     @Override
     public BigDecimal getCost() {
         return this.cost;
-    }
-
-    @Override
-    public String getName() {
-        return this.uploader.getName();
     }
 }

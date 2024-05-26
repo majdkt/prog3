@@ -53,6 +53,11 @@ public class VideoImpl implements Video {
     }
 
     @Override
+    public void setAccessCount() {
+        this.accessCount++;
+    }
+
+    @Override
     public Uploader getUploader() {
         return this.uploader;
     }
