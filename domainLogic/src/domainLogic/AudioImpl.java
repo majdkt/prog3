@@ -7,59 +7,63 @@ import contract.Uploader;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collection;
-import java.util.List;
 
- class AudioImpl implements Audio {
-    private long accessCount;
+class AudioImpl implements Audio {
     private int samplingRate;
-
-     // Constructor to initialize the AudioImpl object with a sampling rate
-     public AudioImpl(int samplingRate) {
-         this.samplingRate = samplingRate;
-     }
-
+    private String address;
+    private Collection<Tag> tags;
+    private long accessCount;
+    private long size;
+    private Uploader uploader;
+    private Duration availability;
+    private BigDecimal cost;
+    public AudioImpl() {
+        this.accessCount = 0;
+    }
+    public AudioImpl(String address) {
+        this.address = address;
+        this.accessCount = 0;
+    }
     @Override
     public int getSamplingRate() {
-        // Return the stored sampling rate
-        return this.samplingRate;
+        return samplingRate;
     }
-
     @Override
     public String getAddress() {
-        return "";
+        return address;
     }
-
+    public void setAddress(String address) {
+        this.address = address;
+    }
     @Override
     public Collection<Tag> getTags() {
-        return List.of();
+        return tags;
     }
-
-    protected void setAccessCount(long value){
-        this.accessCount=value;
-    }
-
     @Override
     public long getAccessCount() {
-        return this.accessCount;
+        return accessCount;
     }
-
+    public void setAccessCount(long newAccessCount) {
+        this.accessCount = newAccessCount;
+    }
     @Override
     public long getSize() {
-        return 0;
+        return size;
     }
-
     @Override
     public Uploader getUploader() {
-        return null;
+        return uploader;
     }
-
     @Override
     public Duration getAvailability() {
-        return null;
+        return availability;
     }
-
     @Override
     public BigDecimal getCost() {
-        return null;
+        return cost;
+    }
+    @Override
+    public String toString() {
+        return "AudioFile{address='" + address + "', accessCount=" + accessCount + "}";
     }
 }

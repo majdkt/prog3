@@ -2,31 +2,51 @@ package domainLogic;
 
 import contract.Audio;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Manager {
-    private List<AudioImpl> audioList = new ArrayList<>();
+    private Map<String, Audio> audioMap = new HashMap<>();
+    private int addressCounter = 1;
+    private Queue<String> availableAddresses = new LinkedList<>();
 
-    Audio create(int SamplingRate){
-        AudioImpl ai = new AudioImpl(SamplingRate); // Pass the SamplingRate to the AudioImpl constructor
-        audioList.add(ai);
-        return null;
+    public void create() {
+        String address;
+        if (availableAddresses.isEmpty()) {
+            address = "address_" + addressCounter;
+            addressCounter++;
+        } else {
+            address = availableAddresses.poll();
+        }
+        Audio audioFile = new AudioImpl(address);
+        audioMap.put(address, audioFile);
     }
 
-    public List<Audio> read(){
-        return new ArrayList<>(this.audioList);
+    public List<String> read() {
+        List<String> audioDetails = new ArrayList<>();
+        for (Map.Entry<String, Audio> entry : audioMap.entrySet()) {
+            audioDetails.add(entry.getValue().toString());
+        }
+        return audioDetails;
     }
 
-    Audio update(int i){
-        AudioImpl audio = audioList.get(i);
-        long ac = audio.getAccessCount();
-        audio.setAccessCount(ac+1);
-        return audio;
+    public List<Audio> getAudioList() {
+        return new ArrayList<>(audioMap.values());
     }
 
-    boolean delete(Audio audio){
-        return audioList.remove(audio);
+    public void update(String address, long newAccessCount) {
+        Audio audio = audioMap.get(address);
+        if (audio != null) {
+            System.out.println("old " + audio.getAccessCount());
+            ((AudioImpl) audio).setAccessCount(newAccessCount);
+            System.out.println("new " + audio.getAccessCount());
+        }
     }
 
+    public void delete(String address) {
+        Audio removedAudio = audioMap.remove(address);
+        if (removedAudio != null) {
+            availableAddresses.add(address);
+        }
+    }
 }
