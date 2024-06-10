@@ -1,20 +1,19 @@
 package domainLogic;
 
 import contract.Audio;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Manager {
-    private Map<String, Audio> audioMap = new HashMap<>();
+    private final Map<String, Audio> audioMap = new HashMap<>();
     private int addressCounter = 1;
-    private Queue<String> availableAddresses = new LinkedList<>();
+    private final Queue<String> availableAddresses = new LinkedList<>();
 
-    public void create() {
+    public synchronized void create() {
         String address;
         if (availableAddresses.isEmpty()) {
             address = "address_" + addressCounter;
             addressCounter++;
+            System.out.println("Creating " + address);
         } else {
             address = availableAddresses.poll();
         }
@@ -22,7 +21,7 @@ public class Manager {
         audioMap.put(address, audioFile);
     }
 
-    public List<String> read() {
+    public synchronized List<String> read() {
         List<String> audioDetails = new ArrayList<>();
         for (Map.Entry<String, Audio> entry : audioMap.entrySet()) {
             audioDetails.add(entry.getValue().toString());
@@ -30,23 +29,22 @@ public class Manager {
         return audioDetails;
     }
 
-    public List<Audio> getAudioList() {
-        return new ArrayList<>(audioMap.values());
-    }
-
-    public void update(String address, long newAccessCount) {
+    public synchronized void update(String address, long newAccessCount) {
         Audio audio = audioMap.get(address);
         if (audio != null) {
-            System.out.println("old " + audio.getAccessCount());
+            System.out.println("Old access count: " + audio.getAccessCount());
             ((AudioImpl) audio).setAccessCount(newAccessCount);
-            System.out.println("new " + audio.getAccessCount());
+            System.out.println("New access count: " + audio.getAccessCount());
         }
     }
 
-    public void delete(String address) {
-        Audio removedAudio = audioMap.remove(address);
-        if (removedAudio != null) {
-            availableAddresses.add(address);
+    public synchronized void delete(String address) {
+        if (audioMap.remove(address)!=null){
+            Audio removedAudio = audioMap.remove(address);
+            if (removedAudio != null) {
+                availableAddresses.add(address);
+            }
+            System.out.println( "Removed address: " + address );
         }
     }
 }
