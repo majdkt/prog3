@@ -1,3 +1,5 @@
+package cliagain;
+
 public class Command {
     private final String action;
     private final String address;

@@ -1,5 +1,7 @@
 package contract;
 
-public interface Audio extends MediaContent,Uploadable{
+import java.io.Serializable;
+
+public interface Audio extends MediaContent,Uploadable, Serializable {
     int getSamplingRate();
 }

@@ -1,12 +1,14 @@
 package domainLogic;
 
 import contract.Audio;
+
+import java.io.*;
 import java.util.*;
 
 public class Manager {
-    private final Map<String, Audio> audioMap = new HashMap<>();
+    private Map<String, Audio> audioMap = new HashMap<>();
     private int addressCounter = 1;
-    private final Queue<String> availableAddresses = new LinkedList<>();
+    private Queue<String> availableAddresses = new LinkedList<>();
 
     public synchronized void create() {
         String address;
@@ -45,6 +47,28 @@ public class Manager {
                 availableAddresses.add(address);
             }
             System.out.println( "Removed address: " + address );
+        }
+    }
+
+    public synchronized List<Audio> getAudioList() {
+        return new ArrayList<>(audioMap.values());
+    }
+
+
+    public synchronized void saveState(String filename) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+            oos.writeObject(audioMap);
+            oos.writeObject(addressCounter);
+            oos.writeObject(availableAddresses);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public synchronized void loadState(String filename) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+            audioMap = (Map<String, Audio>) ois.readObject();
+            addressCounter = (Integer) ois.readObject();
+            availableAddresses = (Queue<String>) ois.readObject();
         }
     }
 }

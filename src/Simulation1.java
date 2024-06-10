@@ -1,65 +1,40 @@
 import domainLogic.Manager;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadLocalRandom;
-
 public class Simulation1 {
     public static void main(String[] args) {
-        BlockingQueue<Command> commandQueue = new LinkedBlockingQueue<>();
+        //Simulation1 beinhaltet Random Faktor
+
         Manager manager = new Manager();
 
-        Thread workerThread = new Thread(() -> {
+        Thread createThread = new Thread(() -> {
             while (true) {
+                manager.create();
                 try {
-                    Command command = commandQueue.take();
-                    switch (command.getAction()) {
-                        case "create":
-                            manager.create();
-                            System.out.println("Audio created.");
-                            break;
-                        case "read":
-                            System.out.println("Saved audio files:");
-                            manager.read().forEach(System.out::println);
-                            break;
-                        case "exit":
-                            System.out.println("Exiting...");
-                            return;
-                        default:
-                            System.out.println("Unknown command: " + command.getAction());
-                    }
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    System.out.println("Worker thread interrupted");
-                    return;
+                    throw new RuntimeException(e);
                 }
             }
         });
 
-        workerThread.start();
-
-        Thread simulationThread = new Thread(() -> {
-            try {
-                for (int i = 0; i < 10; i++) {
-                    commandQueue.put(new Command("create"));
-                    Thread.sleep(ThreadLocalRandom.current().nextInt(100, 500)); // Random delay
+        Thread deleteThread = new Thread(() -> {
+            while (true) {
+                String address = "address_" + (manager.read().size());
+                manager.delete(address);
+                manager.read().forEach(System.out::println);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-                commandQueue.put(new Command("read"));
-                commandQueue.put(new Command("exit"));
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                System.out.println("Simulation1 interrupted");
             }
         });
 
-        simulationThread.start();
+        createThread.start();
+        deleteThread.start();
 
-        try {
-            simulationThread.join();
-            workerThread.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            System.out.println("Main thread interrupted");
-        }
+
+        System.out.println("Final list of audio files:");
+        manager.read().forEach(System.out::println);
     }
 }
