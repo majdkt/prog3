@@ -1,4 +1,4 @@
-package cliagain;
+package cliPack;
 
 import domainLogic.Manager;
 
@@ -22,6 +22,7 @@ public class Menu {
             switch (choice) {
                 case 1:
                     manager.create();
+                    System.out.println("audioFile saved.");
                     break;
                 case 2:
                     manager.read().forEach(System.out::println);
@@ -39,23 +40,22 @@ public class Menu {
                     manager.delete(deleteAddress);
                     break;
                 case 5:
-                    System.out.print("Enter filename to save state: ");
-                    String saveFile = scanner.nextLine();
                     try {
-                        manager.saveState(saveFile);
-                        System.out.println("State saved to " + saveFile);
+                        manager.saveState();
+                        System.out.println("State saved and can be loaded ");
                     } catch (IOException e) {
                         System.out.println("Failed to save state: " + e.getMessage());
                     }
                 case 6:
-                    System.out.print("Enter filename to load state: ");
-                    String loadFile = scanner.nextLine();
                     try {
-                        manager.loadState(loadFile);
-                        System.out.println("State loaded from " + loadFile);
+                        manager.loadState();
+                        System.out.println("State loaded. ");
                     } catch (IOException | ClassNotFoundException e) {
                         System.out.println("Failed to load state: " + e.getMessage());
                     }
+                    break;
+                case 7:
+                    manager.logout();
                     break;
                 case 0:
                     scanner.close();
@@ -73,6 +73,7 @@ public class Menu {
         System.out.println("4. Delete Media");
         System.out.println("5. Save data set");
         System.out.println("6. Load data set");
+        System.out.println("7. LogOut");
         System.out.println("0. Exit");
         System.out.print("Enter your choice: ");
     }

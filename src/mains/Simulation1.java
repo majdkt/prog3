@@ -1,8 +1,10 @@
+package mains;
+
 import domainLogic.Manager;
 
 public class Simulation1 {
     public static void main(String[] args) {
-        //Simulation1 beinhaltet Random Faktor
+        //mains.Simulation1 beinhaltet Random Faktor
 
         Manager manager = new Manager();
 
@@ -21,7 +23,7 @@ public class Simulation1 {
             while (true) {
                 String address = "address_" + (manager.read().size());
                 manager.delete(address);
-                manager.read().forEach(System.out::println);
+               // manager.read().forEach(System.out::println);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -32,7 +34,6 @@ public class Simulation1 {
 
         createThread.start();
         deleteThread.start();
-
 
         System.out.println("Final list of audio files:");
         manager.read().forEach(System.out::println);

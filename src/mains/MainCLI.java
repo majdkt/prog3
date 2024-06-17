@@ -1,9 +1,7 @@
-import cliagain.Command;
-import cliagain.Menu;
-import domainLogic.Manager;
+package mains;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import cliPack.Menu;
+import domainLogic.Manager;
 
 public class MainCLI {
     public static void main(String[] args) {

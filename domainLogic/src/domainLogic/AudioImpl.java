@@ -4,14 +4,12 @@ import contract.Audio;
 import contract.Tag;
 import contract.Uploader;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collection;
 
 class AudioImpl implements Audio, Serializable {
-    @Serial
     private static final long serialVersionUID = 1L;
     private int samplingRate;
     private String address;

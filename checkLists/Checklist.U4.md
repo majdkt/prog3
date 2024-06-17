@@ -18,16 +18,16 @@ Flüchtige Quellen, wie Sprachmodelle, sind per screen shot zu dokumentieren.
 1 Punkt für die Erfüllung des Pflichtteils
 
 ### Pflichtteil
-- [ ] Quellen angegeben
-- [ ] zip Archiv
-- [ ] IntelliJ-Projekt (kein Gradle, Maven o.ä.)
-- [ ] keine weiteren Bibliotheken außer JUnit5, Mockito und JavaFX (und deren Abhängigkeiten)
-- [ ] keine Umlaute, Sonderzeichen, etc. in Datei- und Pfadnamen
-- [ ] kompilierbar
-- [ ] Trennung zwischen Test- und Produktiv-Code
-- [ ] main-Methoden nur im default package des module belegProg3
-- [ ] ausführbar
-- [ ] Speichern und Laden der Geschäftslogik mit JOS oder JBP
+- [x] Quellen angegeben
+- [x] zip Archiv
+- [x] IntelliJ-Projekt (kein Gradle, Maven o.ä.)
+- [x] keine weiteren Bibliotheken außer JUnit5, Mockito und JavaFX (und deren Abhängigkeiten)
+- [x] keine Umlaute, Sonderzeichen, etc. in Datei- und Pfadnamen
+- [x] kompilierbar
+- [x] Trennung zwischen Test- und Produktiv-Code
+- [x] main-Methoden nur im default package des module belegProg3
+- [x] ausführbar
+- [x] Speichern und Laden der Geschäftslogik mit JOS oder JBP
 
 ### empfohlene Realisierungen als Vorbereitung auf den Beleg
 werden überprüft (aber nicht bewertet), wenn hier in der vorgegebenen Reihenfolge als bearbeitet angegeben
