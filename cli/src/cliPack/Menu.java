@@ -1,12 +1,14 @@
 package cliPack;
 
+import all.JosCommands;
 import domainLogic.Manager;
 
 import java.io.IOException;
 import java.util.Scanner;
 
 public class Menu {
-    private final Manager manager;
+    private Manager manager;
+    private JosCommands josCommands = new JosCommands();
 
     public Menu(Manager manager) {
         this.manager = manager;
@@ -41,14 +43,14 @@ public class Menu {
                     break;
                 case 5:
                     try {
-                        manager.saveState();
+                        josCommands.saveState(manager);
                         System.out.println("State saved and can be loaded ");
                     } catch (IOException e) {
                         System.out.println("Failed to save state: " + e.getMessage());
                     }
                 case 6:
                     try {
-                        manager.loadState();
+                        this.manager = josCommands.loadState();
                         System.out.println("State loaded. ");
                     } catch (IOException | ClassNotFoundException e) {
                         System.out.println("Failed to load state: " + e.getMessage());

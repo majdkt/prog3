@@ -5,7 +5,7 @@ import contract.Audio;
 import java.io.*;
 import java.util.*;
 
-public class Manager {
+public class Manager implements Serializable {
     private Map<String, Audio> audioMap = new HashMap<>();
     private int addressCounter = 1;
     private Queue<String> availableAddresses = new LinkedList<>();
@@ -55,26 +55,6 @@ public class Manager {
 
     public synchronized List<Audio> getAudioList() {
         return new ArrayList<>(audioMap.values());
-    }
-
-
-    public synchronized void saveState() throws IOException {
-        String filename = "Saved";
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(audioMap);
-            oos.writeObject(addressCounter);
-            oos.writeObject(availableAddresses);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public synchronized void loadState() throws IOException, ClassNotFoundException {
-        String filename = "Saved";
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
-            audioMap = (Map<String, Audio>) ois.readObject();
-            addressCounter = (Integer) ois.readObject();
-            availableAddresses = (Queue<String>) ois.readObject();
-        }
     }
 
     public synchronized void logout() {
