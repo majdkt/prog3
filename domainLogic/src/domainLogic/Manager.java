@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.*;
 
 public class Manager implements Serializable {
-    private Map<String, Audio> audioMap = new HashMap<>();
+    private Map<String, AudioImpl> audioMap = new HashMap<>();
     private int addressCounter = 1;
     private Queue<String> availableAddresses = new LinkedList<>();
 
@@ -19,26 +19,23 @@ public class Manager implements Serializable {
         } else {
             address = availableAddresses.poll();
         }
-        Audio audioFile = new AudioImpl(address);
+        AudioImpl audioFile = new AudioImpl(address);
         audioMap.put(address, audioFile);
     }
 
     public synchronized List<String> read() {
         List<String> audioDetails = new ArrayList<>();
-        for (Map.Entry<String, Audio> entry : audioMap.entrySet()) {
+        for (Map.Entry<String, AudioImpl> entry : audioMap.entrySet()) {
             audioDetails.add(entry.getValue().toString());
-        }
-        if (audioDetails.isEmpty()) {
-            System.out.println("No audio entries found.");
         }
         return audioDetails;
     }
 
     public synchronized void update(String address, long newAccessCount) {
-        Audio audio = audioMap.get(address);
+        AudioImpl audio = audioMap.get(address);
         if (audio != null) {
             System.out.println("Old access count: " + audio.getAccessCount());
-            ((AudioImpl) audio).setAccessCount(newAccessCount);
+            audio.setAccessCount(newAccessCount);
             System.out.println("New access count: " + audio.getAccessCount());
         }
     }
