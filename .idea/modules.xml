@@ -6,7 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/cli/cli.iml" filepath="$PROJECT_DIR$/cli/cli.iml" />
       <module fileurl="file://$PROJECT_DIR$/contract/contract.iml" filepath="$PROJECT_DIR$/contract/contract.iml" />
       <module fileurl="file://$PROJECT_DIR$/domainLogic/domainLogic.iml" filepath="$PROJECT_DIR$/domainLogic/domainLogic.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eventSystem/eventSystem.iml" filepath="$PROJECT_DIR$/eventSystem/eventSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eventMod/eventMod.iml" filepath="$PROJECT_DIR$/eventMod/eventMod.iml" />
       <module fileurl="file://$PROJECT_DIR$/jos/jos.iml" filepath="$PROJECT_DIR$/jos/jos.iml" />
     </modules>
   </component>

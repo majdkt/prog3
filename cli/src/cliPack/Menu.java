@@ -2,6 +2,9 @@ package cliPack;
 
 import all.JosCommands;
 import domainLogic.Manager;
+import events.AudioEventHandler;
+import events.EventManager;
+
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -12,6 +15,9 @@ public class Menu {
 
     public Menu(Manager manager) {
         this.manager = manager;
+        EventManager eventManager = new EventManager();
+        eventManager.addListener(new AudioEventHandler());
+        manager.setEventManager(eventManager);
     }
 
     public void run() {
@@ -24,7 +30,6 @@ public class Menu {
             switch (choice) {
                 case 1:
                     manager.create();
-                    System.out.println("audioFile saved.");
                     break;
                 case 2:
                     manager.read().forEach(System.out::println);
@@ -48,6 +53,7 @@ public class Menu {
                     } catch (IOException e) {
                         System.out.println("Failed to save state: " + e.getMessage());
                     }
+                    break;
                 case 6:
                     try {
                         this.manager = josCommands.loadState();
@@ -58,6 +64,7 @@ public class Menu {
                     break;
                 case 7:
                     manager.logout();
+                    System.out.println("Logged out successfully. State has been reset.");
                     break;
                 case 0:
                     scanner.close();
