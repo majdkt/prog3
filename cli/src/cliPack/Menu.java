@@ -1,77 +1,65 @@
 package cliPack;
 
-import all.JosCommands;
-import domainLogic.Manager;
-import events.AudioEventHandler;
-import events.EventManager;
-
-
 import java.io.IOException;
 import java.util.Scanner;
 
 public class Menu {
-    private Manager manager;
-    private JosCommands josCommands = new JosCommands();
+    private MenuHandler handler;
+    private Scanner scanner;
 
-    public Menu(Manager manager) {
-        this.manager = manager;
-        EventManager eventManager = new EventManager();
-        eventManager.addListener(new AudioEventHandler());
-        manager.setEventManager(eventManager);
+    public Menu(MenuHandler handler) {
+        this.handler = handler;
+        this.scanner = new Scanner(System.in);
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
+        try {
+            while (true) {
+                showMenu();
+                int choice = Integer.parseInt(scanner.nextLine());
 
-        while (true) {
-            showMenu();
-            int choice = Integer.parseInt(scanner.nextLine());
-
-            switch (choice) {
-                case 1:
-                    manager.create();
-                    break;
-                case 2:
-                    manager.read().forEach(System.out::println);
-                    break;
-                case 3:
-                    System.out.println("Enter address number to update (e.g., '1' for 'address_1'):");
-                    String updateAddress = "address_" + scanner.nextLine();
-                    System.out.println("Enter new access count:");
-                    long newAccessCount = Long.parseLong(scanner.nextLine());
-                    manager.update(updateAddress, newAccessCount);
-                    break;
-                case 4:
-                    System.out.println("Enter address number to delete (e.g., '1' for 'address_1'):");
-                    String deleteAddress = "address_" + scanner.nextLine();
-                    manager.delete(deleteAddress);
-                    break;
-                case 5:
-                    try {
-                        josCommands.saveState(manager);
-                        System.out.println("State saved and can be loaded ");
-                    } catch (IOException e) {
-                        System.out.println("Failed to save state: " + e.getMessage());
-                    }
-                    break;
-                case 6:
-                    try {
-                        this.manager = josCommands.loadState();
-                        System.out.println("State loaded. ");
-                    } catch (IOException | ClassNotFoundException e) {
-                        System.out.println("Failed to load state: " + e.getMessage());
-                    }
-                    break;
-                case 7:
-                    manager.logout();
-                    System.out.println("Logged out successfully. State has been reset.");
-                    break;
-                case 0:
-                    scanner.close();
-                    return;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+                switch (choice) {
+                    case 1:
+                        handler.create();
+                        System.out.println("Audio file created.");
+                        break;
+                    case 2:
+                        handler.read().forEach(System.out::println);
+                        break;
+                    case 3:
+                        System.out.println("Enter address number to update (e.g., '1' for 'address_1'):");
+                        String updateAddress = "address_" + scanner.nextLine();
+                        System.out.println("Enter new access count:");
+                        long newAccessCount = Long.parseLong(scanner.nextLine());
+                        handler.update(updateAddress, newAccessCount);
+                        System.out.println("Audio file updated.");
+                        break;
+                    case 4:
+                        System.out.println("Enter address number to delete (e.g., '1' for 'address_1'):");
+                        String deleteAddress = "address_" + scanner.nextLine();
+                        handler.delete(deleteAddress);
+                        System.out.println("Audio file deleted.");
+                        break;
+                    case 5:
+                        handler.save();
+                        System.out.println("State saved.");
+                        break;
+                    case 6:
+                        handler.load();
+                        System.out.println("State loaded.");
+                        break;
+                    case 7:
+                        handler.logout();
+                        System.out.println("Logged out.");
+                        break;
+                    case 0:
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
             }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
