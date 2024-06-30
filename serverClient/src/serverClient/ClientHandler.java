@@ -32,6 +32,9 @@ class ClientHandler implements Runnable {
                 String command = scanner.nextLine();
 
                 switch (command.toLowerCase()) {
+                    case "help":
+                        writer.println("create, read, update, delete, logout, exit");
+                        break;
                     case "create":
                         createMedia(writer);
                         break;
@@ -76,6 +79,7 @@ class ClientHandler implements Runnable {
     }
 
     private void readMedia(PrintWriter writer) {
+        writer.println("");
         manager.read().forEach(writer::println);
     }
 

@@ -20,28 +20,22 @@ public class ClientMain {
              Scanner userInput = new Scanner(System.in)) {
 
             System.out.println("Connected to the server.");
+            System.out.println("create, read, update, delete, logout, exit");
 
             // Reading server responses continuously
             Thread responseThread = new Thread(() -> {
-                try {
-                    while (serverInput.hasNextLine()) {
-                        String line = serverInput.nextLine();
-                        System.out.println(line);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                while (serverInput.hasNextLine()) {
+                    String line = serverInput.nextLine();
+                    System.out.println(line);}
             });
             responseThread.start();
 
             // Sending commands
             while (true) {
-                System.out.print("Enter command: ");
+                System.out.print("(help)    ");
                 String command = userInput.nextLine();
-                serverOutput.println(command);  // Send the command to the server
-                serverOutput.flush(); // Ensure the data is sent immediately
-
-                // Exit loop if command is "exit"
+                serverOutput.println(command);
+                serverOutput.flush();
                 if (command.equalsIgnoreCase("exit")) {
                     break;
                 }
