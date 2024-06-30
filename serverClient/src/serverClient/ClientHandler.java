@@ -44,12 +44,6 @@ class ClientHandler implements Runnable {
                     case "delete":
                         deleteMedia(scanner, writer);
                         break;
-                    case "save":
-                        saveState(writer);
-                        break;
-                    case "load":
-                        loadState(writer);
-                        break;
                     case "logout":
                         logout(writer);
                         break;
@@ -69,6 +63,7 @@ class ClientHandler implements Runnable {
         } finally {
             try {
                 clientSocket.close();
+                ServerLogic.clientDisconnected();
             } catch (IOException e) {
                 e.printStackTrace();
             }
