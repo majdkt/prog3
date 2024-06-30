@@ -7,12 +7,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerLogic {
-    private ServerLogic serverLogic;
     private int port;
+    private Manager manager;
 
-    public ServerLogic(int port) {
-        this.serverLogic = serverLogic;
+    public ServerLogic(int port, Manager manager) {
         this.port = port;
+        this.manager = manager;
     }
 
     public void start() {
@@ -24,7 +24,7 @@ public class ServerLogic {
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
 
                 // Handle client connection using ClientHandler
-                ClientHandler client = new ClientHandler(clientSocket, serverLogic);
+                ClientHandler client = new ClientHandler(clientSocket, manager);
                 new Thread(client).start();
             }
         } catch (IOException e) {
