@@ -89,6 +89,8 @@ class ClientHandler implements Runnable {
         }
     }
 
+
+
     private void updateMedia(Scanner scanner, PrintWriter writer) {
         writer.println("Enter address number to update (e.g., '1' for 'address_1'):");
         String updateAddress = "address_" + scanner.nextLine();

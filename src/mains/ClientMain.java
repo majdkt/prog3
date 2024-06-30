@@ -16,12 +16,11 @@ public class ClientMain {
              InputStream input = socket.getInputStream();
              OutputStream output = socket.getOutputStream();
              Scanner scanner = new Scanner(input);
-             PrintWriter writer = new PrintWriter(output, true)) {
+             PrintWriter writer = new PrintWriter(output, true);
+             Scanner userInputScanner = new Scanner(System.in)) {
 
             System.out.println("Connected to the server.");
 
-            // User input
-            Scanner userInputScanner = new Scanner(System.in);
             String userInput;
             while (true) {
                 System.out.print("Enter command: ");
@@ -32,8 +31,8 @@ public class ClientMain {
                     break;
                 }
 
-                // Server response
-                if (scanner.hasNextLine()) {
+                // Read server response
+                while (scanner.hasNextLine()) {
                     String serverResponse = scanner.nextLine();
                     System.out.println(serverResponse);
                 }

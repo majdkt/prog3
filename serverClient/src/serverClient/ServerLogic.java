@@ -33,22 +33,9 @@ public class ServerLogic {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            stop();
         }
     }
 
-    public void stop() {
-        running = false;
-        try {
-            if (serverSocket != null) {
-                serverSocket.close();
-                System.out.println("Server stopped.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void clientDisconnected() {
         System.out.println("Client disconnected.");
