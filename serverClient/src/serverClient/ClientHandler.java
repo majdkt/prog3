@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -58,10 +59,8 @@ class ClientHandler implements Runnable {
                 }
             }
         } catch (IOException e) {
-            // Client disconnected
             System.out.println("Client disconnected.");
         } catch (NoSuchElementException e) {
-            // Client disconnected unexpectedly
             System.out.println("Client disconnected unexpectedly.");
         } finally {
             try {
@@ -75,12 +74,21 @@ class ClientHandler implements Runnable {
 
     private void createMedia(PrintWriter writer) {
         manager.create();
-        writer.println("AudioFile saved.");
+        System.out.println("AudioFile saved");
+        writer.println("Created new media.");
     }
 
     private void readMedia(PrintWriter writer) {
-        writer.println("");
-        manager.read().forEach(writer::println);
+        System.out.println("MediaList Sent");
+
+        List<String> mediaList = manager.read();
+        if (mediaList == null || mediaList.isEmpty()) {
+            writer.println("No Media Found");
+        } else {
+            for (String media : mediaList) {
+                writer.println(media);
+            }
+        }
     }
 
     private void updateMedia(Scanner scanner, PrintWriter writer) {
@@ -89,7 +97,8 @@ class ClientHandler implements Runnable {
         writer.println("Enter new access count:");
         long newAccessCount = Long.parseLong(scanner.nextLine());
         manager.update(updateAddress, newAccessCount);
-        writer.println("Updated successfully.");
+        System.out.println("Access updated.");
+        writer.println("Updated successfully: " + newAccessCount + " access count");
     }
 
     private void deleteMedia(Scanner scanner, PrintWriter writer) {
@@ -97,28 +106,13 @@ class ClientHandler implements Runnable {
         String deleteAddress = "address_" + scanner.nextLine();
         manager.delete(deleteAddress);
         writer.println("Deleted successfully.");
+        System.out.println("Media Deleted.");
     }
 
-    private void saveState(PrintWriter writer) {
-        try {
-            josCommands.saveState(manager);
-            writer.println("State saved and can be loaded.");
-        } catch (IOException e) {
-            writer.println("Failed to save state: " + e.getMessage());
-        }
-    }
-
-    private void loadState(PrintWriter writer) {
-        try {
-            manager = josCommands.loadState();
-            writer.println("State loaded.");
-        } catch (IOException | ClassNotFoundException e) {
-            writer.println("Failed to load state: " + e.getMessage());
-        }
-    }
 
     private void logout(PrintWriter writer) {
         manager.logout();
+        System.out.println("Logged out successfully.");
         writer.println("Logged out.");
     }
 }

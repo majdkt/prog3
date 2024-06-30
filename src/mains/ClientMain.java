@@ -8,9 +8,9 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ClientMain {
-    public static void main(String[] args) {
-        String serverAddress = "localhost";  // The server's address
-        int serverPort = 8080;  // The server's port
+    public static void main(String[] args) throws IOException {
+        String serverAddress = "localhost";
+        int serverPort = 8080;
 
         try (Socket socket = new Socket(serverAddress, serverPort);
              InputStream input = socket.getInputStream();
@@ -24,9 +24,13 @@ public class ClientMain {
 
             // Reading server responses continuously
             Thread responseThread = new Thread(() -> {
-                while (serverInput.hasNextLine()) {
-                    String line = serverInput.nextLine();
-                    System.out.println(line);}
+                try {
+                    while (serverInput.hasNextLine()) {
+                        String line = serverInput.nextLine();
+                        System.out.println(line);
+                    }
+                } catch (Exception e) {
+                }
             });
             responseThread.start();
 
@@ -37,6 +41,7 @@ public class ClientMain {
                 serverOutput.println(command);
                 serverOutput.flush();
                 if (command.equalsIgnoreCase("exit")) {
+                    responseThread.interrupt();
                     break;
                 }
             }
