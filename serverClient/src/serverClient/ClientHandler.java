@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -44,12 +45,6 @@ class ClientHandler implements Runnable {
                     case "delete":
                         deleteMedia(scanner, writer);
                         break;
-                    case "save":
-                        saveState(writer);
-                        break;
-                    case "load":
-                        loadState(writer);
-                        break;
                     case "logout":
                         logout(writer);
                         break;
@@ -69,6 +64,7 @@ class ClientHandler implements Runnable {
         } finally {
             try {
                 clientSocket.close();
+                ServerLogic.clientDisconnected();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -81,7 +77,16 @@ class ClientHandler implements Runnable {
     }
 
     private void readMedia(PrintWriter writer) {
-        manager.read().forEach(writer::println);
+        List<String> mediaList = manager.read();
+        if (mediaList.isEmpty()) {
+            writer.println("No media found.");
+        } else {
+            StringBuilder sb = new StringBuilder();
+            for (String media : mediaList) {
+                sb.append(media).append("\n"); // Append each media entry with a newline separator
+            }
+            writer.println(sb.toString().trim()); // Send the concatenated string to the client
+        }
     }
 
     private void updateMedia(Scanner scanner, PrintWriter writer) {
@@ -98,24 +103,6 @@ class ClientHandler implements Runnable {
         String deleteAddress = "address_" + scanner.nextLine();
         manager.delete(deleteAddress);
         writer.println("Deleted successfully.");
-    }
-
-    private void saveState(PrintWriter writer) {
-        try {
-            josCommands.saveState(manager);
-            writer.println("State saved and can be loaded.");
-        } catch (IOException e) {
-            writer.println("Failed to save state: " + e.getMessage());
-        }
-    }
-
-    private void loadState(PrintWriter writer) {
-        try {
-            manager = josCommands.loadState();
-            writer.println("State loaded.");
-        } catch (IOException | ClassNotFoundException e) {
-            writer.println("Failed to load state: " + e.getMessage());
-        }
     }
 
     private void logout(PrintWriter writer) {

@@ -7,7 +7,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerLogic {
-    private int port;
+    private final int port;
+    private boolean running;
+    private ServerSocket serverSocket;
     private Manager manager;
 
     public ServerLogic(int port, Manager manager) {
@@ -16,10 +18,12 @@ public class ServerLogic {
     }
 
     public void start() {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try {
+            serverSocket = new ServerSocket(port);
             System.out.println("Server started on port " + port);
+            running = true;
 
-            while (true) {
+            while (running) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
 
@@ -29,6 +33,24 @@ public class ServerLogic {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            stop();
         }
+    }
+
+    public void stop() {
+        running = false;
+        try {
+            if (serverSocket != null) {
+                serverSocket.close();
+                System.out.println("Server stopped.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void clientDisconnected() {
+        System.out.println("Client disconnected.");
     }
 }

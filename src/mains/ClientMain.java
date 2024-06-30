@@ -9,44 +9,37 @@ import java.util.Scanner;
 
 public class ClientMain {
     public static void main(String[] args) {
-        String serverAddress = "localhost";  // The server's address
-        int serverPort = 8080;  // The server's port
+        final String serverHost = "localhost";
+        final int serverPort = 8080;
 
-        try (Socket socket = new Socket(serverAddress, serverPort);
+        try (Socket socket = new Socket(serverHost, serverPort);
              InputStream input = socket.getInputStream();
              OutputStream output = socket.getOutputStream();
-             Scanner serverInput = new Scanner(input);
-             PrintWriter serverOutput = new PrintWriter(output, true);
-             Scanner userInput = new Scanner(System.in)) {
+             Scanner scanner = new Scanner(input);
+             PrintWriter writer = new PrintWriter(output, true)) {
 
             System.out.println("Connected to the server.");
 
-            // Reading server responses continuously
-            Thread responseThread = new Thread(() -> {
-                try {
-                    while (serverInput.hasNextLine()) {
-                        String line = serverInput.nextLine();
-                        System.out.println(line);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-            responseThread.start();
-
-            // Sending commands
+            // User input
+            Scanner userInputScanner = new Scanner(System.in);
+            String userInput;
             while (true) {
                 System.out.print("Enter command: ");
-                String command = userInput.nextLine();
-                serverOutput.println(command);  // Send the command to the server
-                serverOutput.flush(); // Ensure the data is sent immediately
+                userInput = userInputScanner.nextLine();
+                writer.println(userInput);
 
-                // Exit loop if command is "exit"
-                if (command.equalsIgnoreCase("exit")) {
+                if (userInput.equalsIgnoreCase("exit")) {
                     break;
+                }
+
+                // Server response
+                if (scanner.hasNextLine()) {
+                    String serverResponse = scanner.nextLine();
+                    System.out.println(serverResponse);
                 }
             }
 
+            System.out.println("Disconnected from the server.");
         } catch (IOException e) {
             e.printStackTrace();
         }

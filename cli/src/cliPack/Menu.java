@@ -35,11 +35,13 @@ public class Menu {
                     System.out.println("Enter new access count:");
                     long newAccessCount = Long.parseLong(scanner.nextLine());
                     manager.update(updateAddress, newAccessCount);
+                    System.out.println("Update successful." + updateAddress + "=>" + newAccessCount); ;
                     break;
                 case 4:
                     System.out.println("Enter address number to delete (e.g., '1' for 'address_1'):");
                     String deleteAddress = "address_" + scanner.nextLine();
                     manager.delete(deleteAddress);
+                    System.out.println("Delete successful." + deleteAddress);
                     break;
                 case 5:
                     try {

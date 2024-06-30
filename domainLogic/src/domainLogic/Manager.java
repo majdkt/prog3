@@ -15,7 +15,6 @@ public class Manager implements Serializable {
         if (availableAddresses.isEmpty()) {
             address = "address_" + addressCounter;
             addressCounter++;
-            System.out.println("Saving audioFile in " + address);
         } else {
             address = availableAddresses.poll();
         }
@@ -34,9 +33,7 @@ public class Manager implements Serializable {
     public synchronized void update(String address, long newAccessCount) {
         AudioImpl audio = audioMap.get(address);
         if (audio != null) {
-            System.out.println("Old access count: " + audio.getAccessCount());
             audio.setAccessCount(newAccessCount);
-            System.out.println("New access count: " + audio.getAccessCount());
         }
     }
 
@@ -46,7 +43,6 @@ public class Manager implements Serializable {
             if (removedAudio != null) {
                 availableAddresses.add(address);
             }
-            System.out.println( "Removed address: " + address );
         }
     }
 
@@ -58,6 +54,5 @@ public class Manager implements Serializable {
         audioMap.clear();
         addressCounter = 0;
         availableAddresses.clear();
-        System.out.println("Logged out successfully. State has been reset.");
     }
 }

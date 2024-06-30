@@ -40,3 +40,4 @@ werden überprüft (aber nicht bewertet), wenn hier in der vorgegebenen Reihenfo
 - [ ] je ein Stellvertreter-Test für Einfügen und Anzeigen pro Server
 - [ ] Implementierung von Client und Server für TCP und UDP
 - [ ] Unterstützung mehrerer konkurierender Clients pro Server (TCP oder UDP)
+/ Notify ServerLogic
