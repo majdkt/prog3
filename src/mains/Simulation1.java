@@ -21,8 +21,8 @@ public class Simulation1 {
 
         Thread deleteThread = new Thread(() -> {
             while (true) {
-                String address = "address_" + (manager.read().size());
-                manager.delete(address);
+               // String address = "address_" + (manager.read().size());
+               // manager.delete(address);
                // manager.read().forEach(System.out::println);
                 try {
                     Thread.sleep(1000);
@@ -36,6 +36,6 @@ public class Simulation1 {
         deleteThread.start();
 
         System.out.println("Final list of audio files:");
-        manager.read().forEach(System.out::println);
+        //manager.read().forEach(System.out::println);
     }
 }

@@ -1,21 +1,22 @@
 package cliPack;
 
 import all.JosCommands;
-import contract.Audio;
-import contract.MediaContent;
+import domainLogic.Manager;
 import contract.Tag;
-import contract.Uploader;
-import domainLogic.*;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Menu {
     private Manager manager;
     private JosCommands josCommands = new JosCommands();
+    private final String currentUserName;
 
-    public Menu(Manager manager) {
+    public Menu(Manager manager, String currentUserName) {
         this.manager = manager;
+        this.currentUserName = currentUserName; // Store the name of the current user
     }
 
     public void run() {
@@ -27,10 +28,7 @@ public class Menu {
 
             switch (choice) {
                 case 1:
-                    Uploader uploader = new UploaderImpl("Majd");
-                    MediaContent newfile = new VideoImpl(uploader);
-                    manager.create(newfile);
-                   // System.out.println("audioFile saved.");
+                    handleCreateMedia(scanner);
                     break;
                 case 2:
                     manager.read().forEach(System.out::println);
@@ -40,12 +38,12 @@ public class Menu {
                     String updateAddress = "address_" + scanner.nextLine();
                     System.out.println("Enter new access count:");
                     long newAccessCount = Long.parseLong(scanner.nextLine());
-                    manager.update(updateAddress, newAccessCount);
+                    manager.updateAccessCount(updateAddress, newAccessCount);
                     break;
                 case 4:
                     System.out.println("Enter address number to delete (e.g., '1' for 'address_1'):");
                     String deleteAddress = "address_" + scanner.nextLine();
-                    manager.delete(deleteAddress);
+                    manager.deleteMedia(deleteAddress);
                     break;
                 case 5:
                     try {
@@ -54,6 +52,7 @@ public class Menu {
                     } catch (IOException e) {
                         System.out.println("Failed to save state: " + e.getMessage());
                     }
+                    break;
                 case 6:
                     try {
                         this.manager = josCommands.loadState();
@@ -84,5 +83,43 @@ public class Menu {
         System.out.println("7. LogOut");
         System.out.println("0. Exit");
         System.out.print("Enter your choice: ");
+    }
+
+    private void handleCreateMedia(Scanner scanner) {
+        System.out.println("Choose media type (1 for Audio, 2 for Video):");
+        int mediaChoice = Integer.parseInt(scanner.nextLine());
+        String mediaType;
+        switch (mediaChoice) {
+            case 1:
+                mediaType = "Audio";
+                break;
+            case 2:
+                mediaType = "Video";
+                break;
+            default:
+                System.out.println("Invalid media type.");
+                return;
+        }
+
+        System.out.println("Enter tags (comma separated, e.g., 'Animal,Music'):");
+        String tagsInput = scanner.nextLine();
+        Set<Tag> tags = new HashSet<>();
+        if (!tagsInput.trim().isEmpty()) {
+            String[] tagsArray = tagsInput.split(",");
+            for (String tagStr : tagsArray) {
+                try {
+                    tags.add(Tag.valueOf(tagStr.trim()));
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid tag: " + tagStr);
+                }
+            }
+        }
+
+        try {
+            manager.uploadMedia(currentUserName, mediaType, tags);
+            System.out.println("Media file created successfully.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error creating media: " + e.getMessage());
+        }
     }
 }

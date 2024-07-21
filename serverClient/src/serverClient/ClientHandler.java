@@ -81,14 +81,8 @@ class ClientHandler implements Runnable {
     private void readMedia(PrintWriter writer) {
         System.out.println("MediaList Sent");
 
-        List<String> mediaList = manager.read();
-        if (mediaList == null || mediaList.isEmpty()) {
-            writer.println("No Media Found");
-        } else {
-            for (String media : mediaList) {
-                writer.println(media);
-            }
-        }
+     //   List<String> mediaList = manager.read();
+
     }
 
     private void updateMedia(Scanner scanner, PrintWriter writer) {
@@ -96,7 +90,7 @@ class ClientHandler implements Runnable {
         String updateAddress = "address_" + scanner.nextLine();
         writer.println("Enter new access count:");
         long newAccessCount = Long.parseLong(scanner.nextLine());
-        manager.update(updateAddress, newAccessCount);
+      //  manager.update(updateAddress, newAccessCount);
         System.out.println("Access updated.");
         writer.println("Updated successfully: " + newAccessCount + " access count");
     }
@@ -104,14 +98,14 @@ class ClientHandler implements Runnable {
     private void deleteMedia(Scanner scanner, PrintWriter writer) {
         writer.println("Enter address number to delete (e.g., '1' for 'address_1'):");
         String deleteAddress = "address_" + scanner.nextLine();
-        manager.delete(deleteAddress);
+      //  manager.delete(deleteAddress);
         writer.println("Deleted successfully.");
         System.out.println("Media Deleted.");
     }
 
 
     private void logout(PrintWriter writer) {
-        manager.logout();
+       // manager.logout();
         System.out.println("Logged out successfully.");
         writer.println("Logged out.");
     }

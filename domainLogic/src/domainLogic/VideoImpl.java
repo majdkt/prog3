@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collection;
+import java.util.Set;
 
 public class VideoImpl implements Video, Serializable, MediaContent {
     private Uploader uploader;
@@ -17,14 +18,14 @@ public class VideoImpl implements Video, Serializable, MediaContent {
     private long size;
     private int resolution;
 
-    public VideoImpl(Uploader uploader) {
+    public VideoImpl(Uploader uploader, Set<Tag> tags, String address, long size, Duration availability, BigDecimal cost, int additionalAttribute) {
 
         this.uploader = uploader;
-        this.availability = availability;
-        this.cost = cost;
-        this.address = address;
-        this.tags = tags;
-        this.size = size;
+        this.availability = this.availability;
+        this.cost = this.cost;
+        this.address = this.address;
+        this.tags = this.tags;
+        this.size = this.size;
         this.resolution = resolution;
         this.accessCount = 0;
     }
@@ -72,5 +73,9 @@ public class VideoImpl implements Video, Serializable, MediaContent {
     @Override
     public void setAccessCount(long newAccessCount) {
         this.accessCount = accessCount;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

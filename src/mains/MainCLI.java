@@ -6,7 +6,8 @@ import domainLogic.Manager;
 public class MainCLI {
     public static void main(String[] args) {
         Manager manager = new Manager();
-        Menu menu = new Menu(manager);
+        String user = "Majd";
+        Menu menu = new Menu(manager,user);
         menu.run();
     }
 }

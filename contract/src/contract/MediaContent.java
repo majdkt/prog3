@@ -14,4 +14,6 @@ public interface MediaContent {
     BigDecimal getCost();
 
     void setAccessCount(long newAccessCount);
+
+    void setAddress(String address);
 }
