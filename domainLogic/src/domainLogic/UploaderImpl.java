@@ -2,7 +2,9 @@ package domainLogic;
 
 import contract.Uploader;
 
-public class UploaderImpl implements Uploader {
+import java.io.Serializable;
+
+public class UploaderImpl implements Uploader, Serializable {
     private String name;
 
     public UploaderImpl(String name) {

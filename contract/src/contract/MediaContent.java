@@ -9,9 +9,6 @@ public interface MediaContent {
     Collection<Tag> getTags();
     long getAccessCount();
     long getSize();
-    Uploader getUploader();
-    Duration getAvailability();
-    BigDecimal getCost();
 
     void setAccessCount(long newAccessCount);
 

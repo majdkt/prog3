@@ -20,13 +20,13 @@ public class AudioImpl implements Audio, Serializable, MediaContent {
     private Uploader uploader;
     private Duration availability;
     private BigDecimal cost;
+
     public AudioImpl() {
-        this.accessCount = 0;
+        // Default constructor
     }
 
     public AudioImpl(int samplingRate, String address, Collection<Tag> tags,
                      long accessCount, long size, Uploader uploader, Duration availability, BigDecimal cost) {
-
         this.samplingRate = samplingRate;
         this.address = address;
         this.tags = tags;
@@ -41,42 +41,48 @@ public class AudioImpl implements Audio, Serializable, MediaContent {
     public int getSamplingRate() {
         return samplingRate;
     }
+
     @Override
     public String getAddress() {
         return address;
     }
+
     public void setAddress(String address) {
         this.address = address;
     }
+
     @Override
     public Collection<Tag> getTags() {
         return tags;
     }
+
     @Override
     public long getAccessCount() {
         return accessCount;
     }
+
     public void setAccessCount(long newAccessCount) {
         this.accessCount = newAccessCount;
     }
+
     @Override
     public long getSize() {
         return size;
     }
+
     @Override
     public Uploader getUploader() {
         return uploader;
     }
+
     @Override
     public Duration getAvailability() {
         return availability;
     }
+
     @Override
     public BigDecimal getCost() {
         return cost;
     }
-    @Override
-    public String toString() {
-        return "AudioFile{address='" + address + "', accessCount=" + accessCount + "}";
-    }
+
 }

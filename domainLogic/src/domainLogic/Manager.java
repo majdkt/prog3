@@ -16,7 +16,7 @@ public class Manager implements Serializable {
     private Random random = new Random();
     private int addressCounter = 1;
 
-    public synchronized void uploadMedia(String uploaderName, String mediaType, Set<Tag> tags) {
+    public synchronized void create(String uploaderName, String mediaType, Set<Tag> tags) {
         long size = getRandomSize();
 
         // Check if adding this media would exceed the total capacity
@@ -40,10 +40,23 @@ public class Manager implements Serializable {
             );
         } else if (mediaType.equalsIgnoreCase("Video")) {
             mediaContent = new VideoImpl(
-                    new UploaderImpl(uploaderName),
-                    tags,
                     address,
+                    tags,
+                    0, // initial access count
                     size,
+                    new UploaderImpl(uploaderName),
+                    getRandomAvailability(),
+                    getRandomCost(),
+                    getRandomResolution()
+            );
+        } else if (mediaType.equalsIgnoreCase("AudioVideo")) {
+            mediaContent = new AudioVideoImpl(
+                    getRandomSamplingRate(),
+                    address,
+                    tags,
+                    0, // initial access count
+                    size,
+                    new UploaderImpl(uploaderName),
                     getRandomAvailability(),
                     getRandomCost(),
                     getRandomResolution()
@@ -58,7 +71,7 @@ public class Manager implements Serializable {
 
     private String getNextAddress() {
         if (availableAddresses.isEmpty()) {
-            return "address_" + addressCounter++;
+            return String.valueOf(addressCounter++);
         } else {
             return availableAddresses.poll();
         }
@@ -66,7 +79,7 @@ public class Manager implements Serializable {
 
     private long getRandomSize() {
         long minSize = 1_000_000L; // 1 MB in bytes
-        long maxSize = 100_000_000L; // 100 MB in bytes
+        long maxSize = 50_000_000L; // 50 MB in bytes
         return minSize + (long) (random.nextDouble() * (maxSize - minSize));
     }
 
@@ -83,7 +96,7 @@ public class Manager implements Serializable {
     }
 
     private BigDecimal getRandomCost() {
-        return BigDecimal.valueOf(random.nextDouble() * 10); // Random cost between 0 and 10
+        return BigDecimal.valueOf(random.nextDouble() * 10).setScale(2, BigDecimal.ROUND_HALF_UP); // Random cost between 0 and 10, rounded to 2 decimal places
     }
 
     public synchronized List<String> read() {
@@ -94,10 +107,34 @@ public class Manager implements Serializable {
         return mediaDetails;
     }
 
-    public synchronized void updateAccessCount(String address, long newAccessCount) {
+    private String getMediaDetails(MediaContent content) {
+        if (content instanceof AudioImpl) {
+            AudioImpl audio = (AudioImpl) content;
+            return String.format("Audio File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %s, Cost: %.2f, Tags: %s]",
+                    audio.getAddress(), audio.getSize() / 1_000_000.0, audio.getSamplingRate(), audio.getAccessCount(),
+                    audio.getUploader().getName(), audio.getAvailability().toDays(), audio.getCost(),
+                    audio.getTags());
+        } else if (content instanceof VideoImpl) {
+            VideoImpl video = (VideoImpl) content;
+            return String.format("Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %s, Cost: %.2f, Tags: %s]",
+                    video.getAddress(), video.getSize() / 1_000_000.0, video.getResolution(), video.getAccessCount(),
+                    video.getUploader().getName(), video.getAvailability().toDays(), video.getCost(),
+                    video.getTags());
+        } else if (content instanceof AudioVideoImpl) {
+            AudioVideoImpl audioVideo = (AudioVideoImpl) content;
+            return String.format("AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %s, Cost: %.2f, Tags: %s]",
+                    audioVideo.getAddress(), audioVideo.getSize() / 1_000_000.0, audioVideo.getSamplingRate(), audioVideo.getResolution(),
+                    audioVideo.getAccessCount(), audioVideo.getUploader().getName(), audioVideo.getAvailability().toDays(), audioVideo.getCost(),
+                    audioVideo.getTags());
+        } else {
+            return "Unknown media type";
+        }
+    }
+
+    public synchronized void updateAccessCount(String address) {
         MediaContent media = contentMap.get(address);
         if (media != null) {
-            media.setAccessCount(newAccessCount);
+            media.setAccessCount(media.getAccessCount()+1);
         }
     }
 
@@ -116,22 +153,20 @@ public class Manager implements Serializable {
         availableAddresses.clear();
     }
 
-    private String getMediaDetails(MediaContent content) {
-        if (content instanceof AudioImpl) {
-            AudioImpl audio = (AudioImpl) content;
-            return String.format("Audio File [Address: %s, Size: %d bytes, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %s, Cost: %s, Tags: %s]",
-                    audio.getAddress(), audio.getSize(), audio.getSamplingRate(), audio.getAccessCount(),
-                    audio.getUploader().getName(), audio.getAvailability(), audio.getCost(),
-                    audio.getTags());
-        } else if (content instanceof VideoImpl) {
-            VideoImpl video = (VideoImpl) content;
-            return String.format("Video File [Address: %s, Size: %d bytes, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %s, Cost: %s, Tags: %s]",
-                    video.getAddress(), video.getSize(), video.getResolution(), video.getAccessCount(),
-                    video.getUploader().getName(), video.getAvailability(), video.getCost(),
-                    video.getTags());
-        } else {
-            return "Unknown media type";
-        }
+    // Added for testing purposes
+    public Map<String, MediaContent> getContentMap() {
+        return contentMap;
     }
 
+    public Queue<String> getAvailableAddresses() {
+        return availableAddresses;
+    }
+
+    public long getCurrentTotalSize() {
+        return currentTotalSize;
+    }
+
+    public int getAddressCounter() {
+        return addressCounter;
+    }
 }
