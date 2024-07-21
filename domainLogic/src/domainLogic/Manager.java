@@ -1,58 +1,71 @@
 package domainLogic;
 
-import contract.Audio;
+import contract.MediaContent;
+import contract.Tag;
+import contract.Uploader;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.*;
 
 public class Manager implements Serializable {
-    private Map<String, AudioImpl> audioMap = new HashMap<>();
+    private Map<String, MediaContent> contentMap = new HashMap<>();
     private int addressCounter = 1;
     private Queue<String> availableAddresses = new LinkedList<>();
 
-    public synchronized void create() {
+    public synchronized void create(MediaContent content) {
         String address;
-        if (availableAddresses.isEmpty()) {
-            address = "address_" + addressCounter;
-            addressCounter++;
-        } else {
-            address = availableAddresses.poll();
+        if (content.toString() == "Audio"){
+            if (availableAddresses.isEmpty()) {
+                address = "address_" + addressCounter;
+                addressCounter++;
+            } else {
+                address = availableAddresses.poll();
+            }
+            contentMap.put(address, content);
         }
-        AudioImpl audioFile = new AudioImpl(address);
-        audioMap.put(address, audioFile);
+        else System.out.println("HAHAAHA");
+        System.out.println("Created content of type: " + getContentType(content));
     }
 
     public synchronized List<String> read() {
-        List<String> audioDetails = new ArrayList<>();
-        for (Map.Entry<String, AudioImpl> entry : audioMap.entrySet()) {
-            audioDetails.add(entry.getValue().toString());
+        List<String> contentDetails = new ArrayList<>();
+        for (Map.Entry<String, MediaContent> entry : contentMap.entrySet()) {
+            contentDetails.add(entry.getValue().toString());
         }
-        return audioDetails;
+        return contentDetails;
     }
 
     public synchronized void update(String address, long newAccessCount) {
-        AudioImpl audio = audioMap.get(address);
-        if (audio != null) {
-            audio.setAccessCount(newAccessCount);
+        MediaContent content = contentMap.get(address);
+        if (content != null) {
+            content.setAccessCount(newAccessCount);
         }
     }
 
     public synchronized void delete(String address) {
-        if (audioMap.remove(address)!=null){
-            Audio removedAudio = audioMap.remove(address);
-            if (removedAudio != null) {
-                availableAddresses.add(address);
-            }
+        MediaContent removedContent = contentMap.remove(address);
+        if (removedContent != null) {
+            availableAddresses.add(address);
         }
     }
 
-    public synchronized List<Audio> getAudioList() {
-        return new ArrayList<>(audioMap.values());
+    public synchronized List<MediaContent> getContentList() {
+        return new ArrayList<>(contentMap.values());
     }
 
     public synchronized void logout() {
-        audioMap.clear();
+        contentMap.clear();
         addressCounter = 0;
         availableAddresses.clear();
+    }
+
+    private String getContentType(MediaContent content) {
+        if (content instanceof contract.Audio) {
+            return "Audio";
+        } else if (content instanceof contract.Video) {
+            return "Video";
+        } else {
+            return "Unknown";
+        }
     }
 }

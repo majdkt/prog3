@@ -10,7 +10,7 @@ public class Simulation1 {
 
         Thread createThread = new Thread(() -> {
             while (true) {
-                manager.create();
+                //manager.create();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {

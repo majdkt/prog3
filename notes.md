@@ -20,3 +20,18 @@ like specific CLI For the server ? Do we need CLI For Server at all ? Nein
 - Can I create new interfaces that make life easier? like what ?
 you can edit the already exisitng interfaces
 , you maybe actually should do it.x
+
+
+
+
+
+
+
+I need an Interface in the domainlogic that combine somehow Uploadable and MediaContent interfaces
+
+
+
+
+
+
+

@@ -1,7 +1,11 @@
 package cliPack;
 
 import all.JosCommands;
-import domainLogic.Manager;
+import contract.Audio;
+import contract.MediaContent;
+import contract.Tag;
+import contract.Uploader;
+import domainLogic.*;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -23,8 +27,10 @@ public class Menu {
 
             switch (choice) {
                 case 1:
-                    manager.create();
-                    System.out.println("audioFile saved.");
+                    Uploader uploader = new UploaderImpl("Majd");
+                    MediaContent newfile = new VideoImpl(uploader);
+                    manager.create(newfile);
+                   // System.out.println("audioFile saved.");
                     break;
                 case 2:
                     manager.read().forEach(System.out::println);
