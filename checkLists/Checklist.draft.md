@@ -59,7 +59,7 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
 - [ ] vollständiges CLI (1)
 - [ ] alternatives CLI (1)
   * _angeben welche Funktionalität im alternativen CLI deaktiviert_
-- [ ] ausdifferenziertes event-System mit mindestens 3 events (2)
+- [ ] ausdifferenziertes event-System mit mindestens 3 EventListener (2)
 - [ ] observer (2)
 - [ ] angemessene Aufzählungstypen (2)
 - [ ] Simulation 2 (1)

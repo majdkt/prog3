@@ -2,6 +2,8 @@ package domainLogic;
 
 import contract.MediaContent;
 import contract.Tag;
+import events.*;
+import events.EventListener;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,12 +18,31 @@ public class Manager implements Serializable {
     private Random random = new Random();
     private int addressCounter = 1;
 
+    // New maps for producer management
+    private Map<String, UploaderImpl> uploaderMap = new HashMap<>();
+    private Map<UploaderImpl, List<String>> uploaderMediaMap = new HashMap<>();
+    private List<EventListener> eventListeners = new ArrayList<>();
+
+    public synchronized void addEventListener(EventListener listener) {
+        eventListeners.add(listener);
+    }
+
+    private void notifyListeners(Event event) {
+        for (EventListener listener : eventListeners) {
+            listener.onEvent(event);
+        }
+    }
+
     public synchronized void create(String uploaderName, String mediaType, Set<Tag> tags) {
         long size = getRandomSize();
 
-        // Check if adding this media would exceed the total capacity
         if (currentTotalSize + size > MAX_TOTAL_CAPACITY) {
             throw new IllegalArgumentException("Max capacity exceeded. Cannot upload media.");
+        }
+
+        UploaderImpl uploader = uploaderMap.get(uploaderName);
+        if (uploader == null) {
+            throw new IllegalArgumentException("Uploader does not exist.");
         }
 
         String address = getNextAddress();
@@ -32,9 +53,9 @@ public class Manager implements Serializable {
                     getRandomSamplingRate(),
                     address,
                     tags,
-                    0, // initial access count
+                    0,
                     size,
-                    new UploaderImpl(uploaderName),
+                    uploader,
                     getRandomAvailability(),
                     getRandomCost()
             );
@@ -42,9 +63,9 @@ public class Manager implements Serializable {
             mediaContent = new VideoImpl(
                     address,
                     tags,
-                    0, // initial access count
+                    0,
                     size,
-                    new UploaderImpl(uploaderName),
+                    uploader,
                     getRandomAvailability(),
                     getRandomCost(),
                     getRandomResolution()
@@ -54,9 +75,9 @@ public class Manager implements Serializable {
                     getRandomSamplingRate(),
                     address,
                     tags,
-                    0, // initial access count
+                    0,
                     size,
-                    new UploaderImpl(uploaderName),
+                    uploader,
                     getRandomAvailability(),
                     getRandomCost(),
                     getRandomResolution()
@@ -67,14 +88,13 @@ public class Manager implements Serializable {
 
         contentMap.put(address, mediaContent);
         currentTotalSize += size;
+
+        notifyListeners(new MediaUploadedEvent(uploaderName, mediaType, tags, size, getRandomCost()));
+        notifyListeners(new TagChangedEvent(getAllTags()));
     }
 
     private String getNextAddress() {
-        if (availableAddresses.isEmpty()) {
-            return String.valueOf(addressCounter++);
-        } else {
-            return availableAddresses.poll();
-        }
+        return String.valueOf(addressCounter++);
     }
 
     private long getRandomSize() {
@@ -107,22 +127,32 @@ public class Manager implements Serializable {
         return mediaDetails;
     }
 
+    public synchronized List<String> read1(String mediaType) {
+        List<String> mediaDetails = new ArrayList<>();
+        for (MediaContent content : contentMap.values()) {
+            if (mediaType == null || content.getClass().getSimpleName().equalsIgnoreCase(mediaType)) {
+                mediaDetails.add(getMediaDetails(content));
+            }
+        }
+        return mediaDetails;
+    }
+
     private String getMediaDetails(MediaContent content) {
         if (content instanceof AudioImpl) {
             AudioImpl audio = (AudioImpl) content;
-            return String.format("Audio File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %s, Cost: %.2f, Tags: %s]",
+            return String.format("Audio File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %d, Cost: %.2f, Tags: %s]",
                     audio.getAddress(), audio.getSize() / 1_000_000.0, audio.getSamplingRate(), audio.getAccessCount(),
                     audio.getUploader().getName(), audio.getAvailability().toDays(), audio.getCost(),
                     audio.getTags());
         } else if (content instanceof VideoImpl) {
             VideoImpl video = (VideoImpl) content;
-            return String.format("Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %s, Cost: %.2f, Tags: %s]",
+            return String.format("Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d, Cost: %.2f, Tags: %s]",
                     video.getAddress(), video.getSize() / 1_000_000.0, video.getResolution(), video.getAccessCount(),
                     video.getUploader().getName(), video.getAvailability().toDays(), video.getCost(),
                     video.getTags());
         } else if (content instanceof AudioVideoImpl) {
             AudioVideoImpl audioVideo = (AudioVideoImpl) content;
-            return String.format("AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %s, Cost: %.2f, Tags: %s]",
+            return String.format("AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d, Cost: %.2f, Tags: %s]",
                     audioVideo.getAddress(), audioVideo.getSize() / 1_000_000.0, audioVideo.getSamplingRate(), audioVideo.getResolution(),
                     audioVideo.getAccessCount(), audioVideo.getUploader().getName(), audioVideo.getAvailability().toDays(), audioVideo.getCost(),
                     audioVideo.getTags());
@@ -134,7 +164,8 @@ public class Manager implements Serializable {
     public synchronized void updateAccessCount(String address) {
         MediaContent media = contentMap.get(address);
         if (media != null) {
-            media.setAccessCount(media.getAccessCount()+1);
+            media.setAccessCount(media.getAccessCount() + 1);
+            notifyListeners(new AccessCountUpdatedEvent(address));
         }
     }
 
@@ -143,6 +174,20 @@ public class Manager implements Serializable {
         if (removedMedia != null) {
             currentTotalSize -= removedMedia.getSize();
             availableAddresses.add(address);
+            notifyListeners(new MediaDeletedEvent(address));
+        }
+    }
+
+    public synchronized void deleteUploader(String uploaderName) {
+        UploaderImpl uploader = uploaderMap.remove(uploaderName);
+        if (uploader != null) {
+            List<String> mediaList = uploaderMediaMap.remove(uploader);
+            if (mediaList != null) {
+                for (String address : mediaList) {
+                    contentMap.remove(address);
+                }
+            }
+            notifyListeners(new UploaderDeletedEvent(uploaderName));
         }
     }
 
@@ -151,9 +196,34 @@ public class Manager implements Serializable {
         currentTotalSize = 0;
         addressCounter = 1;
         availableAddresses.clear();
+        uploaderMap.clear();
+        uploaderMediaMap.clear();
     }
 
-    // Added for testing purposes
+    public synchronized void addUploader(String uploaderName) {
+        if (uploaderMap.containsKey(uploaderName)) {
+            throw new IllegalArgumentException("Uploader with this name already exists.");
+        }
+        uploaderMap.put(uploaderName, new UploaderImpl(uploaderName));
+    }
+
+    public synchronized Map<String, Integer> getUploaderMediaCount() {
+        Map<String, Integer> uploaderMediaCount = new HashMap<>();
+        for (Map.Entry<UploaderImpl, List<String>> entry : uploaderMediaMap.entrySet()) {
+            uploaderMediaCount.put(entry.getKey().getName(), entry.getValue().size());
+        }
+        return uploaderMediaCount;
+    }
+
+    public synchronized Set<Tag> getAllTags() {
+        Set<Tag> tags = new HashSet<>();
+        for (MediaContent content : contentMap.values()) {
+            tags.addAll(content.getTags());
+        }
+        return tags;
+    }
+
+    // Getter methods for testing purposes
     public Map<String, MediaContent> getContentMap() {
         return contentMap;
     }
