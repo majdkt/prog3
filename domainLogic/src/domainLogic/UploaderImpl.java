@@ -2,17 +2,27 @@ package domainLogic;
 
 import contract.Uploader;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class UploaderImpl implements Uploader, Serializable {
+public class UploaderImpl implements Uploader {
     private String name;
+    private List<String> mediaList;
 
     public UploaderImpl(String name) {
         this.name = name;
+        this.mediaList = new ArrayList<>();
     }
 
-    @Override
     public String getName() {
         return name;
+    }
+
+    public void addMedia(String address) {
+        mediaList.add(address);
+    }
+
+    public List<String> getMediaList() {
+        return mediaList;
     }
 }

@@ -13,4 +13,8 @@ public interface MediaContent {
     void setAccessCount(long newAccessCount);
 
     void setAddress(String address);
+
+    BigDecimal getCost();
+
+    Uploader getUploader();
 }

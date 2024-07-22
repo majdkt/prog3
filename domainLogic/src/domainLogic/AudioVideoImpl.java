@@ -4,11 +4,11 @@ import contract.Audio;
 import contract.Video;
 import contract.MediaContent;
 import contract.Tag;
-import domainLogic.UploaderImpl;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable {
@@ -21,9 +21,10 @@ public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable 
     private final Duration availability;
     private final BigDecimal cost;
     private final int resolution;
+    LocalDateTime uploadDate;
 
     // Constructor
-    public AudioVideoImpl(int samplingRate, String address, Set<Tag> tags, long accessCount, long size, UploaderImpl uploader, Duration availability, BigDecimal cost, int resolution) {
+    public AudioVideoImpl(int samplingRate, String address, Set<Tag> tags, long accessCount, long size, UploaderImpl uploader, Duration availability, BigDecimal cost, int resolution, LocalDateTime uploadDate) {
         this.samplingRate = samplingRate;
         this.address = address;
         this.tags = tags;
@@ -91,5 +92,9 @@ public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable 
     @Override
     public BigDecimal getCost() {
         return cost;
+    }
+
+    public Object getUploadDate() {
+        return this.uploadDate;
     }
 }

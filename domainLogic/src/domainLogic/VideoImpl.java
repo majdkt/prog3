@@ -8,7 +8,9 @@ import contract.Video;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Set;
 
 public class VideoImpl implements Video, Serializable, MediaContent {
     private Uploader uploader;
@@ -20,7 +22,7 @@ public class VideoImpl implements Video, Serializable, MediaContent {
     private long size;
     private int resolution;
 
-    public VideoImpl() {
+    public VideoImpl(String address, Set<Tag> tags, int i, long size, UploaderImpl uploader, Duration randomAvailability, BigDecimal randomCost, int randomResolution, LocalDateTime uploadDate) {
         // Default constructor
     }
 

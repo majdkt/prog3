@@ -8,7 +8,9 @@ import contract.Uploader;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Set;
 
 public class AudioImpl implements Audio, Serializable, MediaContent {
     private static final long serialVersionUID = 1L;
@@ -21,7 +23,7 @@ public class AudioImpl implements Audio, Serializable, MediaContent {
     private Duration availability;
     private BigDecimal cost;
 
-    public AudioImpl() {
+    public AudioImpl(int randomSamplingRate, String address, Set<Tag> tags, int i, long size, UploaderImpl uploader, Duration randomAvailability, BigDecimal randomCost, LocalDateTime uploadDate) {
         // Default constructor
     }
 
