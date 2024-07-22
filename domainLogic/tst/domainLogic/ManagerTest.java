@@ -19,7 +19,7 @@ public class ManagerTest {
 
     @BeforeEach
     public void setUp() {
-        manager = new Manager();
+        //manager = new Manager();
     }
 
     @Test

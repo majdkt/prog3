@@ -9,19 +9,24 @@ import java.time.Duration;
 import java.util.*;
 
 public class Manager implements Serializable {
-    private static final long MAX_TOTAL_CAPACITY = 500_000_000L; // 500 MB in bytes
+    private final long MAX_TOTAL_CAPACITY; // 500 MB in bytes
     private Map<String, MediaContent> contentMap = new HashMap<>();
     private Queue<String> availableAddresses = new LinkedList<>();
     private long currentTotalSize = 0;
     private Random random = new Random();
     private int addressCounter = 1;
 
+    public Manager(long maxTotalCapacity) {
+        MAX_TOTAL_CAPACITY = maxTotalCapacity;
+    }
+
+
     public synchronized void create(String uploaderName, String mediaType, Set<Tag> tags) {
         long size = getRandomSize();
 
         // Check if adding this media would exceed the total capacity
         if (currentTotalSize + size > MAX_TOTAL_CAPACITY) {
-            throw new IllegalArgumentException("Max capacity exceeded. Cannot upload media.");
+            throw new IllegalArgumentException( MAX_TOTAL_CAPACITY + "haha" + size + " " + "Max capacity exceeded. Cannot upload media.");
         }
 
         String address = getNextAddress();
@@ -77,28 +82,6 @@ public class Manager implements Serializable {
         }
     }
 
-    private long getRandomSize() {
-        long minSize = 1_000_000L; // 1 MB in bytes
-        long maxSize = 50_000_000L; // 50 MB in bytes
-        return minSize + (long) (random.nextDouble() * (maxSize - minSize));
-    }
-
-    private int getRandomSamplingRate() {
-        return 44_100; // Example fixed sampling rate for simplicity
-    }
-
-    private int getRandomResolution() {
-        return 1080; // Example fixed resolution for simplicity
-    }
-
-    private Duration getRandomAvailability() {
-        return Duration.ofDays(random.nextInt(365)); // Random duration up to 1 year
-    }
-
-    private BigDecimal getRandomCost() {
-        return BigDecimal.valueOf(random.nextDouble() * 10).setScale(2, BigDecimal.ROUND_HALF_UP); // Random cost between 0 and 10, rounded to 2 decimal places
-    }
-
     public synchronized List<String> read() {
         List<String> mediaDetails = new ArrayList<>();
         for (Map.Entry<String, MediaContent> entry : contentMap.entrySet()) {
@@ -107,6 +90,7 @@ public class Manager implements Serializable {
         return mediaDetails;
     }
 
+    // AM besten sollte ersetzt werden durch Event-system
     private String getMediaDetails(MediaContent content) {
         if (content instanceof AudioImpl) {
             AudioImpl audio = (AudioImpl) content;
@@ -153,6 +137,32 @@ public class Manager implements Serializable {
         availableAddresses.clear();
     }
 
+
+    // Help methods
+    private long getRandomSize() {
+        long minSize = 1_000_000L; // 1 MB in bytes
+        long maxSize = 50_000_000L; // 50 MB in bytes
+        return minSize + (long) (random.nextDouble() * (maxSize - minSize));
+    }
+
+    private int getRandomSamplingRate() {
+        return 44_100;
+    }
+
+    private int getRandomResolution() {
+        return 1080;
+    }
+
+    private Duration getRandomAvailability() {
+        return Duration.ofDays(random.nextInt(365)); // Random duration up to 1 year
+    }
+
+    private BigDecimal getRandomCost() {
+        return BigDecimal.valueOf(random.nextDouble() * 10).setScale(2, BigDecimal.ROUND_HALF_UP); // Random cost between 0 and 10, rounded to 2 decimal places
+    }
+
+
+
     // Added for testing purposes
     public Map<String, MediaContent> getContentMap() {
         return contentMap;
@@ -169,4 +179,5 @@ public class Manager implements Serializable {
     public int getAddressCounter() {
         return addressCounter;
     }
+
 }

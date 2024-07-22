@@ -9,7 +9,7 @@ import java.util.Set;
 public class Simulation1 {
     private static volatile boolean running = true;
 
-    public static void main(String[] args) {
+      /*public static void main(String[] args) {
         Manager manager = new Manager();
         String uploaderName = "SimulationUser";
 
@@ -73,5 +73,5 @@ public class Simulation1 {
 
         System.out.println("Final list of media files:");
         manager.read().forEach(System.out::println);
-    }
+    } */
 }

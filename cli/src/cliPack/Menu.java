@@ -46,6 +46,7 @@ public class Menu {
                     try {
                         manager.create(uploaderName, mediaType, tags);
                         System.out.println("Media file saved.");
+                        System.out.println(manager.getCurrentTotalSize() + " rest size");
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage());
                     }

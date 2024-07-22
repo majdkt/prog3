@@ -9,8 +9,6 @@ public interface MediaContent {
     Collection<Tag> getTags();
     long getAccessCount();
     long getSize();
-
     void setAccessCount(long newAccessCount);
-
     void setAddress(String address);
 }
