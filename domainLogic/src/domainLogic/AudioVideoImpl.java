@@ -1,10 +1,6 @@
 package domainLogic;
 
-import contract.Audio;
-import contract.Video;
-import contract.MediaContent;
-import contract.Tag;
-import domainLogic.UploaderImpl;
+import contract.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -79,7 +75,7 @@ public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable 
     }
 
     @Override
-    public UploaderImpl getUploader() {
+    public Uploader getUploader() {
         return uploader;
     }
 

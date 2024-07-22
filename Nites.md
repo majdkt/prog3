@@ -4,7 +4,7 @@
 - There must be a methode to create an uploader
 - you can have a list of uploaders who don't have any media
 - You have first to create an Uploader, the uploader is allowed to be chosen and to upload MediaContent
-- Befehlssatz
+- Befehlssatz for CLI
   • :c Wechsel in den Einfügemodus ( Create )
   • :d Wechsel in den Löschmodus ( Delete )
   • :r Wechsel in den Anzeigemodus ( Read )
