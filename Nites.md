@@ -19,3 +19,12 @@
   content Audio
   tag i
   uploader
+
+
+Problems to solve:
+- If uploader exisits, ask if you want to add files to its name.
+  ( Maybe like, show users list to choose the uploader or create a new one)
+- create mode for existing uploader and for new uploader
+- show files of specific uploader
+- Size of created media is always 0, watch out max_capacity 
+- 

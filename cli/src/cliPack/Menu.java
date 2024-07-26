@@ -156,7 +156,7 @@ public class Menu {
         } else if (criteria.equalsIgnoreCase("uploader")) {
             System.out.println("Enter uploader name:");
             String uploaderName = scanner.nextLine().trim();
-            List<String> mediaDetails = manager.getMediaDetailsForUploader(uploaderName);
+            List<String> mediaDetails = manager.getAllUploaders();
             if (mediaDetails.isEmpty()) {
                 System.out.println("No media files for this uploader.");
             } else {

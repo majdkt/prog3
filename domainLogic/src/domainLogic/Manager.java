@@ -184,7 +184,7 @@ public class Manager implements Serializable {
         return Duration.ofDays(random.nextInt(365)); // Random duration up to 1 year
     }
 
-    public synchronized List<String> getMediaDetailsForUploader(String uploaderName) {
+    /*public synchronized List<String> getMediaDetailsForUploader(String uploaderName) {
         List<MediaContent> mediaList = uploaderMap.get(uploaderName);
         List<String> mediaDetails = new ArrayList<>();
         if (mediaList != null) {
@@ -193,5 +193,5 @@ public class Manager implements Serializable {
             }
         }
         return mediaDetails;
-    }
+    }*/
 }
