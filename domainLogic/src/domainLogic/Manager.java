@@ -10,11 +10,11 @@ import java.util.*;
 
 public class Manager implements Serializable {
     private final long MAX_TOTAL_CAPACITY; // Max capacity in bytes
-    private Map<String, MediaContent> contentMap = new HashMap<>();
+    Map<String, MediaContent> contentMap = new HashMap<>();
     private Set<String> uploaderSet = new HashSet<>();
-    private Queue<String> availableAddresses = new LinkedList<>();
-    private long currentTotalSize = 0;
-    private int addressCounter = 1;
+    Queue<String> availableAddresses = new LinkedList<>();
+    long currentTotalSize = 0;
+    int addressCounter = 1;
 
     public Manager(long maxTotalCapacity) {
         this.MAX_TOTAL_CAPACITY = maxTotalCapacity;
