@@ -8,6 +8,7 @@ import contract.Video;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ public class VideoImpl implements Video, Serializable, MediaContent {
     private long accessCount;
     private long size;
     private int resolution;
+    private LocalDateTime uploadDate;
 
 
     public VideoImpl(String address, Collection<Tag> tags, long accessCount, long size,
@@ -32,6 +34,7 @@ public class VideoImpl implements Video, Serializable, MediaContent {
         this.availability = availability;
         this.cost = cost;
         this.resolution = resolution;
+        this.uploadDate = LocalDateTime.now();
     }
 
     @Override
@@ -41,7 +44,7 @@ public class VideoImpl implements Video, Serializable, MediaContent {
 
     @Override
     public Duration getAvailability() {
-        return availability;
+        return Duration.between(uploadDate, LocalDateTime.now());
     }
 
     @Override

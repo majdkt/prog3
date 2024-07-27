@@ -5,6 +5,7 @@ import contract.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable {
@@ -17,6 +18,7 @@ public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable 
     private final Duration availability;
     private final BigDecimal cost;
     private final int resolution;
+    private LocalDateTime uploadDate;
 
 
     public AudioVideoImpl(int samplingRate, String address, Set<Tag> tags, int accessCount, long size, UploaderImpl uploader, Duration availability, BigDecimal cost, int resolution) {
@@ -29,6 +31,7 @@ public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable 
         this.availability = availability;
         this.cost = cost;
         this.resolution = resolution;
+        this.uploadDate = LocalDateTime.now();
     }
 
     // Implementations for Audio interface
@@ -76,7 +79,7 @@ public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable 
 
     @Override
     public Duration getAvailability() {
-        return availability;
+        return Duration.between(uploadDate, LocalDateTime.now());
     }
 
     @Override

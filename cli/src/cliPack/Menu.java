@@ -47,24 +47,26 @@ public class Menu {
         System.out.println("Enter uploader name:");
         String uploaderName = scanner.nextLine().trim();
 
+        // Try to create the uploader
         try {
             manager.createUploader(uploaderName);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            return; // Return to the menu if there's an issue creating the uploader
+            return; // Exit to the menu if there's an issue creating the uploader
         }
 
         while (true) {
-            System.out.println("Enter media details (type mediaType uploaderName size cost samplingRate/resolution [tags]) or type 'done' to finish:");
+            System.out.println("Enter media details (mediaType uploaderName size cost [samplingRate] [resolution] [tags]) or type 'done' to finish:");
             String mediaDetails = scanner.nextLine().trim();
 
             if (mediaDetails.equalsIgnoreCase("done")) {
-                break; // Exit loop and return to menu
+                break; // Exit the loop and return to the menu
             }
 
+            // Split the input details
             String[] details = mediaDetails.split(" ");
             if (details.length < 4) {
-                System.out.println("Invalid media details format.");
+                System.out.println("Invalid media details format. Minimum format is: mediaType uploaderName size cost");
                 continue; // Prompt for media details again
             }
 
@@ -77,24 +79,39 @@ public class Menu {
             Set<Tag> tags = new HashSet<>();
 
             try {
+                // Parse size and cost
                 size = Long.parseLong(details[2]);
                 cost = new BigDecimal(details[3]);
 
+                // Parse samplingRate and resolution based on media type
                 if (mediaType.equalsIgnoreCase("Audio")) {
+                    if (details.length < 5) {
+                        System.out.println("Missing sampling rate for Audio media.");
+                        continue;
+                    }
                     samplingRate = Integer.parseInt(details[4]);
-                }
-                if (mediaType.equalsIgnoreCase("Video") || mediaType.equalsIgnoreCase("AudioVideo")) {
+                } else if (mediaType.equalsIgnoreCase("Video") || mediaType.equalsIgnoreCase("AudioVideo")) {
+                    if (details.length < 5) {
+                        System.out.println("Missing resolution for Video/AudioVideo media.");
+                        continue;
+                    }
                     resolution = Integer.parseInt(details[4]);
+
                     if (mediaType.equalsIgnoreCase("AudioVideo")) {
+                        if (details.length < 6) {
+                            System.out.println("Missing sampling rate for AudioVideo media.");
+                            continue;
+                        }
                         samplingRate = Integer.parseInt(details[5]);
                     }
                 }
 
-                // Check if tags are present
+                // Parse tags if present
                 if (details.length > (mediaType.equalsIgnoreCase("AudioVideo") ? 6 : 5)) {
                     String tagInput = details[mediaType.equalsIgnoreCase("AudioVideo") ? 6 : 5];
                     if (!tagInput.trim().isEmpty()) {
-                        for (String tagStr : tagInput.split(",")) {
+                        String[] tagStrings = tagInput.split(",");
+                        for (String tagStr : tagStrings) {
                             try {
                                 Tag tag = Tag.valueOf(tagStr.trim());
                                 tags.add(tag);
@@ -108,13 +125,17 @@ public class Menu {
             } catch (NumberFormatException e) {
                 System.out.println("Invalid number format in media details.");
                 continue; // Prompt for media details again
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error parsing media details: " + e.getMessage());
+                continue; // Prompt for media details again
             }
 
+            // Try to create the media content
             try {
-                manager.create(uploader, mediaType, tags, size, cost, samplingRate, resolution, Duration.ofDays(1));
+                manager.create(uploader, mediaType, tags, size, cost, samplingRate, resolution,null);
                 System.out.println("Media file saved.");
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error creating media file: " + e.getMessage());
             }
         }
 
@@ -148,19 +169,21 @@ public class Menu {
             manager.read().forEach(System.out::println);
 
         } else if (criteria.equalsIgnoreCase("tag")) {
-            System.out.println("Enter tag:");
-            String tagInput = scanner.nextLine().trim();
-            try {
-                Tag tag = Tag.valueOf(tagInput);
-                manager.readByTag(tag).forEach(System.out::println);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Invalid tag.");
+            System.out.println("Tag status:");
+            Map<Tag, Boolean> tagStatus = manager.readByTag();
+
+            // Print out the status of each tag
+            for (Map.Entry<Tag, Boolean> entry : tagStatus.entrySet()) {
+                Tag tag = entry.getKey();
+                boolean isUsed = entry.getValue();
+                System.out.println("Tag: " + tag + " | Status: " + (isUsed ? "Used" : "Not Used"));
             }
 
         } else if (criteria.equalsIgnoreCase("uploader")) {
-            System.out.println("Enter uploader name:");
-            String uploaderName = scanner.nextLine().trim();
-            manager.readByUploader(uploaderName).forEach(System.out::println);
+            Map<String, Integer> mediaCounts = manager.readByUploader();
+            System.out.println("Media counts by uploader:");
+            mediaCounts.forEach((name, count) -> System.out.println(name + ": " + count));
+
 
         } else if (criteria.equalsIgnoreCase("mediaType")) {
             System.out.println("Enter media type (Audio/Video/AudioVideo):");

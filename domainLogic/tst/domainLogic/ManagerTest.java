@@ -93,22 +93,36 @@ public class ManagerTest {
 
     @Test
     public void testReadByTag() {
-        manager.createUploader("uploader1");
-        Tag tag1 = Tag.Review;
-        Set<Tag> tags = new HashSet<>();
-        tags.add(tag1);
-        manager.create("uploader1", "Audio", tags, 1000, BigDecimal.TEN, 44100, 1080, Duration.ofDays(30));
-        assertEquals(1, manager.readByTag(tag1).size());
+        // Add media content with various tags
+       // manager.create("uploader1", "Audio", Set.of(Tag.Music, Tag.Review), 1000, BigDecimal.TEN, 44100, 1080, Duration.ofDays(30));
+       // manager.create("uploader2", "Video", Set.of(Tag.News), 2000, BigDecimal.valueOf(20), 44100, 1080, Duration.ofDays(30));
+
+        // Verify the status of tags
+        Map<Tag, Boolean> tagStatus = manager.readByTag();
+        assertTrue(tagStatus.get(Tag.Music));
+        assertTrue(tagStatus.get(Tag.Review));
+        assertTrue(tagStatus.get(Tag.News));
+        assertFalse(tagStatus.get(Tag.Animal)); // Assuming Tag.Animal was not used
     }
 
     @Test
     public void testReadByUploader() {
+        // Create uploaders
         manager.createUploader("uploader1");
         manager.createUploader("uploader2");
+
+        // Upload media for each uploader
         manager.create("uploader1", "Audio", new HashSet<>(), 1000, BigDecimal.TEN, 44100, 1080, Duration.ofDays(30));
+        manager.create("uploader1", "Video", new HashSet<>(), 2000, BigDecimal.valueOf(20), 44100, 1080, Duration.ofDays(30));
         manager.create("uploader2", "Video", new HashSet<>(), 2000, BigDecimal.valueOf(20), 44100, 1080, Duration.ofDays(30));
-        assertEquals(1, manager.readByUploader("uploader1").size());
-        assertEquals(1, manager.readByUploader("uploader2").size());
+
+        // Read media counts by uploader
+        Map<String, Integer> mediaCounts = manager.readByUploader();
+
+        // Verify media counts
+        assertEquals(2, mediaCounts.size(), "There should be 2 uploaders in the map");
+        assertEquals(2, mediaCounts.get("uploader1"), "uploader1 should have 2 media items");
+        assertEquals(1, mediaCounts.get("uploader2"), "uploader2 should have 1 media item");
     }
 
     @Test

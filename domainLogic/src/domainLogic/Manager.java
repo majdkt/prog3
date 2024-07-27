@@ -112,24 +112,33 @@ public class Manager implements Serializable {
         return mediaDetails;
     }
 
-    public synchronized List<String> readByTag(Tag tag) {
-        List<String> mediaDetails = new ArrayList<>();
+    public synchronized Map<Tag, Boolean> readByTag() {
+        Map<Tag, Boolean> tagStatus = new HashMap<>();
+
         for (MediaContent content : contentMap.values()) {
-            if (content.getTags().contains(tag)) {
-                mediaDetails.add(getMediaDetails(content));
+            for (Tag tag : content.getTags()) {
+                tagStatus.put(tag, true);
             }
         }
-        return mediaDetails;
+
+        // Ensure all tags are accounted for in the response
+        for (Tag tag : Tag.values()) {
+            if (!tagStatus.containsKey(tag)) {
+                tagStatus.put(tag, false);
+            }
+        }
+
+        return tagStatus;
     }
 
-    public synchronized List<String> readByUploader(String uploaderName) {
-        List<String> mediaDetails = new ArrayList<>();
+
+    public synchronized Map<String, Integer> readByUploader() {
+        Map<String, Integer> uploaderMediaCount = new HashMap<>();
         for (MediaContent content : contentMap.values()) {
-            if (content.getUploader().getName().equals(uploaderName)) {
-                mediaDetails.add(getMediaDetails(content));
-            }
+            String uploaderName = content.getUploader().getName();
+            uploaderMediaCount.put(uploaderName, uploaderMediaCount.getOrDefault(uploaderName, 0) + 1);
         }
-        return mediaDetails;
+        return uploaderMediaCount;
     }
 
     public synchronized List<String> readByMediaType(String mediaType) {
@@ -144,25 +153,24 @@ public class Manager implements Serializable {
         return mediaDetails;
     }
 
-    // AM besten sollte ersetzt werden durch Event-system
     private String getMediaDetails(MediaContent content) {
         if (content instanceof AudioImpl) {
             AudioImpl audio = (AudioImpl) content;
-            return String.format("Audio File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %s, Cost: %.2f, Tags: %s]",
+            return String.format("Audio File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %d millis, Cost: %.2f, Tags: %s]",
                     audio.getAddress(), audio.getSize() / 1_000_000.0, audio.getSamplingRate(), audio.getAccessCount(),
-                    audio.getUploader().getName(), audio.getAvailability().toDays(), audio.getCost(),
+                    audio.getUploader().getName(), audio.getAvailability().toMillis(), audio.getCost(),
                     audio.getTags());
         } else if (content instanceof VideoImpl) {
             VideoImpl video = (VideoImpl) content;
-            return String.format("Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %s, Cost: %.2f, Tags: %s]",
+            return String.format("Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d millis, Cost: %.2f, Tags: %s]",
                     video.getAddress(), video.getSize() / 1_000_000.0, video.getResolution(), video.getAccessCount(),
-                    video.getUploader().getName(), video.getAvailability().toDays(), video.getCost(),
+                    video.getUploader().getName(), video.getAvailability().toMillis(), video.getCost(),
                     video.getTags());
         } else if (content instanceof AudioVideoImpl) {
             AudioVideoImpl audioVideo = (AudioVideoImpl) content;
-            return String.format("AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %s, Cost: %.2f, Tags: %s]",
+            return String.format("AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d millis, Cost: %.2f, Tags: %s]",
                     audioVideo.getAddress(), audioVideo.getSize() / 1_000_000.0, audioVideo.getSamplingRate(), audioVideo.getResolution(),
-                    audioVideo.getAccessCount(), audioVideo.getUploader().getName(), audioVideo.getAvailability().toDays(), audioVideo.getCost(),
+                    audioVideo.getAccessCount(), audioVideo.getUploader().getName(), audioVideo.getAvailability().toMillis(), audioVideo.getCost(),
                     audioVideo.getTags());
         } else {
             return "Unknown media type";
@@ -191,5 +199,4 @@ public class Manager implements Serializable {
         addressCounter = 1;
         availableAddresses.clear();
     }
-
 }

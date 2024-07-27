@@ -8,6 +8,7 @@ import contract.Uploader;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ public class AudioImpl implements Audio, Serializable, MediaContent {
     private Uploader uploader;
     private Duration availability;
     private BigDecimal cost;
+    private LocalDateTime uploadDate;
 
     public AudioImpl(int samplingRate, String address, Collection<Tag> tags,
                      long accessCount, long size, Uploader uploader, Duration availability, BigDecimal cost) {
@@ -30,6 +32,7 @@ public class AudioImpl implements Audio, Serializable, MediaContent {
         this.accessCount = accessCount;
         this.size = size;
         this.uploader = uploader;
+        this.uploadDate = LocalDateTime.now();
         this.availability = availability;
         this.cost = cost;
     }
@@ -70,9 +73,8 @@ public class AudioImpl implements Audio, Serializable, MediaContent {
 
     @Override
     public Duration getAvailability() {
-        return availability;
+        return Duration.between(uploadDate, LocalDateTime.now());
     }
-
     @Override
     public BigDecimal getCost() {
         return cost;
