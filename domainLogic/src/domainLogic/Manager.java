@@ -7,15 +7,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.*;
-import java.util.List;
 
 public class Manager implements Serializable {
     private final long MAX_TOTAL_CAPACITY; // Max capacity in bytes
     private Map<String, MediaContent> contentMap = new HashMap<>();
-    private Map<String, UploaderImpl> uploaderMap = new HashMap<>();
+    private Set<String> uploaderSet = new HashSet<>();
     private Queue<String> availableAddresses = new LinkedList<>();
     private long currentTotalSize = 0;
-    private Random random = new Random();
     private int addressCounter = 1;
 
     public Manager(long maxTotalCapacity) {
@@ -24,28 +22,27 @@ public class Manager implements Serializable {
 
     // Uploader management methods
     public synchronized void createUploader(String uploaderName) {
-        if (uploaderMap.containsKey(uploaderName)) {
+        if (uploaderSet.contains(uploaderName)) {
             throw new IllegalArgumentException("Uploader already exists.");
         }
-        uploaderMap.put(uploaderName, new UploaderImpl(uploaderName));
+        uploaderSet.add(uploaderName);
     }
 
-
     public synchronized void deleteUploader(String uploaderName) {
-        if (!uploaderMap.containsKey(uploaderName)) {
+        if (!uploaderSet.contains(uploaderName)) {
             throw new IllegalArgumentException("Uploader not found.");
         }
-        uploaderMap.remove(uploaderName);
+        uploaderSet.remove(uploaderName);
         contentMap.values().removeIf(content -> content.getUploader().getName().equals(uploaderName));
     }
 
     public synchronized List<String> getAllUploaders() {
-        return new ArrayList<>(uploaderMap.keySet());
+        return new ArrayList<>(uploaderSet);
     }
 
     // Media management methods
-    public synchronized void create(String uploaderName, String mediaType, Set<Tag> tags, long size, BigDecimal cost, int samplingRate, int resolution) {
-        if (!uploaderMap.containsKey(uploaderName)) {
+    public synchronized void create(String uploaderName, String mediaType, Set<Tag> tags, long size, BigDecimal cost, int samplingRate, int resolution, Duration availability) {
+        if (!uploaderSet.contains(uploaderName)) {
             throw new IllegalArgumentException("Uploader does not exist.");
         }
 
@@ -64,8 +61,8 @@ public class Manager implements Serializable {
                     tags,
                     0, // initial access count
                     size,
-                    uploaderMap.get(uploaderName),
-                    getRandomAvailability(),
+                    new UploaderImpl(uploaderName), // Still using UploaderImpl for consistency in MediaContent
+                    availability,
                     cost
             );
         } else if (mediaType.equalsIgnoreCase("Video")) {
@@ -74,8 +71,8 @@ public class Manager implements Serializable {
                     tags,
                     0, // initial access count
                     size,
-                    uploaderMap.get(uploaderName),
-                    getRandomAvailability(),
+                    new UploaderImpl(uploaderName),
+                    availability,
                     cost,
                     resolution
             );
@@ -86,8 +83,8 @@ public class Manager implements Serializable {
                     tags,
                     0, // initial access count
                     size,
-                    uploaderMap.get(uploaderName),
-                    getRandomAvailability(),
+                    new UploaderImpl(uploaderName),
+                    availability,
                     cost,
                     resolution
             );
@@ -119,6 +116,28 @@ public class Manager implements Serializable {
         List<String> mediaDetails = new ArrayList<>();
         for (MediaContent content : contentMap.values()) {
             if (content.getTags().contains(tag)) {
+                mediaDetails.add(getMediaDetails(content));
+            }
+        }
+        return mediaDetails;
+    }
+
+    public synchronized List<String> readByUploader(String uploaderName) {
+        List<String> mediaDetails = new ArrayList<>();
+        for (MediaContent content : contentMap.values()) {
+            if (content.getUploader().getName().equals(uploaderName)) {
+                mediaDetails.add(getMediaDetails(content));
+            }
+        }
+        return mediaDetails;
+    }
+
+    public synchronized List<String> readByMediaType(String mediaType) {
+        List<String> mediaDetails = new ArrayList<>();
+        for (MediaContent content : contentMap.values()) {
+            if ((mediaType.equalsIgnoreCase("Audio") && content instanceof AudioImpl) ||
+                    (mediaType.equalsIgnoreCase("Video") && content instanceof VideoImpl) ||
+                    (mediaType.equalsIgnoreCase("AudioVideo") && content instanceof AudioVideoImpl)) {
                 mediaDetails.add(getMediaDetails(content));
             }
         }
@@ -167,31 +186,10 @@ public class Manager implements Serializable {
 
     public synchronized void logout() {
         contentMap.clear();
-        uploaderMap.clear();
+        uploaderSet.clear();
         currentTotalSize = 0;
         addressCounter = 1;
         availableAddresses.clear();
     }
 
-    // Helper methods
-    private long getRandomSize() {
-        long minSize = 1_000_000L; // 1 MB in bytes
-        long maxSize = 50_000_000L; // 50 MB in bytes
-        return minSize + (long) (random.nextDouble() * (maxSize - minSize));
-    }
-
-    private Duration getRandomAvailability() {
-        return Duration.ofDays(random.nextInt(365)); // Random duration up to 1 year
-    }
-
-    /*public synchronized List<String> getMediaDetailsForUploader(String uploaderName) {
-        List<MediaContent> mediaList = uploaderMap.get(uploaderName);
-        List<String> mediaDetails = new ArrayList<>();
-        if (mediaList != null) {
-            for (MediaContent content : mediaList) {
-                mediaDetails.add(getMediaDetails(content));
-            }
-        }
-        return mediaDetails;
-    }*/
 }

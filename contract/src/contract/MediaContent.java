@@ -8,7 +8,5 @@ public interface MediaContent {
     long getAccessCount();
     long getSize();
     void setAccessCount(long newAccessCount);
-    void setAddress(String address);
-
     Uploader getUploader();
 }

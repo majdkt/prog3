@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collection;
+import java.util.Set;
 
 public class AudioImpl implements Audio, Serializable, MediaContent {
     private static final long serialVersionUID = 1L;
@@ -20,10 +21,6 @@ public class AudioImpl implements Audio, Serializable, MediaContent {
     private Uploader uploader;
     private Duration availability;
     private BigDecimal cost;
-
-    public AudioImpl() {
-        // Default constructor
-    }
 
     public AudioImpl(int samplingRate, String address, Collection<Tag> tags,
                      long accessCount, long size, Uploader uploader, Duration availability, BigDecimal cost) {
@@ -45,10 +42,6 @@ public class AudioImpl implements Audio, Serializable, MediaContent {
     @Override
     public String getAddress() {
         return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     @Override
@@ -84,5 +77,4 @@ public class AudioImpl implements Audio, Serializable, MediaContent {
     public BigDecimal getCost() {
         return cost;
     }
-
 }

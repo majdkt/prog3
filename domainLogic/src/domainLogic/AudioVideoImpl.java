@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable {
     private final int samplingRate;
-    private final String address;
+    private String address;
     private final Set<Tag> tags;
     private long accessCount;
     private final long size;
@@ -18,8 +18,8 @@ public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable 
     private final BigDecimal cost;
     private final int resolution;
 
-    // Constructor
-    public AudioVideoImpl(int samplingRate, String address, Set<Tag> tags, long accessCount, long size, UploaderImpl uploader, Duration availability, BigDecimal cost, int resolution) {
+
+    public AudioVideoImpl(int samplingRate, String address, Set<Tag> tags, int accessCount, long size, UploaderImpl uploader, Duration availability, BigDecimal cost, int resolution) {
         this.samplingRate = samplingRate;
         this.address = address;
         this.tags = tags;
@@ -62,11 +62,6 @@ public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable 
     @Override
     public void setAccessCount(long accessCount) {
         this.accessCount = accessCount;
-    }
-
-    @Override
-    public void setAddress(String address) {
-
     }
 
     @Override

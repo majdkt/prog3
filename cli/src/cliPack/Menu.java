@@ -6,6 +6,7 @@ import contract.Tag;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.*;
 
 public class Menu {
@@ -79,16 +80,19 @@ public class Menu {
                 size = Long.parseLong(details[2]);
                 cost = new BigDecimal(details[3]);
 
-                if (mediaType.equalsIgnoreCase("Audio") || mediaType.equalsIgnoreCase("AudioVideo")) {
+                if (mediaType.equalsIgnoreCase("Audio")) {
                     samplingRate = Integer.parseInt(details[4]);
                 }
                 if (mediaType.equalsIgnoreCase("Video") || mediaType.equalsIgnoreCase("AudioVideo")) {
                     resolution = Integer.parseInt(details[4]);
+                    if (mediaType.equalsIgnoreCase("AudioVideo")) {
+                        samplingRate = Integer.parseInt(details[5]);
+                    }
                 }
 
                 // Check if tags are present
-                if (details.length > 5) {
-                    String tagInput = details[5];
+                if (details.length > (mediaType.equalsIgnoreCase("AudioVideo") ? 6 : 5)) {
+                    String tagInput = details[mediaType.equalsIgnoreCase("AudioVideo") ? 6 : 5];
                     if (!tagInput.trim().isEmpty()) {
                         for (String tagStr : tagInput.split(",")) {
                             try {
@@ -107,7 +111,7 @@ public class Menu {
             }
 
             try {
-                manager.create(uploader, mediaType, tags, size, cost, samplingRate, resolution);
+                manager.create(uploader, mediaType, tags, size, cost, samplingRate, resolution, Duration.ofDays(1));
                 System.out.println("Media file saved.");
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -136,7 +140,7 @@ public class Menu {
     }
 
     private void handleRead() {
-        System.out.println("Enter read criteria (content/tag/uploader):");
+        System.out.println("Enter read criteria (content/tag/uploader/mediaType):");
         String criteria = scanner.nextLine().trim();
 
         if (criteria.equalsIgnoreCase("content")) {
@@ -156,12 +160,12 @@ public class Menu {
         } else if (criteria.equalsIgnoreCase("uploader")) {
             System.out.println("Enter uploader name:");
             String uploaderName = scanner.nextLine().trim();
-            List<String> mediaDetails = manager.getAllUploaders();
-            if (mediaDetails.isEmpty()) {
-                System.out.println("No media files for this uploader.");
-            } else {
-                mediaDetails.forEach(System.out::println);
-            }
+            manager.readByUploader(uploaderName).forEach(System.out::println);
+
+        } else if (criteria.equalsIgnoreCase("mediaType")) {
+            System.out.println("Enter media type (Audio/Video/AudioVideo):");
+            String mediaType = scanner.nextLine().trim();
+            manager.readByMediaType(mediaType).forEach(System.out::println);
 
         } else {
             System.out.println("Invalid criteria.");
@@ -202,7 +206,7 @@ public class Menu {
         System.out.println("Command list:");
         System.out.println(":c - Create uploader and media files. To end media input, type 'done'.");
         System.out.println(":d - Delete uploader or media.");
-        System.out.println(":r - Read content by criteria (content/tag/uploader).");
+        System.out.println(":r - Read content by criteria (content/tag/uploader/mediaType).");
         System.out.println(":u - Update media access count.");
         System.out.println(":p - Persistence (save/load state).");
         System.out.println(":h - Help.");
