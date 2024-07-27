@@ -11,5 +11,6 @@
     <orderEntry type="module" module-name="cli" />
     <orderEntry type="module" module-name="contract" />
     <orderEntry type="module" module-name="serverClient" />
+    <orderEntry type="module" module-name="eventSystem" />
   </component>
 </module>

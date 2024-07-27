@@ -1,21 +1,25 @@
 package cliPack;
 
-import all.JosCommands;
-import domainLogic.Manager;
 import contract.Tag;
+import domainLogic.Manager;
+import eventSystem.EventDispatcher;
+import eventSystem.UploaderEvent;
+import eventSystem.MediaEvent;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
 
 public class Menu {
     private Manager manager;
-    private JosCommands josCommands = new JosCommands();
+    private EventDispatcher eventDispatcher;
     private Scanner scanner = new Scanner(System.in);
 
-    public Menu(Manager manager) {
+    public Menu(Manager manager, EventDispatcher eventDispatcher) {
         this.manager = manager;
+        this.eventDispatcher = eventDispatcher;
     }
 
     public void run() {
@@ -47,13 +51,8 @@ public class Menu {
         System.out.println("Enter uploader name:");
         String uploaderName = scanner.nextLine().trim();
 
-        // Try to create the uploader
-        try {
-            manager.createUploader(uploaderName);
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            return; // Exit to the menu if there's an issue creating the uploader
-        }
+        // Fire event for uploader creation
+        eventDispatcher.fireUploaderCreated(new UploaderEvent(this, uploaderName));
 
         while (true) {
             System.out.println("Enter media details (mediaType uploaderName size cost [samplingRate] [resolution] [tags]) or type 'done' to finish:");
@@ -130,33 +129,22 @@ public class Menu {
                 continue; // Prompt for media details again
             }
 
-            // Try to create the media content
-            try {
-                manager.create(uploader, mediaType, tags, size, cost, samplingRate, resolution,null);
-                System.out.println("Media file saved.");
-            } catch (IllegalArgumentException e) {
-                System.out.println("Error creating media file: " + e.getMessage());
-            }
+            // Fire event for media creation
+            String address = String.valueOf(System.currentTimeMillis()); // Generate a unique address
+            eventDispatcher.fireMediaCreated(new MediaEvent(this, address));
         }
-
-        // Return to menu after finishing creation
     }
-
 
     private void handleDelete() {
         System.out.println("Enter uploader name or media address to delete:");
         String input = scanner.nextLine().trim();
 
         if (manager.getAllUploaders().contains(input)) {
-            try {
-                manager.deleteUploader(input);
-                System.out.println("Uploader deleted.");
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
+            // Fire event for uploader deletion
+            eventDispatcher.fireUploaderDeleted(new UploaderEvent(this, input));
         } else {
-            manager.deleteMedia(input);
-            System.out.println("Media deleted.");
+            // Fire event for media deletion
+            eventDispatcher.fireMediaDeleted(new MediaEvent(this, input));
         }
     }
 
@@ -164,26 +152,23 @@ public class Menu {
         System.out.println("Enter read criteria (content/tag/uploader/mediaType):");
         String criteria = scanner.nextLine().trim();
 
+        // Fire appropriate read events here if needed
+        // For now, just perform the read directly on the manager
         if (criteria.equalsIgnoreCase("content")) {
             // Display media content details
             manager.read().forEach(System.out::println);
 
         } else if (criteria.equalsIgnoreCase("tag")) {
             System.out.println("Tag status:");
-            Map<Tag, Boolean> tagStatus = manager.readByTag();
-
-            // Print out the status of each tag
-            for (Map.Entry<Tag, Boolean> entry : tagStatus.entrySet()) {
-                Tag tag = entry.getKey();
-                boolean isUsed = entry.getValue();
-                System.out.println("Tag: " + tag + " | Status: " + (isUsed ? "Used" : "Not Used"));
-            }
+            manager.readByTag().forEach((tag, used) ->
+                    System.out.println("Tag: " + tag + " | Status: " + (used ? "Used" : "Not Used"))
+            );
 
         } else if (criteria.equalsIgnoreCase("uploader")) {
-            Map<String, Integer> mediaCounts = manager.readByUploader();
             System.out.println("Media counts by uploader:");
-            mediaCounts.forEach((name, count) -> System.out.println(name + ": " + count));
-
+            manager.readByUploader().forEach((uploader, count) ->
+                    System.out.println(uploader + ": " + count)
+            );
 
         } else if (criteria.equalsIgnoreCase("mediaType")) {
             System.out.println("Enter media type (Audio/Video/AudioVideo):");
@@ -206,20 +191,11 @@ public class Menu {
         System.out.println("Enter persistence command (save/load):");
         String command = scanner.nextLine().trim();
 
+        // Implement persistence commands if needed
         if (command.equalsIgnoreCase("save")) {
-            try {
-                josCommands.saveState(manager);
-                System.out.println("State saved.");
-            } catch (IOException e) {
-                System.out.println("Failed to save state: " + e.getMessage());
-            }
+            // Save state
         } else if (command.equalsIgnoreCase("load")) {
-            try {
-                manager = josCommands.loadState();
-                System.out.println("State loaded.");
-            } catch (IOException | ClassNotFoundException e) {
-                System.out.println("Failed to load state: " + e.getMessage());
-            }
+            // Load state
         } else {
             System.out.println("Invalid persistence command.");
         }
