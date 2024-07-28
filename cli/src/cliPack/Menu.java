@@ -5,7 +5,6 @@ import eventSystem.EventDispatcher;
 import eventSystem.events.*;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -100,7 +99,7 @@ public class Menu {
                     resolution = Integer.parseInt(details[4]);
 
                     if (mediaType.equalsIgnoreCase("AudioVideo")) {
-                        if (details.length < 5) {
+                        if (details.length < 6) {
                             System.out.println("Missing resolution rate for AudioVideo media.");
                             continue;
                         }
@@ -165,7 +164,7 @@ public class Menu {
                 eventDispatcher.dispatch(new ReadByUploaderEvent());
                 break;
             case "mediaType":
-                System.out.println("Enter media type (audio/video/audioVideo):");
+                System.out.println("enter media type (audio/video/audioVideo):");
                 String mediaType = scanner.nextLine().trim();
                 // Dispatch read by media type event
                 eventDispatcher.dispatch(new ReadByMediaTypeEvent(mediaType));
