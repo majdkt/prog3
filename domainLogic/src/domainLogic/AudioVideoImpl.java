@@ -8,7 +8,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable {
+public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable, AudioVideo {
     private final int samplingRate;
     private String address;
     private final Set<Tag> tags;

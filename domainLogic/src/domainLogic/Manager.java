@@ -39,6 +39,10 @@ public class Manager implements Serializable {
         return new ArrayList<>(uploaderSet);
     }
 
+    public boolean uploaderExists(String uploaderName) {
+        return uploaderSet.contains(uploaderName);
+    }
+
     // Media management methods
     public synchronized void create(String uploaderName, String mediaType, Set<Tag> tags, long size, BigDecimal cost, int samplingRate, int resolution, Duration availability) {
         if (!uploaderSet.contains(uploaderName)) {
@@ -166,7 +170,7 @@ public class Manager implements Serializable {
                     video.getUploader().getName(), video.getAvailability().toMinutes() , video.getCost(),
                     video.getTags());
         } else if (content instanceof AudioVideoImpl) {
-            AudioVideo audioVideo = (AudioVideo) content;
+            AudioVideo audioVideo = (AudioVideoImpl) content;
             return String.format("AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d millis, Cost: %.2f, Tags: %s]",
                     audioVideo.getAddress(), audioVideo.getSize()/ 1.0, audioVideo.getSamplingRate(), audioVideo.getResolution(),
                     audioVideo.getAccessCount(), audioVideo.getUploader().getName(), audioVideo.getAvailability().toMillis(), audioVideo.getCost(),

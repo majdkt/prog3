@@ -37,6 +37,9 @@ public class MediaListener implements EventListener {
         } else if (event instanceof UpdateAccessCountEvent) {
             UpdateAccessCountEvent updateAccessCountEvent = (UpdateAccessCountEvent) event;
             manager.updateAccessCount(updateAccessCountEvent.getAddress());
+        } else if (event instanceof CheckUploaderExistenceEvent) {
+            CheckUploaderExistenceEvent checkUploaderExistenceEvent = (CheckUploaderExistenceEvent) event;
+            checkUploaderExistenceEvent.setExists(manager.uploaderExists(checkUploaderExistenceEvent.getUploaderName()));
         }
     }
 }

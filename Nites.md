@@ -25,12 +25,11 @@ Problems to solve:
 - If uploader exisits, ask if you want to add files to its name.
   ( Maybe like, show users list to choose the uploader or create a new one)
 - create mode for existing uploader and for new uploader
-- show files of specific uploader
-- Size of created media is always 0, watch out max_capacity 
 
 
 New:
 - You dont need to show the Media of uploaders in the list, just number of meia for each uploader. [DONE]
 - Also by tags, You need just to show the status of the tag, if its used or not . [DONE]
 - 
-- Read content by type is not working with event
+- Read content by type is not working with event [DONE]
+- 

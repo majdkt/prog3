@@ -54,8 +54,17 @@ public class Menu {
         System.out.println("Enter uploader name:");
         String uploaderName = scanner.nextLine().trim();
 
-        // Dispatch create uploader event
-        eventDispatcher.dispatch(new CreateUploaderEvent(uploaderName));
+        // Check if uploader exists
+        if (uploaderExists(uploaderName)) {
+            System.out.println("Uploader already exists. Do you want to add files to this uploader? (yes/no):");
+            String response = scanner.nextLine().trim();
+            if (!response.equalsIgnoreCase("yes")) {
+                return;
+            }
+        } else {
+            // Dispatch create uploader event
+            eventDispatcher.dispatch(new CreateUploaderEvent(uploaderName));
+        }
 
         while (true) {
             System.out.println("Enter media details (mediaType uploaderName size cost [samplingRate] [resolution] [tags]) or type 'done' to finish:");
@@ -99,7 +108,7 @@ public class Menu {
                     resolution = Integer.parseInt(details[4]);
 
                     if (mediaType.equalsIgnoreCase("AudioVideo")) {
-                        if (details.length < 6) {
+                        if (details.length < 5) {
                             System.out.println("Missing resolution rate for AudioVideo media.");
                             continue;
                         }
@@ -137,6 +146,13 @@ public class Menu {
 
         // Return to menu after finishing creation
     }
+
+    private boolean uploaderExists(String uploaderName) {
+        CheckUploaderExistenceEvent event = new CheckUploaderExistenceEvent(uploaderName);
+        eventDispatcher.dispatch(event);
+        return event.isExists();
+    }
+
 
     private void handleDelete() {
         System.out.println("Enter uploader name or media address to delete:");
