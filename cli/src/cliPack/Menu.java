@@ -1,18 +1,18 @@
 package cliPack;
 
-import eventSystem.*;
 import contract.Tag;
+import eventSystem.EventDispatcher;
 import eventSystem.events.*;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
 
 public class Menu {
-    private EventDispatcher eventDispatcher;
-    private Scanner scanner = new Scanner(System.in);
+    private final EventDispatcher eventDispatcher;
+    private final Scanner scanner = new Scanner(System.in);
 
     public Menu(EventDispatcher eventDispatcher) {
         this.eventDispatcher = eventDispatcher;
@@ -59,7 +59,7 @@ public class Menu {
         eventDispatcher.dispatch(new CreateUploaderEvent(uploaderName));
 
         while (true) {
-            System.out.println("Enter media details (mediaType uploaderName size cost availability [samplingRate] [resolution] [tags]) or type 'done' to finish:");
+            System.out.println("Enter media details (mediaType uploaderName size cost [samplingRate] [resolution] [tags]) or type 'done' to finish:");
             String mediaDetails = scanner.nextLine().trim();
 
             if (mediaDetails.equalsIgnoreCase("done")) {
@@ -69,7 +69,7 @@ public class Menu {
             // Split the input details
             String[] details = mediaDetails.split(" ");
             if (details.length < 5) {
-                System.out.println("Invalid media details format. Minimum format is: mediaType uploaderName size cost Resolution/Sampling Rate");
+                System.out.println("Invalid media details format. Minimum format is: mediaType uploaderName size cost");
                 continue; // Prompt for media details again
             }
 
@@ -78,18 +78,17 @@ public class Menu {
             BigDecimal cost;
             int samplingRate = 0;
             int resolution = 0;
-            Duration availability;
+            Duration availability = null; // Set availability to null initially
             Set<Tag> tags = new HashSet<>();
 
             try {
-                // Parse size, cost, and availability
+                // Parse size and cost
                 size = Long.parseLong(details[2]);
                 cost = new BigDecimal(details[3]);
-                availability = null;
 
                 // Parse samplingRate and resolution based on media type
                 if (mediaType.equalsIgnoreCase("Audio")) {
-                    if (details.length < 5) {
+                    if (details.length < 6) {
                         System.out.println("Missing sampling rate for Audio media.");
                         continue;
                     }
@@ -126,8 +125,8 @@ public class Menu {
                     }
                 }
 
-            } catch (NumberFormatException | DateTimeParseException e) {
-                System.out.println("Invalid number format or duration in media details.");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number format in media details.");
                 continue; // Prompt for media details again
             } catch (IllegalArgumentException e) {
                 System.out.println("Error parsing media details: " + e.getMessage());

@@ -2,14 +2,14 @@ package eventSystem.events;
 
 import eventSystem.Event;
 
-public class UpdateAccessCountEvent extends Event {
+public class UpdateAccessCountEvent implements Event {
     private final String mediaAddress;
 
     public UpdateAccessCountEvent(String mediaAddress) {
         this.mediaAddress = mediaAddress;
     }
 
-    public String getMediaAddress() {
+    public String getAddress() {
         return mediaAddress;
     }
 }

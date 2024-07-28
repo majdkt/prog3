@@ -10,15 +10,15 @@
   • :r Wechsel in den Anzeigemodus ( Read )
   • :u Wechsel in den Änderungsmodus ( Update )
   • :p Wechsel in den Persistenzmodus 
-- Example:
-• :c
-  Alice
-  Audio Alice Music 1200 2,05 44100
-  AudioVideo Alice Review,Music 7600 2,25
-  :r
-  content Audio
-  tag i
-  uploader
+  - Example:
+  • :c
+    Alice
+    Audio Alice Music 1200 2,05 44100
+    AudioVideo Alice Review,Music 7600 2,25
+    :r
+    content Audio
+    tag i
+    uploader
 
 
 Problems to solve:

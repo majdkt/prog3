@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Set;
 
-public class CreateMediaEvent extends Event {
+public class CreateMediaEvent implements Event {
     private final String uploaderName;
     private final String mediaType;
     private final Set<Tag> tags;

@@ -2,7 +2,7 @@ package eventSystem.events;
 
 import eventSystem.Event;
 
-public class ReadByMediaTypeEvent extends Event {
+public class ReadByMediaTypeEvent implements Event {
     private final String mediaType;
 
     public ReadByMediaTypeEvent(String mediaType) {

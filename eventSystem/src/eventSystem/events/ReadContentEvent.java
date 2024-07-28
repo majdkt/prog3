@@ -2,5 +2,5 @@ package eventSystem.events;
 
 import eventSystem.Event;
 
-public class ReadContentEvent extends Event {
+public class ReadContentEvent implements Event {
 }

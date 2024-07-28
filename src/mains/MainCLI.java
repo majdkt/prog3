@@ -1,19 +1,27 @@
 package mains;
 
 import cliPack.Menu;
-import domainLogic.Manager;
 import eventSystem.EventDispatcher;
+import eventSystem.listeners.MediaListener;
+import eventSystem.listeners.UploaderListener;
+import domainLogic.Manager;
 
 public class MainCLI {
     public static void main(String[] args) {
-        // Initialize the event dispatcher
+        // Initialize Manager
+        Manager manager = new Manager(1000000000); // Example capacity of 1GB
+
+        // Initialize EventDispatcher
         EventDispatcher eventDispatcher = new EventDispatcher();
 
-        // Initialize the manager with a maximum capacity (e.g., 10 GB)
-        long maxTotalCapacity = 10L * 1024 * 1024 * 1024; // 10 GB in bytes
-        Manager manager = new Manager(maxTotalCapacity);
-        // Initialize and run the menu
+        // Add Listeners
+        eventDispatcher.addListener(new UploaderListener(manager));
+        eventDispatcher.addListener(new MediaListener(manager));
+
+        // Initialize Menu
         Menu menu = new Menu(eventDispatcher);
+
+        // Run Menu
         menu.run();
     }
 }

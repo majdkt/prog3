@@ -1,11 +1,9 @@
 package eventSystem.listeners;
 
-import domainLogic.Manager;
 import eventSystem.Event;
 import eventSystem.events.CreateUploaderEvent;
 import eventSystem.events.DeleteEvent;
-import eventSystem.events.ReadByUploaderEvent;
-import eventSystem.events.ReadContentEvent;
+import domainLogic.Manager;
 
 public class UploaderListener implements EventListener {
     private final Manager manager;
@@ -17,13 +15,11 @@ public class UploaderListener implements EventListener {
     @Override
     public void handleEvent(Event event) {
         if (event instanceof CreateUploaderEvent) {
-            manager.createUploader(((CreateUploaderEvent) event).getUploaderName());
+            CreateUploaderEvent createUploaderEvent = (CreateUploaderEvent) event;
+            manager.createUploader(createUploaderEvent.getUploaderName());
         } else if (event instanceof DeleteEvent) {
-            manager.deleteUploader(((DeleteEvent) event).getTarget());
-        } else if (event instanceof ReadByUploaderEvent) {
-            manager.readByUploader();
-        } else if (event instanceof ReadContentEvent) {
-            manager.read();
+            DeleteEvent deleteEvent = (DeleteEvent) event;
+            manager.deleteMedia(deleteEvent.getTarget());
         }
     }
 }

@@ -1,7 +1,7 @@
 package eventSystem;
 
 
-public abstract class Event {
+public interface Event {
 }
 
 
