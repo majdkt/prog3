@@ -1,5 +1,5 @@
 package contract;
 
 public enum Tag {
-    Animal,Review,Music,News
+    Animal,Review,Music,News;
 }
