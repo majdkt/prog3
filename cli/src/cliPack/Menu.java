@@ -147,7 +147,7 @@ public class Menu {
     }
 
     private void handleRead() {
-        System.out.println("Enter read criteria (content/tag/uploader/mediaType):");
+        System.out.println("Enter read criteria (content/tag/uploader/mediatype):");
         String criteria = scanner.nextLine().trim();
 
         switch (criteria.toLowerCase()) {
@@ -163,7 +163,7 @@ public class Menu {
                 // Dispatch read by uploader event
                 eventDispatcher.dispatch(new ReadByUploaderEvent());
                 break;
-            case "mediaType":
+            case "mediatype":
                 System.out.println("enter media type (audio/video/audioVideo):");
                 String mediaType = scanner.nextLine().trim();
                 // Dispatch read by media type event
