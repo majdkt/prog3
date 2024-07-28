@@ -17,6 +17,7 @@ bin/
 *.ipr
 *.class
 
+
 ### NetBeans ###
 nbproject/private/
 build/
