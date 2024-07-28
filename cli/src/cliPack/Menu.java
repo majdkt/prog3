@@ -74,11 +74,10 @@ public class Menu {
             }
 
             String mediaType = details[0];
-            long size;
+            long size ;
             BigDecimal cost;
             int samplingRate = 0;
             int resolution = 0;
-            Duration availability = null; // Set availability to null initially
             Set<Tag> tags = new HashSet<>();
 
             try {
@@ -88,30 +87,30 @@ public class Menu {
 
                 // Parse samplingRate and resolution based on media type
                 if (mediaType.equalsIgnoreCase("Audio")) {
-                    if (details.length < 6) {
+                    if (details.length < 4) {
                         System.out.println("Missing sampling rate for Audio media.");
                         continue;
                     }
-                    samplingRate = Integer.parseInt(details[5]);
+                    samplingRate = Integer.parseInt(details[4]);
                 } else if (mediaType.equalsIgnoreCase("Video") || mediaType.equalsIgnoreCase("AudioVideo")) {
-                    if (details.length < 6) {
+                    if (details.length < 4) {
                         System.out.println("Missing resolution for Video/AudioVideo media.");
                         continue;
                     }
-                    resolution = Integer.parseInt(details[5]);
+                    resolution = Integer.parseInt(details[4]);
 
                     if (mediaType.equalsIgnoreCase("AudioVideo")) {
-                        if (details.length < 7) {
-                            System.out.println("Missing sampling rate for AudioVideo media.");
+                        if (details.length < 5) {
+                            System.out.println("Missing resolution rate for AudioVideo media.");
                             continue;
                         }
-                        samplingRate = Integer.parseInt(details[6]);
+                        samplingRate = Integer.parseInt(details[5]);
                     }
                 }
 
                 // Parse tags if present
-                if (details.length > (mediaType.equalsIgnoreCase("AudioVideo") ? 7 : 6)) {
-                    String tagInput = details[mediaType.equalsIgnoreCase("AudioVideo") ? 7 : 6];
+                if (details.length > (mediaType.equalsIgnoreCase("AudioVideo") ? 6 : 5)) {
+                    String tagInput = details[mediaType.equalsIgnoreCase("AudioVideo") ? 6 : 5];
                     if (!tagInput.trim().isEmpty()) {
                         String[] tagStrings = tagInput.split(",");
                         for (String tagStr : tagStrings) {
@@ -134,7 +133,7 @@ public class Menu {
             }
 
             // Dispatch create media event
-            eventDispatcher.dispatch(new CreateMediaEvent(uploaderName, mediaType, tags, size, cost, samplingRate, resolution, availability));
+            eventDispatcher.dispatch(new CreateMediaEvent(uploaderName, mediaType, tags, size, cost, samplingRate, resolution, null));
         }
 
         // Return to menu after finishing creation
@@ -166,7 +165,7 @@ public class Menu {
                 eventDispatcher.dispatch(new ReadByUploaderEvent());
                 break;
             case "mediaType":
-                System.out.println("Enter media type (Audio/Video/AudioVideo):");
+                System.out.println("Enter media type (audio/video/audioVideo):");
                 String mediaType = scanner.nextLine().trim();
                 // Dispatch read by media type event
                 eventDispatcher.dispatch(new ReadByMediaTypeEvent(mediaType));

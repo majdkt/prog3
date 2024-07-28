@@ -1,7 +1,6 @@
 package domainLogic;
 
-import contract.MediaContent;
-import contract.Tag;
+import contract.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -155,21 +154,21 @@ public class Manager implements Serializable {
 
     private String getMediaDetails(MediaContent content) {
         if (content instanceof AudioImpl) {
-            AudioImpl audio = (AudioImpl) content;
+            Audio audio = (AudioImpl) content;
             return String.format("Audio File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %d millis, Cost: %.2f, Tags: %s]",
-                    audio.getAddress(), audio.getSize() / 1_000_000.0, audio.getSamplingRate(), audio.getAccessCount(),
+                    audio.getAddress(), audio.getSize() / 1.0, audio.getSamplingRate(), audio.getAccessCount(),
                     audio.getUploader().getName(), audio.getAvailability().toMillis(), audio.getCost(),
                     audio.getTags());
         } else if (content instanceof VideoImpl) {
-            VideoImpl video = (VideoImpl) content;
-            return String.format("Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d millis, Cost: %.2f, Tags: %s]",
-                    video.getAddress(), video.getSize() / 1_000_000.0, video.getResolution(), video.getAccessCount(),
-                    video.getUploader().getName(), video.getAvailability().toMillis(), video.getCost(),
+            Video video = (VideoImpl) content;
+            return String.format("Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d minutes, Cost: %.2f, Tags: %s]",
+                    video.getAddress(), video.getSize()/ 1.0, video.getResolution(), video.getAccessCount(),
+                    video.getUploader().getName(), video.getAvailability().toMinutes() , video.getCost(),
                     video.getTags());
         } else if (content instanceof AudioVideoImpl) {
-            AudioVideoImpl audioVideo = (AudioVideoImpl) content;
+            AudioVideo audioVideo = (AudioVideo) content;
             return String.format("AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d millis, Cost: %.2f, Tags: %s]",
-                    audioVideo.getAddress(), audioVideo.getSize() / 1_000_000.0, audioVideo.getSamplingRate(), audioVideo.getResolution(),
+                    audioVideo.getAddress(), audioVideo.getSize()/ 1.0, audioVideo.getSamplingRate(), audioVideo.getResolution(),
                     audioVideo.getAccessCount(), audioVideo.getUploader().getName(), audioVideo.getAvailability().toMillis(), audioVideo.getCost(),
                     audioVideo.getTags());
         } else {
