@@ -1,8 +1,8 @@
 package eventSystem.listeners;
 
+import domainLogic.Manager;
 import eventSystem.Event;
 import eventSystem.events.*;
-import domainLogic.Manager;
 
 public class MediaListener implements EventListener {
     private final Manager manager;
@@ -37,9 +37,17 @@ public class MediaListener implements EventListener {
         } else if (event instanceof UpdateAccessCountEvent) {
             UpdateAccessCountEvent updateAccessCountEvent = (UpdateAccessCountEvent) event;
             manager.updateAccessCount(updateAccessCountEvent.getAddress());
+        } else if (event instanceof DeleteEvent) {
+            DeleteEvent deleteEvent = (DeleteEvent) event;
+            manager.deleteMedia(deleteEvent.getTarget());
+        } else if (event instanceof SaveStateEvent) {
+            //manager.saveState();
+        } else if (event instanceof LoadStateEvent) {
+            //manager.loadState();
         } else if (event instanceof CheckUploaderExistenceEvent) {
             CheckUploaderExistenceEvent checkUploaderExistenceEvent = (CheckUploaderExistenceEvent) event;
-            checkUploaderExistenceEvent.setExists(manager.uploaderExists(checkUploaderExistenceEvent.getUploaderName()));
+            boolean exists = manager.uploaderExists(checkUploaderExistenceEvent.getUploaderName());
+            checkUploaderExistenceEvent.setExists(exists);
         }
     }
 }

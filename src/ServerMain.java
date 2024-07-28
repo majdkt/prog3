@@ -1,8 +1,3 @@
-package mains;
-
-import domainLogic.Manager;
-import serverClient.ServerLogic;
-
 public class ServerMain {
     public static void main(String[] args) {
         //Manager manager = new Manager();

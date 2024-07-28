@@ -1,11 +1,3 @@
-package mains;
-
-import domainLogic.Manager;
-import contract.Tag;
-
-import java.util.HashSet;
-import java.util.Set;
-
 public class Simulation1 {
     private static volatile boolean running = true;
 

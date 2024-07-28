@@ -107,13 +107,14 @@ public class Manager implements Serializable {
         }
     }
 
-    public synchronized List<String> read() {
-        List<String> mediaDetails = new ArrayList<>();
+    public synchronized String read() {
+        StringBuilder mediaDetails = new StringBuilder();
         for (Map.Entry<String, MediaContent> entry : contentMap.entrySet()) {
-            mediaDetails.add(getMediaDetails(entry.getValue()));
+            mediaDetails.append(getMediaDetails(entry.getValue())).append(System.lineSeparator());
         }
-        return mediaDetails;
+        return mediaDetails.toString();
     }
+
 
     public synchronized Map<Tag, Boolean> readByTag() {
         Map<Tag, Boolean> tagStatus = new HashMap<>();

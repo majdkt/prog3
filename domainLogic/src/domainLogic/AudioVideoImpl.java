@@ -86,4 +86,12 @@ public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable,
     public BigDecimal getCost() {
         return cost;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d millis, Cost: %.2f, Tags: %s]",
+                getAddress(), getSize() / 1_000_000.0, getSamplingRate(), getResolution(), getAccessCount(), getUploader().getName(),
+                getAvailability().toMillis(), getCost(), getTags());
+    }
 }

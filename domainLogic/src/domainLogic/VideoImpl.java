@@ -82,4 +82,12 @@ public class VideoImpl implements Video, Serializable, MediaContent {
         this.accessCount = newAccessCount;
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d millis, Cost: %.2f, Tags: %s]",
+                getAddress(), getSize() / 1_000_000.0, getResolution(), getAccessCount(), getUploader().getName(),
+                getAvailability().toMillis(), getCost(), getTags());
+    }
+
 }

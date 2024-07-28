@@ -5,13 +5,11 @@ import eventSystem.EventDispatcher;
 import eventSystem.events.*;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class Menu {
-    private final EventDispatcher eventDispatcher;
-    private final Scanner scanner = new Scanner(System.in);
+    private EventDispatcher eventDispatcher;
+    private Scanner scanner = new Scanner(System.in);
 
     public Menu(EventDispatcher eventDispatcher) {
         this.eventDispatcher = eventDispatcher;
@@ -54,17 +52,8 @@ public class Menu {
         System.out.println("Enter uploader name:");
         String uploaderName = scanner.nextLine().trim();
 
-        // Check if uploader exists
-        if (uploaderExists(uploaderName)) {
-            System.out.println("Uploader already exists. Do you want to add files to this uploader? (yes/no):");
-            String response = scanner.nextLine().trim();
-            if (!response.equalsIgnoreCase("yes")) {
-                return;
-            }
-        } else {
-            // Dispatch create uploader event
-            eventDispatcher.dispatch(new CreateUploaderEvent(uploaderName));
-        }
+        // Dispatch create uploader event
+        eventDispatcher.dispatch(new CreateUploaderEvent(uploaderName));
 
         while (true) {
             System.out.println("Enter media details (mediaType uploaderName size cost [samplingRate] [resolution] [tags]) or type 'done' to finish:");
@@ -108,7 +97,7 @@ public class Menu {
                     resolution = Integer.parseInt(details[4]);
 
                     if (mediaType.equalsIgnoreCase("AudioVideo")) {
-                        if (details.length < 5) {
+                        if (details.length < 6) {
                             System.out.println("Missing resolution rate for AudioVideo media.");
                             continue;
                         }
@@ -135,9 +124,6 @@ public class Menu {
             } catch (NumberFormatException e) {
                 System.out.println("Invalid number format in media details.");
                 continue; // Prompt for media details again
-            } catch (IllegalArgumentException e) {
-                System.out.println("Error parsing media details: " + e.getMessage());
-                continue; // Prompt for media details again
             }
 
             // Dispatch create media event
@@ -147,18 +133,11 @@ public class Menu {
         // Return to menu after finishing creation
     }
 
-    private boolean uploaderExists(String uploaderName) {
-        CheckUploaderExistenceEvent event = new CheckUploaderExistenceEvent(uploaderName);
-        eventDispatcher.dispatch(event);
-        return event.isExists();
-    }
-
-
     private void handleDelete() {
         System.out.println("Enter uploader name or media address to delete:");
         String input = scanner.nextLine().trim();
 
-        // Dispatch delete uploader or media event
+        // Dispatch delete event
         eventDispatcher.dispatch(new DeleteEvent(input));
     }
 
@@ -221,7 +200,7 @@ public class Menu {
         System.out.println("Command list:");
         System.out.println(":c - Create uploader and media files. To end media input, type 'done'.");
         System.out.println(":d - Delete uploader or media.");
-        System.out.println(":r - Read content by criteria (content/tag/uploader/mediaType).");
+        System.out.println(":r - Read content by criteria (content/tag/uploader/mediatype).");
         System.out.println(":u - Update media access count.");
         System.out.println(":p - Persistence (save/load state).");
         System.out.println(":h - Help.");
