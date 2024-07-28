@@ -33,4 +33,4 @@ New:
 - You dont need to show the Media of uploaders in the list, just number of meia for each uploader. [DONE]
 - Also by tags, You need just to show the status of the tag, if its used or not . [DONE]
 - 
-- 
+- Read content by type is not working with event
