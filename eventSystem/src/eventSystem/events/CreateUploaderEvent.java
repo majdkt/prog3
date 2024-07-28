@@ -1,10 +1,11 @@
-package eventSystem;
+package eventSystem.events;
 
-public class UploaderEvent extends Event {
+import eventSystem.Event;
+
+public class CreateUploaderEvent extends Event {
     private final String uploaderName;
 
-    public UploaderEvent(Object source, String uploaderName) {
-        super(source);
+    public CreateUploaderEvent(String uploaderName) {
         this.uploaderName = uploaderName;
     }
 

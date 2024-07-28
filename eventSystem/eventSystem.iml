@@ -7,5 +7,7 @@
     </content>
     <orderEntry type="jdk" jdkName="17" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="contract" />
+    <orderEntry type="module" module-name="domainLogic" />
   </component>
 </module>
