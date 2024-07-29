@@ -17,4 +17,7 @@ public class EventDispatcher {
             listener.handleEvent(event);
         }
     }
+    public void deleteListener(EventListener listener) {
+        listeners.remove(listener);
+    }
 }

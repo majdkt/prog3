@@ -1,3 +1,4 @@
+import domainLogic.AdminManager;
 import eventSystem.EventDispatcher;
 import domainLogic.Manager;
 import cliPack.Menu;
@@ -8,9 +9,10 @@ public class MainCLI {
         int t = Integer.parseInt(args[0]);
         EventDispatcher eventDispatcher = new EventDispatcher();
         Manager manager = new Manager(t);
+        AdminManager adminManager = new AdminManager(manager); // use this instead
 
         // Add Listeners for specific events
-        eventDispatcher.addListener(new CreateMediaEventListener(manager));
+        eventDispatcher.addListener(new CreateMediaEventListener(adminManager));
         eventDispatcher.addListener(new ReadContentEventListener(manager));
         eventDispatcher.addListener(new ReadByTagEventListener(manager));
         eventDispatcher.addListener(new ReadByUploaderEventListener(manager));

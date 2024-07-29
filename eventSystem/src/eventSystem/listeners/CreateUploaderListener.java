@@ -4,6 +4,8 @@ import domainLogic.Manager;
 import eventSystem.Event;
 import eventSystem.events.CreateUploaderEvent;
 
+// no need for Manager. We use AdminManger, he knows all manager. Change in All listeners
+
 public class CreateUploaderListener implements EventListener {
     private Manager manager;
 
