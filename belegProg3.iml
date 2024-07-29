@@ -12,5 +12,6 @@
     <orderEntry type="module" module-name="contract" />
     <orderEntry type="module" module-name="serverClient" />
     <orderEntry type="module" module-name="eventSystem" />
+    <orderEntry type="library" name="mockito.core" level="project" />
   </component>
 </module>

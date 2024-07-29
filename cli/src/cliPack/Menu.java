@@ -6,6 +6,7 @@ import eventSystem.events.*;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class Menu {
     private EventDispatcher eventDispatcher;
@@ -132,23 +133,25 @@ public class Menu {
         // Return to menu after finishing creation
     }
 
-    private void handleDelete() {
-        System.out.println("Enter 'uploader' to delete an uploader or 'media' to delete media:");
-        String deleteType = scanner.nextLine().trim();
 
-        if (deleteType.equalsIgnoreCase("uploader")) {
-            System.out.println("Enter uploader name to delete:");
-            String uploaderName = scanner.nextLine().trim();
-            // Dispatch delete uploader event
-            eventDispatcher.dispatch(new DeleteUploaderEvent(uploaderName));
-        } else if (deleteType.equalsIgnoreCase("media")) {
-            System.out.println("Enter media address to delete:");
-            String address = scanner.nextLine().trim();
-            // Dispatch delete media event
-            eventDispatcher.dispatch(new DeleteEvent(address));
+    private void handleDelete() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter uploader name or media address to delete:");
+        String input = scanner.nextLine();
+
+        if (isNumeric(input)) {
+            eventDispatcher.dispatch(new DeleteEvent(input));
         } else {
-            System.out.println("Invalid delete type.");
+            eventDispatcher.dispatch(new DeleteUploaderEvent(input));
         }
+    }
+
+    private boolean isNumeric(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        // Regex to check if the string is a number
+        return Pattern.matches("\\d+", str);
     }
 
     private void handleRead() {

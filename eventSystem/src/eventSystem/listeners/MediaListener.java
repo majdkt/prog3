@@ -19,16 +19,22 @@ public class MediaListener implements EventListener {
     public void handleEvent(Event event) {
         if (event instanceof CreateMediaEvent) {
             CreateMediaEvent createMediaEvent = (CreateMediaEvent) event;
-            manager.create(
-                    createMediaEvent.getUploaderName(),
-                    createMediaEvent.getMediaType(),
-                    createMediaEvent.getTags(),
-                    createMediaEvent.getSize(),
-                    createMediaEvent.getCost(),
-                    createMediaEvent.getSamplingRate(),
-                    createMediaEvent.getResolution(),
-                    createMediaEvent.getAvailability()
-            );
+            // Ensure uploader exists before creating media
+            if (manager.uploaderExists(createMediaEvent.getUploaderName())) {
+                manager.create(
+                        createMediaEvent.getUploaderName(),
+                        createMediaEvent.getMediaType(),
+                        createMediaEvent.getTags(),
+                        createMediaEvent.getSize(),
+                        createMediaEvent.getCost(),
+                        createMediaEvent.getSamplingRate(),
+                        createMediaEvent.getResolution(),
+                        createMediaEvent.getAvailability()
+                );
+                System.out.println("Media created successfully.");
+            } else {
+                System.out.println("Uploader does not exist. Media creation failed.");
+            }
         } else if (event instanceof ReadContentEvent) {
             System.out.println(manager.read());
         } else if (event instanceof ReadByTagEvent) {
@@ -58,8 +64,6 @@ public class MediaListener implements EventListener {
             try {
                 Manager loadedManager = josCommands.loadState();
                 if (loadedManager != null) {
-                    // Assuming you want to replace the current manager with the loaded one
-                    // If not, you can update or merge state as needed
                     this.manager = loadedManager;
                     System.out.println("State loaded successfully.");
                 } else {
@@ -72,20 +76,7 @@ public class MediaListener implements EventListener {
             CheckUploaderExistenceEvent checkUploaderExistenceEvent = (CheckUploaderExistenceEvent) event;
             boolean exists = manager.uploaderExists(checkUploaderExistenceEvent.getUploaderName());
             checkUploaderExistenceEvent.setExists(exists);
-            if (exists){
-                CreateMediaEvent createMediaEvent = (CreateMediaEvent) event;
-                System.out.println("Adding to an existing uploader ");
-                manager.create(
-                        createMediaEvent.getUploaderName(),
-                        createMediaEvent.getMediaType(),
-                        createMediaEvent.getTags(),
-                        createMediaEvent.getSize(),
-                        createMediaEvent.getCost(),
-                        createMediaEvent.getSamplingRate(),
-                        createMediaEvent.getResolution(),
-                        createMediaEvent.getAvailability()
-                );
-            }
+            System.out.println("Uploader existence checked: " + exists);
         }
     }
 }

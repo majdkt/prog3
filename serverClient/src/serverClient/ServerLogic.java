@@ -1,5 +1,6 @@
 package serverClient;
 
+
 import domainLogic.Manager;
 
 import java.io.IOException;

@@ -26,7 +26,7 @@ public class Manager implements Serializable {
 
     public synchronized void deleteUploader(String uploaderName) {
         if (!uploaderSet.contains(uploaderName)) {
-            throw new IllegalArgumentException("Uploader not found.");
+            throw new IllegalArgumentException("Uploader not found."); // should I keep exceptions ?
         }
 
         // Calculate the total size of media uploaded by the uploader
@@ -49,9 +49,6 @@ public class Manager implements Serializable {
 
     // Media management methods
     public synchronized void create(String uploaderName, String mediaType, Set<Tag> tags, long size, BigDecimal cost, int samplingRate, int resolution, Duration availability) {
-        if (!uploaderSet.contains(uploaderName)) {
-            throw new IllegalArgumentException("Uploader does not exist.");
-        }
 
         // Check if adding this media would exceed the total capacity
         if (currentTotalSize + size > MAX_TOTAL_CAPACITY) {
