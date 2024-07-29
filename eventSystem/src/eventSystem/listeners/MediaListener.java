@@ -21,6 +21,8 @@ public class MediaListener implements EventListener {
             CreateMediaEvent createMediaEvent = (CreateMediaEvent) event;
             // Ensure uploader exists before creating media
             if (manager.uploaderExists(createMediaEvent.getUploaderName())) {
+
+
                 manager.create(
                         createMediaEvent.getUploaderName(),
                         createMediaEvent.getMediaType(),
@@ -31,7 +33,6 @@ public class MediaListener implements EventListener {
                         createMediaEvent.getResolution(),
                         createMediaEvent.getAvailability()
                 );
-                System.out.println("Media created successfully.");
             } else {
                 System.out.println("Uploader does not exist. Media creation failed.");
             }
@@ -76,7 +77,7 @@ public class MediaListener implements EventListener {
             CheckUploaderExistenceEvent checkUploaderExistenceEvent = (CheckUploaderExistenceEvent) event;
             boolean exists = manager.uploaderExists(checkUploaderExistenceEvent.getUploaderName());
             checkUploaderExistenceEvent.setExists(exists);
-            System.out.println("Uploader existence checked: " + exists);
+            System.out.println("Uploader exists: " + exists);
         }
     }
 }

@@ -52,7 +52,7 @@ public class Menu {
     private void handleCreate() {
         System.out.println("Enter uploader name:");
         String uploaderName = scanner.nextLine().trim();
-
+        eventDispatcher.dispatch(new CheckUploaderExistenceEvent(uploaderName));
         // Dispatch create uploader event
         eventDispatcher.dispatch(new CreateUploaderEvent(uploaderName));
         System.out.println("Enter media details (mediaType uploaderName size cost [samplingRate] [resolution] [tags]) or type 'done' to finish:");
