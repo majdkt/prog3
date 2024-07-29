@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Set;
+
 
 public class VideoImpl implements Video, Serializable, MediaContent {
     private Uploader uploader;

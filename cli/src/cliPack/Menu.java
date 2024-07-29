@@ -134,11 +134,22 @@ public class Menu {
     }
 
     private void handleDelete() {
-        System.out.println("Enter uploader name or media address to delete:");
-        String input = scanner.nextLine().trim();
+        System.out.println("Enter 'uploader' to delete an uploader or 'media' to delete media:");
+        String deleteType = scanner.nextLine().trim();
 
-        // Dispatch delete event
-        eventDispatcher.dispatch(new DeleteEvent(input));
+        if (deleteType.equalsIgnoreCase("uploader")) {
+            System.out.println("Enter uploader name to delete:");
+            String uploaderName = scanner.nextLine().trim();
+            // Dispatch delete uploader event
+            eventDispatcher.dispatch(new DeleteUploaderEvent(uploaderName));
+        } else if (deleteType.equalsIgnoreCase("media")) {
+            System.out.println("Enter media address to delete:");
+            String address = scanner.nextLine().trim();
+            // Dispatch delete media event
+            eventDispatcher.dispatch(new DeleteEvent(address));
+        } else {
+            System.out.println("Invalid delete type.");
+        }
     }
 
     private void handleRead() {

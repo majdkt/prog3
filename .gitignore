@@ -1,6 +1,7 @@
 target/
 bin/
 !.mvn/wrapper/maven-wrapper.jar
+*.class
 
 ### STS ###
 .apt_generated
@@ -9,6 +10,7 @@ bin/
 .project
 .settings
 .springBeans
+*.class
 
 ### IntelliJ IDEA ###
 .idea
@@ -26,3 +28,4 @@ dist/
 nbdist/
 .nb-gradle/
 target/
+*.class

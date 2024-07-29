@@ -4,6 +4,8 @@ import domainLogic.Manager;
 import cliPack.Menu;
 import eventSystem.listeners.UploaderListener;
 
+import javax.swing.event.MenuListener;
+
 public class MainCLI {
     public static void main(String[] args) {
         EventDispatcher eventDispatcher = new EventDispatcher();

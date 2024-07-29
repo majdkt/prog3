@@ -8,7 +8,7 @@ import java.time.Duration;
 import java.util.*;
 
 public class Manager implements Serializable {
-    private final long MAX_TOTAL_CAPACITY; // Max capacity in bytes
+    public final long MAX_TOTAL_CAPACITY; // Max capacity in bytes
     Map<String, MediaContent> contentMap = new HashMap<>();
     private Set<String> uploaderSet = new HashSet<>();
     Queue<String> availableAddresses = new LinkedList<>();
@@ -35,12 +35,12 @@ public class Manager implements Serializable {
         contentMap.values().removeIf(content -> content.getUploader().getName().equals(uploaderName));
     }
 
-    public synchronized List<String> getAllUploaders() {
-        return new ArrayList<>(uploaderSet);
-    }
-
     public boolean uploaderExists(String uploaderName) {
         return uploaderSet.contains(uploaderName);
+    }
+
+    public long getCurrentTotalSize() {
+        return currentTotalSize;
     }
 
     // Media management methods
@@ -194,13 +194,5 @@ public class Manager implements Serializable {
             currentTotalSize -= removedMedia.getSize();
             availableAddresses.add(address);
         }
-    }
-
-    public synchronized void logout() {
-        contentMap.clear();
-        uploaderSet.clear();
-        currentTotalSize = 0;
-        addressCounter = 1;
-        availableAddresses.clear();
     }
 }

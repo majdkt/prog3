@@ -40,6 +40,9 @@ public class MediaListener implements EventListener {
         } else if (event instanceof DeleteEvent) {
             DeleteEvent deleteEvent = (DeleteEvent) event;
             manager.deleteMedia(deleteEvent.getTarget());
+        } else if (event instanceof DeleteUploaderEvent) {
+            DeleteUploaderEvent deleteUploaderEvent = (DeleteUploaderEvent) event;
+            manager.deleteUploader(deleteUploaderEvent.getUploaderName());
         } else if (event instanceof SaveStateEvent) {
             //manager.saveState();
         } else if (event instanceof LoadStateEvent) {

@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Set;
 
 public class AudioImpl implements Audio, Serializable, MediaContent {
     private static final long serialVersionUID = 1L;
@@ -23,6 +22,10 @@ public class AudioImpl implements Audio, Serializable, MediaContent {
     private Duration availability;
     private BigDecimal cost;
     private LocalDateTime uploadDate;
+
+    public LocalDateTime getUploadDate() {
+        return uploadDate;
+    }
 
     public AudioImpl(int samplingRate, String address, Collection<Tag> tags,
                      long accessCount, long size, Uploader uploader, Duration availability, BigDecimal cost) {
