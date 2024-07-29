@@ -23,8 +23,7 @@
 
 Problems to solve:
 - If uploader exisits, ask if you want to add files to its name.
-  ( Maybe like, show users list to choose the uploader or create a new one)
-- create mode for existing uploader and for new uploader
+  ( Maybe like, show users list to choose the uploader or create a new one) [DONE]
 
 
 New:

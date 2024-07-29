@@ -8,8 +8,9 @@ import javax.swing.event.MenuListener;
 
 public class MainCLI {
     public static void main(String[] args) {
+        int t = Integer.parseInt(args[0]);
         EventDispatcher eventDispatcher = new EventDispatcher();
-        Manager manager = new Manager(1000);
+        Manager manager = new Manager(t);
 
         // Add Listeners
         eventDispatcher.addListener(new UploaderListener(manager));
