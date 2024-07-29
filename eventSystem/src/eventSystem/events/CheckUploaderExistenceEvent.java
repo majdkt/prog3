@@ -17,4 +17,8 @@ public class CheckUploaderExistenceEvent implements Event {
     public void setExists(boolean exists) {
         this.exists = exists;
     }
+
+    public boolean exists() {
+        return exists;
+    }
 }

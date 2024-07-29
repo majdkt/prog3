@@ -1,10 +1,7 @@
 import eventSystem.EventDispatcher;
-import eventSystem.listeners.MediaListener;
 import domainLogic.Manager;
 import cliPack.Menu;
-import eventSystem.listeners.UploaderListener;
-
-import javax.swing.event.MenuListener;
+import eventSystem.listeners.*;
 
 public class MainCLI {
     public static void main(String[] args) {
@@ -12,9 +9,20 @@ public class MainCLI {
         EventDispatcher eventDispatcher = new EventDispatcher();
         Manager manager = new Manager(t);
 
-        // Add Listeners
-        eventDispatcher.addListener(new UploaderListener(manager));
-        eventDispatcher.addListener(new MediaListener(manager));
+        // Add Listeners for specific events
+        eventDispatcher.addListener(new CreateMediaEventListener(manager));
+        eventDispatcher.addListener(new ReadContentEventListener(manager));
+        eventDispatcher.addListener(new ReadByTagEventListener(manager));
+        eventDispatcher.addListener(new ReadByUploaderEventListener(manager));
+        eventDispatcher.addListener(new ReadByMediaTypeEventListener(manager));
+        eventDispatcher.addListener(new UpdateAccessCountEventListener(manager));
+        eventDispatcher.addListener(new DeleteEventListener(manager));
+        eventDispatcher.addListener(new DeleteUploaderEventListener(manager));
+        eventDispatcher.addListener(new SaveStateEventListener(manager));
+        eventDispatcher.addListener(new LoadStateEventListener(manager));
+        eventDispatcher.addListener(new CreateUploaderListener(manager));
+        eventDispatcher.addListener(new ReadUsedTagsEventListener(manager));
+        eventDispatcher.addListener(new ReadUnusedTagsEventListener(manager));
 
         // Start the menu
         Menu menu = new Menu(eventDispatcher);

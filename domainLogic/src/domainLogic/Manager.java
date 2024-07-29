@@ -49,7 +49,9 @@ public class Manager implements Serializable {
 
     // Media management methods
     public synchronized void create(String uploaderName, String mediaType, Set<Tag> tags, long size, BigDecimal cost, int samplingRate, int resolution, Duration availability) {
-
+        if (!uploaderExists(uploaderName)) {
+            uploaderSet.add(uploaderName);
+        }
         // Check if adding this media would exceed the total capacity
         if (currentTotalSize + size > MAX_TOTAL_CAPACITY) {
             throw new IllegalArgumentException("Max capacity exceeded. Cannot upload media.");
@@ -139,10 +141,16 @@ public class Manager implements Serializable {
 
     public synchronized Map<String, Integer> readByUploader() {
         Map<String, Integer> uploaderMediaCount = new HashMap<>();
+
+        for (String uploaderName : uploaderSet) {
+            uploaderMediaCount.put(uploaderName, 0);
+        }
+
         for (MediaContent content : contentMap.values()) {
             String uploaderName = content.getUploader().getName();
             uploaderMediaCount.put(uploaderName, uploaderMediaCount.getOrDefault(uploaderName, 0) + 1);
         }
+
         return uploaderMediaCount;
     }
 

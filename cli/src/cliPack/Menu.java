@@ -16,123 +16,137 @@ public class Menu {
         this.eventDispatcher = eventDispatcher;
     }
 
+    private void processCommand(String command) {
+        switch (command) {
+            case ":c":
+                handleCreate();
+                break;
+            case ":d":
+                handleDelete();
+                break;
+            case ":r":
+                handleRead();
+                break;
+            case ":u":
+                handleUpdate();
+                break;
+            case ":p":
+                handlePersistence();
+                break;
+            case ":h":
+                showHelp();
+                break;
+            case ":q":
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid command. Type :h for help.");
+                break;
+        }
+    }
+
     public void run() {
         while (true) {
             System.out.println("Enter command (type :h for help):");
             String command = scanner.nextLine().trim();
-
-            switch (command) {
-                case ":c":
-                    handleCreate();
-                    break;
-                case ":d":
-                    handleDelete();
-                    break;
-                case ":r":
-                    handleRead();
-                    break;
-                case ":u":
-                    handleUpdate();
-                    break;
-                case ":p":
-                    handlePersistence();
-                    break;
-                case ":h":
-                    showHelp();
-                    break;
-                case ":q":
-                    return;
-                default:
-                    System.out.println("Invalid command. Type :h for help.");
-                    break;
-            }
+            processCommand(command);
         }
     }
-
     private void handleCreate() {
-        System.out.println("Enter uploader name:");
-        String uploaderName = scanner.nextLine().trim();
-        eventDispatcher.dispatch(new CheckUploaderExistenceEvent(uploaderName));
-        // Dispatch create uploader event
-        eventDispatcher.dispatch(new CreateUploaderEvent(uploaderName));
-        System.out.println("Enter media details (mediaType uploaderName size cost [samplingRate] [resolution] [tags]) or type 'done' to finish:");
+        System.out.println("uploader or (mediaType uploaderName size cost [samplingRate] [resolution] [tags]), or type 'done' to finish:");
+
         while (true) {
-            String mediaDetails = scanner.nextLine().trim();
+            String input = scanner.nextLine().trim();
 
-            if (mediaDetails.equalsIgnoreCase("done")) {
-                break; // Exit the loop and return to the menu
+            if (input.startsWith(":")) {
+                processCommand(input);
+                return;
             }
 
-            // Split the input details
-            String[] details = mediaDetails.split(" ");
-            if (details.length < 5) {
-                System.out.println("Invalid media details format. Minimum format is: mediaType uploaderName size cost");
-                continue; // Prompt for media details again
-            }
+            String[] details = input.split(" ");
 
-            String mediaType = details[0];
-            long size ;
-            BigDecimal cost;
-            int samplingRate = 0;
-            int resolution = 0;
-            Set<Tag> tags = new HashSet<>();
+            if (details.length == 1) {
+                // Single input, assume it's an uploader name
+                String uploaderName = details[0];
+                CheckUploaderExistenceEvent checkEvent = new CheckUploaderExistenceEvent(uploaderName);
+                eventDispatcher.dispatch(checkEvent);
 
-            try {
-                // Parse size and cost
-                size = Long.parseLong(details[2]);
-                cost = new BigDecimal(details[3]);
-
-                // Parse samplingRate and resolution based on media type
-                if (mediaType.equalsIgnoreCase("Audio")) {
-                    if (details.length < 4) {
-                        System.out.println("Missing sampling rate for Audio media.");
-                        continue;
-                    }
-                    samplingRate = Integer.parseInt(details[4]);
-                } else if (mediaType.equalsIgnoreCase("Video") || mediaType.equalsIgnoreCase("AudioVideo")) {
-                    if (details.length < 4) {
-                        System.out.println("Missing resolution for Video/AudioVideo media.");
-                        continue;
-                    }
-                    resolution = Integer.parseInt(details[4]);
-
-                    if (mediaType.equalsIgnoreCase("AudioVideo")) {
-                        if (details.length < 6) {
-                            System.out.println("Missing resolution rate for AudioVideo media.");
-                            continue;
-                        }
-                        samplingRate = Integer.parseInt(details[5]);
-                    }
+                if (!checkEvent.exists()) {
+                    eventDispatcher.dispatch(new CreateUploaderEvent(uploaderName));
+                }
+            } else {
+                // More inputs, assume it's media details
+                if (details.length < 4) {
+                    System.out.println("Invalid media details format. Minimum format is: mediaType uploaderName size cost SamplingRate/Resolution");
+                    continue; // Prompt for media details again
                 }
 
-                // Parse tags if present
-                if (details.length > (mediaType.equalsIgnoreCase("AudioVideo") ? 6 : 5)) {
-                    String tagInput = details[mediaType.equalsIgnoreCase("AudioVideo") ? 6 : 5];
-                    if (!tagInput.trim().isEmpty()) {
-                        String[] tagStrings = tagInput.split(",");
-                        for (String tagStr : tagStrings) {
-                            try {
-                                Tag tag = Tag.valueOf(tagStr.trim());
-                                tags.add(tag);
-                            } catch (IllegalArgumentException e) {
-                                System.out.println("Invalid tag: " + tagStr.trim());
+                String mediaType = details[0];
+                String uploaderName = details[1];
+                long size;
+                BigDecimal cost;
+                int samplingRate = 0;
+                int resolution = 0;
+                Set<Tag> tags = new HashSet<>();
+
+                try {
+                    // Parse size and cost
+                    size = Long.parseLong(details[2]);
+                    cost = new BigDecimal(details[3]);
+
+                    // Parse samplingRate and resolution based on media type
+                    if (mediaType.equalsIgnoreCase("Audio")) {
+                        if (details.length < 5) {
+                            System.out.println("Missing sampling rate for Audio media.");
+                            continue;
+                        }
+                        samplingRate = Integer.parseInt(details[4]);
+                    } else if (mediaType.equalsIgnoreCase("Video") || mediaType.equalsIgnoreCase("AudioVideo")) {
+                        if (details.length < 5) {
+                            System.out.println("Missing resolution for Video/AudioVideo media.");
+                            continue;
+                        }
+                        resolution = Integer.parseInt(details[4]);
+
+                        if (mediaType.equalsIgnoreCase("AudioVideo") && details.length >= 6) {
+                            samplingRate = Integer.parseInt(details[5]);
+                        }
+                    }
+
+                    // Parse tags if present
+                    if (details.length > (mediaType.equalsIgnoreCase("AudioVideo") ? 6 : 5)) {
+                        String tagInput = details[mediaType.equalsIgnoreCase("AudioVideo") ? 6 : 5];
+                        if (!tagInput.trim().isEmpty()) {
+                            String[] tagStrings = tagInput.split(",");
+                            for (String tagStr : tagStrings) {
+                                try {
+                                    Tag tag = Tag.valueOf(tagStr.trim());
+                                    tags.add(tag);
+                                } catch (IllegalArgumentException e) {
+                                    System.out.println("Invalid tag: " + tagStr.trim());
+                                }
                             }
                         }
                     }
+
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid number format in media details.");
+                    continue; // Prompt for media details again
                 }
 
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid number format in media details.");
-                continue; // Prompt for media details again
-            }
+                CheckUploaderExistenceEvent checkEvent = new CheckUploaderExistenceEvent(uploaderName);
+                eventDispatcher.dispatch(checkEvent);
 
-            // Dispatch create media event
-            eventDispatcher.dispatch(new CreateMediaEvent(uploaderName, mediaType, tags, size, cost, samplingRate, resolution, null));
+                if (!checkEvent.exists()) {
+                    eventDispatcher.dispatch(new CreateUploaderEvent(uploaderName));
+                }
+
+                // Dispatch create media event
+                eventDispatcher.dispatch(new CreateMediaEvent(uploaderName, mediaType, tags, size, cost, samplingRate, resolution, null));
+            }
         }
 
-        // Return to menu after finishing creation
     }
-
 
     private void handleDelete() {
         Scanner scanner = new Scanner(System.in);
@@ -155,34 +169,53 @@ public class Menu {
     }
 
     private void handleRead() {
-        System.out.println("Enter read criteria (content/tag/uploader/mediatype):");
-        String criteria = scanner.nextLine().trim();
+        System.out.println("(content <type>, tag used(i), tag unused(e), uploader, content <type>) ");
 
-        switch (criteria.toLowerCase()) {
-            case "content":
-                // Dispatch read content event
-                eventDispatcher.dispatch(new ReadContentEvent());
-                break;
-            case "tag":
-                // Dispatch read by tag event
-                eventDispatcher.dispatch(new ReadByTagEvent());
-                break;
-            case "uploader":
-                // Dispatch read by uploader event
-                eventDispatcher.dispatch(new ReadByUploaderEvent());
-                break;
-            case "mediatype":
-                System.out.println("enter media type (audio/video/audioVideo):");
-                String mediaType = scanner.nextLine().trim();
-                // Dispatch read by media type event
-                eventDispatcher.dispatch(new ReadByMediaTypeEvent(mediaType));
-                break;
-            default:
-                System.out.println("Invalid criteria.");
-                break;
+        while (true) {
+            String input = scanner.nextLine().trim();
+
+            if (input.startsWith(":")) {
+                processCommand(input);
+                return;
+            }
+
+            String[] parts = input.split(" ");
+            String criteria = parts[0].toLowerCase();
+
+            switch (criteria) {
+                case "content":
+                    if (parts.length == 2) {
+                        String contentType = parts[1].trim();
+                        if (contentType.equalsIgnoreCase("Audio") || contentType.equalsIgnoreCase("Video") || contentType.equalsIgnoreCase("AudioVideo")) {
+                            eventDispatcher.dispatch(new ReadByMediaTypeEvent(contentType));
+                        } else {
+                            System.out.println("Invalid content type. Valid types are: Audio, Video, AudioVideo.");
+                        }
+                    } else {
+                        eventDispatcher.dispatch(new ReadContentEvent());
+                    }
+                    break;
+                case "tag":
+                    if (parts.length == 2) {
+                        String tagType = parts[1].trim();
+                        if (tagType.equalsIgnoreCase("i")) {
+                            eventDispatcher.dispatch(new ReadUsedTagsEvent());
+                        } else if (tagType.equalsIgnoreCase("e")) {
+                            eventDispatcher.dispatch(new ReadUnusedTagsEvent());
+                        }
+                    }
+
+                    break;
+                case "uploader":
+                    eventDispatcher.dispatch(new ReadByUploaderEvent());
+                    break;
+
+                default:
+                    System.out.println("Invalid criteria.");
+                    break;
+            }
         }
     }
-
     private void handleUpdate() {
         System.out.println("Enter media address to update access count:");
         String address = scanner.nextLine().trim();
