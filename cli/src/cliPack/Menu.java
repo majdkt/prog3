@@ -224,17 +224,35 @@ public class Menu {
     }
 
     private void handlePersistence() {
-        System.out.println("Enter persistence command (save/load):");
+        System.out.println("Enter persistence command (save [JOS|JBP]/load [JOS|JBP]):");
         String command = scanner.nextLine().trim();
+        String[] parts = command.split(" ");
+        if (parts.length != 2) {
+            System.out.println("Invalid persistence command format. Use save [JOS|JBP] or load [JOS|JBP].");
+            return;
+        }
 
-        switch (command.toLowerCase()) {
+        String action = parts[0].toLowerCase();
+        String technology = parts[1].toUpperCase();
+
+        switch (action) {
             case "save":
-                // Dispatch save state event
-                eventDispatcher.dispatch(new SaveStateEvent());
+                if (technology.equals("JOS")) {
+                    eventDispatcher.dispatch(new SaveStateJOSEvent());
+                } else if (technology.equals("JBP")) {
+                    eventDispatcher.dispatch(new SaveStateJBPEvent());
+                } else {
+                    System.out.println("Unknown persistence technology: " + technology);
+                }
                 break;
             case "load":
-                // Dispatch load state event
-                eventDispatcher.dispatch(new LoadStateEvent());
+                if (technology.equals("JOS")) {
+                    eventDispatcher.dispatch(new LoadStateJOSEvent());
+                } else if (technology.equals("JBP")) {
+                    eventDispatcher.dispatch(new LoadStateJBPEvent());
+                } else {
+                    System.out.println("Unknown persistence technology: " + technology);
+                }
                 break;
             default:
                 System.out.println("Invalid persistence command.");

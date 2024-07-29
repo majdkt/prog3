@@ -23,6 +23,8 @@ public class MainCLI {
         eventDispatcher.addListener(new CreateUploaderListener(manager));
         eventDispatcher.addListener(new ReadUsedTagsEventListener(manager));
         eventDispatcher.addListener(new ReadUnusedTagsEventListener(manager));
+        eventDispatcher.addListener(new SaveStateJBPEventListener(manager));
+        eventDispatcher.addListener(new LoadStateJBPEventListener(manager));
 
         // Start the menu
         Menu menu = new Menu(eventDispatcher);

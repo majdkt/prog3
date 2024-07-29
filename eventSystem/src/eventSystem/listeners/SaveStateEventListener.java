@@ -3,7 +3,7 @@ package eventSystem.listeners;
 import all.JosCommands;
 import domainLogic.Manager;
 import eventSystem.Event;
-import eventSystem.events.SaveStateEvent;
+import eventSystem.events.SaveStateJOSEvent;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ public class SaveStateEventListener implements EventListener {
 
     @Override
     public void handleEvent(Event event) {
-        if (event instanceof SaveStateEvent) {
+        if (event instanceof SaveStateJOSEvent) {
             try {
                 josCommands.saveState(manager);
                 System.out.println("State saved successfully.");

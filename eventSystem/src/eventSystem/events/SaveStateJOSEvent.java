@@ -2,5 +2,5 @@ package eventSystem.events;
 
 import eventSystem.Event;
 
-public class SaveStateEvent implements Event {
+public class SaveStateJOSEvent implements Event {
 }

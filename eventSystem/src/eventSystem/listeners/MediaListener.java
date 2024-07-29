@@ -54,14 +54,14 @@ public class MediaListener implements EventListener {
         } else if (event instanceof DeleteUploaderEvent) {
             DeleteUploaderEvent deleteUploaderEvent = (DeleteUploaderEvent) event;
             manager.deleteUploader(deleteUploaderEvent.getUploaderName());
-        } else if (event instanceof SaveStateEvent) {
+        } else if (event instanceof SaveStateJOSEvent) {
             try {
                 josCommands.saveState(manager);
                 System.out.println("State saved successfully.");
             } catch (IOException e) {
                 System.out.println("Failed to save state: " + e.getMessage());
             }
-        } else if (event instanceof LoadStateEvent) {
+        } else if (event instanceof LoadStateJOSEvent) {
             try {
                 Manager loadedManager = josCommands.loadState();
                 if (loadedManager != null) {
