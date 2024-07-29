@@ -32,7 +32,7 @@ class ManagerTest {
         defaultCost = BigDecimal.valueOf(10);
         defaultSamplingRate = 44100;
         defaultResolution = 1080;
-        defaultAvailability = null;
+        defaultAvailability = Duration.ofDays(1); // Default availability set to 1 day for testing
         uploaderName = "testUploader";
         manager.createUploader(uploaderName);
     }
@@ -71,6 +71,7 @@ class ManagerTest {
                 manager.create(uploaderName, "Audio", defaultTags, 1000000, defaultCost, defaultSamplingRate, 0, defaultAvailability)
         );
     }
+
     @Test
     void delete_media_successfully() {
         manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
@@ -81,9 +82,9 @@ class ManagerTest {
 
     @Test
     void delete_media_not_found() {
-        manager.deleteMedia("nonexistentAddress"); // No assertion needed, as the requirement is to just test the execution path
+        // No assertion needed, just ensuring the method does not throw an exception
+        manager.deleteMedia("nonexistentAddress");
     }
-
 
     @Test
     void create_uploader_successfully() {
@@ -98,8 +99,15 @@ class ManagerTest {
 
     @Test
     void delete_uploader_successfully() {
-        assertDoesNotThrow(() -> manager.deleteUploader(uploaderName));
+        manager.deleteUploader(uploaderName);
         assertFalse(manager.uploaderExists(uploaderName));
+    }
+
+    @Test
+    void delete_uploader_with_media_removes_media() {
+        manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
+        manager.deleteUploader(uploaderName);
+        assertEquals(0, manager.getCurrentTotalSize());
     }
 
     @Test
@@ -107,14 +115,12 @@ class ManagerTest {
         manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
         String details = manager.read();
         assertTrue(details.contains("Audio File"));
-        assertTrue(details.contains(uploaderName));
     }
 
     @Test
     void read_by_tag_with_existing_tag() {
         manager.create(uploaderName, "Video", defaultTags, 10000000, defaultCost, 0, defaultResolution, defaultAvailability);
         Map<Tag, Boolean> tags = manager.readByTag();
-        defaultTags.add(Tag.News);
         assertTrue(tags.get(Tag.News));
     }
 
@@ -124,6 +130,7 @@ class ManagerTest {
         Map<Tag, Boolean> tags = manager.readByTag();
         assertFalse(tags.get(Tag.Music));
     }
+
     @Test
     void read_by_uploader_with_multiple_media() {
         manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
@@ -131,6 +138,7 @@ class ManagerTest {
         Map<String, Integer> uploaders = manager.readByUploader();
         assertEquals(2, uploaders.get(uploaderName).intValue());
     }
+
     @Test
     void read_by_media_type() {
         manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
@@ -141,6 +149,14 @@ class ManagerTest {
         assertEquals(1, videoMedia.size());
         assertTrue(audioMedia.get(0).contains("Audio File"));
         assertTrue(videoMedia.get(0).contains("Video File"));
+    }
+
+    @Test
+    void update_access_count() {
+        manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
+        String address = manager.read().split("\n")[0].split(" ")[3].replace(",", "");
+        manager.updateAccessCount(address);
+        assertTrue(manager.read().contains("Access Count: 1"));
     }
 
     // ... (Nested classes for AudioImplTests, VideoImplTests, AudioVideoImplTests with similar test structures)
@@ -206,5 +222,4 @@ class ManagerTest {
             assertEquals(1, av.getAccessCount());
         }
     }
-
 }

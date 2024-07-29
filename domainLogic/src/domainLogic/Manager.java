@@ -31,6 +31,13 @@ public class Manager implements Serializable {
         if (!uploaderSet.contains(uploaderName)) {
             throw new IllegalArgumentException("Uploader not found.");
         }
+
+        // Calculate the total size of media uploaded by the uploader
+        long sizeToDelete = contentMap.values().stream()
+                .filter(content -> content.getUploader().getName().equals(uploaderName))
+                .mapToLong(MediaContent::getSize)
+                .sum();
+        currentTotalSize -= sizeToDelete;
         uploaderSet.remove(uploaderName);
         contentMap.values().removeIf(content -> content.getUploader().getName().equals(uploaderName));
     }
