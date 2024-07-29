@@ -80,7 +80,7 @@ public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable,
 
     @Override
     public Duration getAvailability() {
-        return Duration.between(uploadDate, LocalDateTime.now());
+        return  Duration.between(uploadDate, LocalDateTime.now());
     }
 
     @Override
@@ -91,9 +91,9 @@ public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable,
     @Override
     public String toString() {
         return String.format(
-                "AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d millis, Cost: %.2f, Tags: %s]",
+                "AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
                 getAddress(), getSize() / 1_000_000.0, getSamplingRate(), getResolution(), getAccessCount(), getUploader().getName(),
-                getAvailability().toMillis(), getCost(), getTags());
+                getAvailability().toDays(), getCost(), getTags());
     }
 
     public Temporal getUploadDate() {

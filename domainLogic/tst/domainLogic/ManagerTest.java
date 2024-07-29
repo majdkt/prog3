@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ManagerTest {
 
     private Manager manager;
-    private static final long MAX_CAPACITY = 100000000; // 100 MB
+    private static final long MAX_CAPACITY = 100_000_000; // 100 MB
     private Set<Tag> defaultTags;
     private BigDecimal defaultCost;
     private int defaultSamplingRate;
@@ -32,117 +32,115 @@ class ManagerTest {
         defaultCost = BigDecimal.valueOf(10);
         defaultSamplingRate = 44100;
         defaultResolution = 1080;
-        defaultAvailability = Duration.ofDays(1); // Default availability set to 1 day for testing
+        defaultAvailability = Duration.ofDays(0);
         uploaderName = "testUploader";
         manager.createUploader(uploaderName);
     }
 
     @Test
-    void create_audio_successfully() {
-        manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
-        assertTrue(manager.getCurrentTotalSize() > 0);
+    void createAudioSuccessfully() {
+        manager.create(uploaderName, "Audio", defaultTags, 5_000_000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
+        assertEquals(5_000_000, manager.getCurrentTotalSize());
     }
 
     @Test
-    void create_video_successfully() {
-        manager.create(uploaderName, "Video", defaultTags, 10000000, defaultCost, 0, defaultResolution, defaultAvailability);
-        assertTrue(manager.getCurrentTotalSize() > 0);
+    void createVideoSuccessfully() {
+        manager.create(uploaderName, "Video", defaultTags, 10_000_000, defaultCost, 0, defaultResolution, defaultAvailability);
+        assertEquals(10_000_000, manager.getCurrentTotalSize());
     }
 
     @Test
-    void create_audio_video_successfully() {
-        manager.create(uploaderName, "AudioVideo", defaultTags, 15000000, defaultCost, defaultSamplingRate, defaultResolution, defaultAvailability);
-        assertTrue(manager.getCurrentTotalSize() > 0);
+    void createAudioVideoSuccessfully() {
+        manager.create(uploaderName, "AudioVideo", defaultTags, 15_000_000, defaultCost, defaultSamplingRate, defaultResolution, defaultAvailability);
+        assertEquals(15_000_000, manager.getCurrentTotalSize());
     }
 
     @Test
-    void create_with_invalid_media_type_throws_exception() {
+    void createWithInvalidMediaTypeThrowsException() {
         assertThrows(IllegalArgumentException.class, () ->
-                manager.create(uploaderName, "InvalidType", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability)
+                manager.create(uploaderName, "InvalidType", defaultTags, 5_000_000, defaultCost, defaultSamplingRate, 0, defaultAvailability)
         );
     }
 
     @Test
-    void create_exceeding_capacity_throws_exception() {
-        while (manager.getCurrentTotalSize() < MAX_CAPACITY) {
-            manager.create(uploaderName, "Audio", defaultTags, 1000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
-        }
+    void createExceedingCapacityThrowsException() {
+        manager.create(uploaderName, "Audio", defaultTags, MAX_CAPACITY, defaultCost, defaultSamplingRate, 0, defaultAvailability);
         assertThrows(IllegalArgumentException.class, () ->
-                manager.create(uploaderName, "Audio", defaultTags, 1000000, defaultCost, defaultSamplingRate, 0, defaultAvailability)
+                manager.create(uploaderName, "Audio", defaultTags, 1, defaultCost, defaultSamplingRate, 0, defaultAvailability)
         );
     }
 
     @Test
-    void delete_media_successfully() {
-        manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
+    void deleteMediaSuccessfully() {
+        manager.create(uploaderName, "Audio", defaultTags, 5_000_000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
         String address = manager.read().split("\n")[0].split(" ")[3].replace(",", "");
         manager.deleteMedia(address);
         assertFalse(manager.read().contains(address));
     }
 
     @Test
-    void delete_media_not_found() {
-        // No assertion needed, just ensuring the method does not throw an exception
+    void deleteMediaNotFound() {
         manager.deleteMedia("nonexistentAddress");
+        assertTrue(manager.read().isEmpty());
     }
 
     @Test
-    void create_uploader_successfully() {
+    void createUploaderSuccessfully() {
         manager.createUploader("newUploader");
         assertTrue(manager.uploaderExists("newUploader"));
     }
 
     @Test
-    void create_uploader_already_exists() {
+    void createUploaderAlreadyExists() {
         assertThrows(IllegalArgumentException.class, () -> manager.createUploader(uploaderName));
     }
 
     @Test
-    void delete_uploader_successfully() {
+    void deleteUploaderSuccessfully() {
         manager.deleteUploader(uploaderName);
         assertFalse(manager.uploaderExists(uploaderName));
     }
 
     @Test
-    void delete_uploader_with_media_removes_media() {
-        manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
+    void deleteUploaderWithMediaRemovesMedia() {
+        manager.create(uploaderName, "Audio", defaultTags, 5_000_000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
         manager.deleteUploader(uploaderName);
         assertEquals(0, manager.getCurrentTotalSize());
     }
 
     @Test
-    void read_media_details() {
-        manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
+    void readMediaDetails() {
+        manager.create(uploaderName, "Audio", defaultTags, 5_000_000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
         String details = manager.read();
         assertTrue(details.contains("Audio File"));
     }
 
     @Test
-    void read_by_tag_with_existing_tag() {
-        manager.create(uploaderName, "Video", defaultTags, 10000000, defaultCost, 0, defaultResolution, defaultAvailability);
+    void readByTagWithExistingTag() {
+        manager.create(uploaderName, "Video", defaultTags, 10_000_000, defaultCost, 0, defaultResolution, defaultAvailability);
         Map<Tag, Boolean> tags = manager.readByTag();
         assertTrue(tags.get(Tag.News));
     }
 
     @Test
-    void read_by_tag_with_non_existing_tag() {
-        manager.create(uploaderName, "Video", defaultTags, 10000000, defaultCost, 0, defaultResolution, defaultAvailability);
+    void readByTagWithNonExistingTag() {
+        manager.create(uploaderName, "Video", defaultTags, 10_000_000, defaultCost, 0, defaultResolution, defaultAvailability);
         Map<Tag, Boolean> tags = manager.readByTag();
         assertFalse(tags.get(Tag.Music));
     }
 
     @Test
-    void read_by_uploader_with_multiple_media() {
-        manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
-        manager.create(uploaderName, "Video", defaultTags, 10000000, defaultCost, 0, defaultResolution, defaultAvailability);
+    void readByUploaderWithMultipleMedia() {
+        manager.create(uploaderName, "Audio", defaultTags, 5_000_000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
+        manager.create(uploaderName, "Video", defaultTags, 10_000_000, defaultCost, 0, defaultResolution, defaultAvailability);
         Map<String, Integer> uploaders = manager.readByUploader();
         assertEquals(2, uploaders.get(uploaderName).intValue());
     }
 
     @Test
-    void read_by_media_type() {
-        manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
-        manager.create(uploaderName, "Video", defaultTags, 10000000, defaultCost, 0, defaultResolution, defaultAvailability);
+    void readByMediaType() {
+        manager.create(uploaderName, "Audio", defaultTags, 5_000_000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
+        manager.create(uploaderName, "Video", defaultTags, 10_000_000, defaultCost, 0, defaultResolution, defaultAvailability);
         List<String> audioMedia = manager.readByMediaType("Audio");
         List<String> videoMedia = manager.readByMediaType("Video");
         assertEquals(1, audioMedia.size());
@@ -152,19 +150,18 @@ class ManagerTest {
     }
 
     @Test
-    void update_access_count() {
-        manager.create(uploaderName, "Audio", defaultTags, 5000000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
+    void updateAccessCount() {
+        manager.create(uploaderName, "Audio", defaultTags, 5_000_000, defaultCost, defaultSamplingRate, 0, defaultAvailability);
         String address = manager.read().split("\n")[0].split(" ")[3].replace(",", "");
         manager.updateAccessCount(address);
         assertTrue(manager.read().contains("Access Count: 1"));
     }
 
-    // ... (Nested classes for AudioImplTests, VideoImplTests, AudioVideoImplTests with similar test structures)
     @Nested
     class AudioImplTests {
         @Test
         void testAudioImplGettersAndSetters() {
-            AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5000000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
+            AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
             Duration expectedAvailability = Duration.between(audio.getUploadDate(), LocalDateTime.now());
             Duration actualAvailability = audio.getAvailability();
             long toleranceInMillis = 10;
@@ -172,7 +169,7 @@ class ManagerTest {
             assertEquals("address1", audio.getAddress());
             assertEquals(defaultTags, audio.getTags());
             assertEquals(0, audio.getAccessCount());
-            assertEquals(5000000, audio.getSize());
+            assertEquals(5_000_000, audio.getSize());
             assertEquals(uploaderName, audio.getUploader().getName());
             assertTrue(Math.abs(expectedAvailability.toMillis() - actualAvailability.toMillis()) <= toleranceInMillis);
             assertEquals(defaultCost, audio.getCost());
@@ -186,11 +183,11 @@ class ManagerTest {
     class VideoImplTests {
         @Test
         void testVideoImplGettersAndSetters() {
-            VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10000000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+            VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
             assertEquals("address1", video.getAddress());
             assertEquals(defaultTags, video.getTags());
             assertEquals(0, video.getAccessCount());
-            assertEquals(10000000, video.getSize());
+            assertEquals(10_000_000, video.getSize());
             assertEquals(uploaderName, video.getUploader().getName());
             assertEquals(defaultCost, video.getCost());
             assertEquals(defaultResolution, video.getResolution());
@@ -204,7 +201,7 @@ class ManagerTest {
     class AudioVideoImplTests {
         @Test
         void testAudioVideoImplGettersAndSetters() {
-            AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15000000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+            AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
             Duration expectedAvailability = Duration.between(av.getUploadDate(), LocalDateTime.now());
             Duration actualAvailability = av.getAvailability();
             long toleranceInMillis = 10;
@@ -212,7 +209,7 @@ class ManagerTest {
             assertEquals("address1", av.getAddress());
             assertEquals(defaultTags, av.getTags());
             assertEquals(0, av.getAccessCount());
-            assertEquals(15000000, av.getSize());
+            assertEquals(15_000_000, av.getSize());
             assertEquals(uploaderName, av.getUploader().getName());
             assertTrue(Math.abs(expectedAvailability.toMillis() - actualAvailability.toMillis()) <= toleranceInMillis);
             assertEquals(defaultCost, av.getCost());
@@ -220,6 +217,25 @@ class ManagerTest {
 
             av.setAccessCount(1);
             assertEquals(1, av.getAccessCount());
+        }
+
+        @Test
+        void testAudioVideoImplToString() {
+            AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), null, defaultCost, defaultResolution);
+            String expectedString = String.format(
+                    "AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
+                    "address1",
+                    15_000_000 / 1_000_000.0,
+                    defaultSamplingRate,
+                    defaultResolution,
+                    0,
+                    uploaderName,
+                    defaultAvailability.toDays(),
+                    defaultCost,
+                    defaultTags
+            );
+            System.out.println(expectedString);
+            assertEquals(expectedString, av.toString());
         }
     }
 }
