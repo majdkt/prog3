@@ -1,5 +1,6 @@
 package domainLogic;
 
+import contract.Audio;
 import contract.Tag;
 import org.junit.jupiter.api.*;
 
@@ -177,6 +178,35 @@ class ManagerTest {
             audio.setAccessCount(1);
             assertEquals(1, audio.getAccessCount());
         }
+
+        @Test
+        void testAudioImplToString() {
+            AudioImpl audio = new AudioImpl(
+                    defaultSamplingRate,
+                    "address1",
+                    defaultTags,
+                    0,
+                    5_000_000,
+                    new UploaderImpl(uploaderName),
+                    defaultAvailability,
+                    defaultCost
+            );
+
+            String expectedString = String.format(
+                    "Audio File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
+                    "address1",
+                    5_000_000 / 1_000_000.0,
+                    defaultSamplingRate,
+                    0,
+                    uploaderName,
+                    defaultAvailability.toDays(),
+                    defaultCost,
+                    defaultTags
+            );
+            assertEquals(expectedString, audio.toString());
+        }
+
+
     }
 
     @Nested
@@ -195,6 +225,35 @@ class ManagerTest {
             video.setAccessCount(1);
             assertEquals(1, video.getAccessCount());
         }
+
+        @Test
+        void testVideoImplToString() {
+            VideoImpl video = new VideoImpl(
+                    "address1",
+                    defaultTags,
+                    0,
+                    10_000_000,
+                    new UploaderImpl(uploaderName),
+                    defaultAvailability,
+                    defaultCost,
+                    defaultResolution
+            );
+
+            String expectedString = String.format(
+                    "Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
+                    "address1",
+                    10_000_000 / 1_000_000.0,
+                    defaultResolution,
+                    0,
+                    uploaderName,
+                    defaultAvailability.toDays(),
+                    defaultCost,
+                    defaultTags
+            );
+            assertEquals(expectedString, video.toString());
+        }
+
+
     }
 
     @Nested
