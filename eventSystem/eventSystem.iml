@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="contract" />
     <orderEntry type="module" module-name="domainLogic" />
+    <orderEntry type="module" module-name="jos" />
   </component>
 </module>

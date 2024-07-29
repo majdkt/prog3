@@ -1,6 +1,5 @@
 package domainLogic;
 
-import contract.Audio;
 import contract.Tag;
 import org.junit.jupiter.api.*;
 
@@ -14,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ManagerTest {
+class DomainLogicTests {
 
     private Manager manager;
     private static final long MAX_CAPACITY = 100_000_000; // 100 MB
@@ -37,6 +36,9 @@ class ManagerTest {
         uploaderName = "testUploader";
         manager.createUploader(uploaderName);
     }
+
+
+    // Tests for Manager
 
     @Test
     void createAudioSuccessfully() {
@@ -89,11 +91,6 @@ class ManagerTest {
     void createUploaderSuccessfully() {
         manager.createUploader("newUploader");
         assertTrue(manager.uploaderExists("newUploader"));
-    }
-
-    @Test
-    void createUploaderAlreadyExists() {
-        assertThrows(IllegalArgumentException.class, () -> manager.createUploader(uploaderName));
     }
 
     @Test

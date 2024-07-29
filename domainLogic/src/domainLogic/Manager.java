@@ -21,9 +21,6 @@ public class Manager implements Serializable {
 
     // Uploader management methods
     public synchronized void createUploader(String uploaderName) {
-        if (uploaderSet.contains(uploaderName)) {
-            throw new IllegalArgumentException("Uploader already exists.");
-        }
         uploaderSet.add(uploaderName);
     }
 

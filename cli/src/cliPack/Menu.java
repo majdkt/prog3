@@ -54,9 +54,8 @@ public class Menu {
 
         // Dispatch create uploader event
         eventDispatcher.dispatch(new CreateUploaderEvent(uploaderName));
-
+        System.out.println("Enter media details (mediaType uploaderName size cost [samplingRate] [resolution] [tags]) or type 'done' to finish:");
         while (true) {
-            System.out.println("Enter media details (mediaType uploaderName size cost [samplingRate] [resolution] [tags]) or type 'done' to finish:");
             String mediaDetails = scanner.nextLine().trim();
 
             if (mediaDetails.equalsIgnoreCase("done")) {
