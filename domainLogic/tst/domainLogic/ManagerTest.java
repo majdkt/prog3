@@ -158,143 +158,264 @@ class ManagerTest {
         assertTrue(manager.read().contains("Access Count: 1"));
     }
 
-    @Nested
-    class AudioImplTests {
-        @Test
-        void testAudioImplGettersAndSetters() {
-            AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
-            Duration expectedAvailability = Duration.between(audio.getUploadDate(), LocalDateTime.now());
-            Duration actualAvailability = audio.getAvailability();
-            long toleranceInMillis = 10;
-            assertEquals(defaultSamplingRate, audio.getSamplingRate());
-            assertEquals("address1", audio.getAddress());
-            assertEquals(defaultTags, audio.getTags());
-            assertEquals(0, audio.getAccessCount());
-            assertEquals(5_000_000, audio.getSize());
-            assertEquals(uploaderName, audio.getUploader().getName());
-            assertTrue(Math.abs(expectedAvailability.toMillis() - actualAvailability.toMillis()) <= toleranceInMillis);
-            assertEquals(defaultCost, audio.getCost());
+    // AudioImplTests
 
-            audio.setAccessCount(1);
-            assertEquals(1, audio.getAccessCount());
-        }
-
-        @Test
-        void testAudioImplToString() {
-            AudioImpl audio = new AudioImpl(
-                    defaultSamplingRate,
-                    "address1",
-                    defaultTags,
-                    0,
-                    5_000_000,
-                    new UploaderImpl(uploaderName),
-                    defaultAvailability,
-                    defaultCost
-            );
-
-            String expectedString = String.format(
-                    "Audio File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
-                    "address1",
-                    5_000_000 / 1_000_000.0,
-                    defaultSamplingRate,
-                    0,
-                    uploaderName,
-                    defaultAvailability.toDays(),
-                    defaultCost,
-                    defaultTags
-            );
-            assertEquals(expectedString, audio.toString());
-        }
-
-
+    @Test
+    void testAudioImplGetSamplingRate() {
+        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
+        assertEquals(defaultSamplingRate, audio.getSamplingRate(), "Sampling rate should match the default value");
     }
 
-    @Nested
-    class VideoImplTests {
-        @Test
-        void testVideoImplGettersAndSetters() {
-            VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
-            assertEquals("address1", video.getAddress());
-            assertEquals(defaultTags, video.getTags());
-            assertEquals(0, video.getAccessCount());
-            assertEquals(10_000_000, video.getSize());
-            assertEquals(uploaderName, video.getUploader().getName());
-            assertEquals(defaultCost, video.getCost());
-            assertEquals(defaultResolution, video.getResolution());
-
-            video.setAccessCount(1);
-            assertEquals(1, video.getAccessCount());
-        }
-
-        @Test
-        void testVideoImplToString() {
-            VideoImpl video = new VideoImpl(
-                    "address1",
-                    defaultTags,
-                    0,
-                    10_000_000,
-                    new UploaderImpl(uploaderName),
-                    defaultAvailability,
-                    defaultCost,
-                    defaultResolution
-            );
-
-            String expectedString = String.format(
-                    "Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
-                    "address1",
-                    10_000_000 / 1_000_000.0,
-                    defaultResolution,
-                    0,
-                    uploaderName,
-                    defaultAvailability.toDays(),
-                    defaultCost,
-                    defaultTags
-            );
-            assertEquals(expectedString, video.toString());
-        }
-
-
+    @Test
+    void testAudioImplGetAddress() {
+        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
+        assertEquals("address1", audio.getAddress(), "Address should match the provided value");
     }
 
-    @Nested
-    class AudioVideoImplTests {
-        @Test
-        void testAudioVideoImplGettersAndSetters() {
-            AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
-            Duration expectedAvailability = Duration.between(av.getUploadDate(), LocalDateTime.now());
-            Duration actualAvailability = av.getAvailability();
-            long toleranceInMillis = 10;
-            assertEquals(defaultSamplingRate, av.getSamplingRate());
-            assertEquals("address1", av.getAddress());
-            assertEquals(defaultTags, av.getTags());
-            assertEquals(0, av.getAccessCount());
-            assertEquals(15_000_000, av.getSize());
-            assertEquals(uploaderName, av.getUploader().getName());
-            assertTrue(Math.abs(expectedAvailability.toMillis() - actualAvailability.toMillis()) <= toleranceInMillis);
-            assertEquals(defaultCost, av.getCost());
-            assertEquals(defaultResolution, av.getResolution());
-
-            av.setAccessCount(1);
-            assertEquals(1, av.getAccessCount());
-        }
-
-        @Test
-        void testAudioVideoImplToString() {
-            AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), null, defaultCost, defaultResolution);
-            String expectedString = String.format(
-                    "AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
-                    "address1",
-                    15_000_000 / 1_000_000.0,
-                    defaultSamplingRate,
-                    defaultResolution,
-                    0,
-                    uploaderName,
-                    defaultAvailability.toDays(),
-                    defaultCost,
-                    defaultTags
-            );
-            System.out.println(expectedString);
-            assertEquals(expectedString, av.toString());
-        }
+    @Test
+    void testAudioImplGetTags() {
+        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
+        assertEquals(defaultTags, audio.getTags(), "Tags should match the provided value");
     }
+
+    @Test
+    void testAudioImplGetAccessCount() {
+        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
+        assertEquals(0, audio.getAccessCount(), "Initial access count should be 0");
+    }
+
+    @Test
+    void testAudioImplGetSize() {
+        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
+        assertEquals(5_000_000, audio.getSize(), "Size should match the provided value");
+    }
+
+    @Test
+    void testAudioImplGetUploader() {
+        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
+        assertEquals(uploaderName, audio.getUploader().getName(), "Uploader name should match the provided value");
+    }
+
+    @Test
+    void testAudioImplGetAvailability() {
+        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
+        Duration expectedAvailability = Duration.between(audio.getUploadDate(), LocalDateTime.now());
+        Duration actualAvailability = audio.getAvailability();
+        long toleranceInMillis = 10;
+        assertTrue(Math.abs(expectedAvailability.toMillis() - actualAvailability.toMillis()) <= toleranceInMillis,
+                "Availability should match the calculated value within tolerance");
+    }
+
+    @Test
+    void testAudioImplGetCost() {
+        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
+        assertEquals(defaultCost, audio.getCost(), "Cost should match the provided value");
+    }
+
+    @Test
+    void testAudioImplSetAccessCount() {
+        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
+        audio.setAccessCount(1);
+        assertEquals(1, audio.getAccessCount(), "Access count should be updated to 1");
+    }
+
+    @Test
+    void testAudioImplToString() {
+        AudioImpl audio = new AudioImpl(
+                defaultSamplingRate,
+                "address1",
+                defaultTags,
+                0,
+                5_000_000,
+                new UploaderImpl(uploaderName),
+                defaultAvailability,
+                defaultCost
+        );
+
+        String expectedString = String.format(
+                "Audio File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
+                "address1",
+                5_000_000 / 1_000_000.0,
+                defaultSamplingRate,
+                0,
+                uploaderName,
+                defaultAvailability.toDays(),
+                defaultCost,
+                defaultTags
+        );
+        assertEquals(expectedString, audio.toString(), "The toString() method should return the expected string format");
+    }
+
+    // AudioVideoImplTests
+    @Test
+    void testAudioVideoImplGetSamplingRate() {
+        AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(defaultSamplingRate, av.getSamplingRate(), "Sampling rate should match the default value");
+    }
+
+    @Test
+    void testAudioVideoImplGetAddress() {
+        AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals("address1", av.getAddress(), "Address should match the provided value");
+    }
+
+    @Test
+    void testAudioVideoImplGetTags() {
+        AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(defaultTags, av.getTags(), "Tags should match the provided value");
+    }
+
+    @Test
+    void testAudioVideoImplGetAccessCount() {
+        AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(0, av.getAccessCount(), "Initial access count should be 0");
+    }
+
+    @Test
+    void testAudioVideoImplGetSize() {
+        AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(15_000_000, av.getSize(), "Size should match the provided value");
+    }
+
+    @Test
+    void testAudioVideoImplGetUploader() {
+        AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(uploaderName, av.getUploader().getName(), "Uploader name should match the provided value");
+    }
+
+    @Test
+    void testAudioVideoImplGetAvailability() {
+        AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        Duration expectedAvailability = Duration.between(av.getUploadDate(), LocalDateTime.now());
+        Duration actualAvailability = av.getAvailability();
+        long toleranceInMillis = 10;
+        assertTrue(Math.abs(expectedAvailability.toMillis() - actualAvailability.toMillis()) <= toleranceInMillis,
+                "Availability should match the calculated value within tolerance");
+    }
+
+    @Test
+    void testAudioVideoImplGetCost() {
+        AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(defaultCost, av.getCost(), "Cost should match the provided value");
+    }
+
+    @Test
+    void testAudioVideoImplGetResolution() {
+        AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(defaultResolution, av.getResolution(), "Resolution should match the provided value");
+    }
+
+    @Test
+    void testAudioVideoImplSetAccessCount() {
+        AudioVideoImpl av = new AudioVideoImpl(defaultSamplingRate, "address1", defaultTags, 0, 15_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        av.setAccessCount(1);
+        assertEquals(1, av.getAccessCount(), "Access count should be updated to 1");
+    }
+
+    @Test
+    void testAudioVideoImplToString() {
+        AudioVideoImpl av = new AudioVideoImpl(
+                defaultSamplingRate,
+                "address1",
+                defaultTags,
+                0,
+                15_000_000,
+                new UploaderImpl(uploaderName),
+                defaultAvailability,
+                defaultCost,
+                defaultResolution
+        );
+
+        String expectedString = String.format(
+                "AudioVideo File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
+                "address1",
+                15_000_000 / 1_000_000.0,
+                defaultSamplingRate,
+                defaultResolution,
+                0,
+                uploaderName,
+                defaultAvailability.toDays(),
+                defaultCost,
+                defaultTags
+        );
+        assertEquals(expectedString, av.toString(), "The toString() method should return the expected string format");
+    }
+
+    //VideoImpl Tests
+    @Test
+    void testVideoImplGetAddress() {
+        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals("address1", video.getAddress(), "Address should match the provided value");
+    }
+
+    @Test
+    void testVideoImplGetTags() {
+        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(defaultTags, video.getTags(), "Tags should match the provided value");
+    }
+
+    @Test
+    void testVideoImplGetAccessCount() {
+        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(0, video.getAccessCount(), "Initial access count should be 0");
+    }
+
+    @Test
+    void testVideoImplGetSize() {
+        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(10_000_000, video.getSize(), "Size should match the provided value");
+    }
+
+    @Test
+    void testVideoImplGetUploader() {
+        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(uploaderName, video.getUploader().getName(), "Uploader name should match the provided value");
+    }
+
+    @Test
+    void testVideoImplGetCost() {
+        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(defaultCost, video.getCost(), "Cost should match the provided value");
+    }
+
+    @Test
+    void testVideoImplGetResolution() {
+        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        assertEquals(defaultResolution, video.getResolution(), "Resolution should match the provided value");
+    }
+
+    @Test
+    void testVideoImplSetAccessCount() {
+        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
+        video.setAccessCount(1);
+        assertEquals(1, video.getAccessCount(), "Access count should be updated to 1");
+    }
+
+    @Test
+    void testVideoImplToString() {
+        VideoImpl video = new VideoImpl(
+                "address1",
+                defaultTags,
+                0,
+                10_000_000,
+                new UploaderImpl(uploaderName),
+                defaultAvailability,
+                defaultCost,
+                defaultResolution
+        );
+
+        String expectedString = String.format(
+                "Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
+                "address1",
+                10_000_000 / 1_000_000.0,
+                defaultResolution,
+                0,
+                uploaderName,
+                defaultAvailability.toDays(),
+                defaultCost,
+                defaultTags
+        );
+        assertEquals(expectedString, video.toString(), "The toString() method should return the expected string format");
+    }
+
 }
