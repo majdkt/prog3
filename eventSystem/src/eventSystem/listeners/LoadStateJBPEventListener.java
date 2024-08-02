@@ -1,17 +1,22 @@
 package eventSystem.listeners;
 
-import all.JbpCommands;
+import commands.JbpCommands;
 import domainLogic.Manager;
 import eventSystem.Event;
+import eventSystem.EventDispatcher;
 import eventSystem.events.LoadStateJBPEvent;
+import eventSystem.events.StateUpdatedEvent;
 
 import java.io.IOException;
 
-public class LoadStateJBPEventListener implements EventListener {
-    private Manager manager;
-    private JbpCommands jbpCommands = new JbpCommands();
 
-    public LoadStateJBPEventListener(Manager manager) {
+public class LoadStateJBPEventListener implements EventListener {
+    private EventDispatcher eventDispatcher;
+    private Manager manager;
+    private final JbpCommands jbpCommands = new JbpCommands();
+
+    public LoadStateJBPEventListener(EventDispatcher eventDispatcher, Manager manager) {
+        this.eventDispatcher = eventDispatcher;
         this.manager = manager;
     }
 
@@ -19,15 +24,16 @@ public class LoadStateJBPEventListener implements EventListener {
     public void handleEvent(Event event) {
         if (event instanceof LoadStateJBPEvent) {
             try {
-                Manager loadedManager = jbpCommands.loadState();
+                Manager loadedManager = jbpCommands.loadStateJBP();
                 if (loadedManager != null) {
-                    this.manager = loadedManager;
+                    manager = loadedManager;
+                    eventDispatcher.dispatch(new StateUpdatedEvent(loadedManager));
                     System.out.println("State loaded successfully using JBP.");
                 } else {
-                    System.out.println("Failed to load state or no state was saved.");
+                    System.out.println("Failed to load state or no state was saved using JBP.");
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                System.out.println("Failed to load state: " + e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Failed to load state using JBP: " + e.getMessage());
             }
         }
     }

@@ -4,6 +4,7 @@ import contract.Tag;
 import domainLogic.Manager;
 import eventSystem.Event;
 import eventSystem.events.ReadUnusedTagsEvent;
+import eventSystem.events.StateUpdatedEvent;
 
 import java.util.Map;
 
@@ -21,6 +22,8 @@ public class ReadUnusedTagsEventListener implements EventListener {
             tagStatus.entrySet().stream()
                     .filter(entry -> !entry.getValue()) // Filter only false tags
                     .forEach(entry -> System.out.println(entry.getKey()));
+        } else if (event instanceof StateUpdatedEvent) {
+            this.manager = ((StateUpdatedEvent) event).getNewManager();
         }
     }
 }

@@ -1,9 +1,10 @@
 package eventSystem.listeners;
 
-import all.JosCommands;
+import commands.JosCommands;
 import domainLogic.Manager;
 import eventSystem.Event;
 import eventSystem.events.SaveStateJOSEvent;
+import eventSystem.events.StateUpdatedEvent;
 
 import java.io.IOException;
 
@@ -24,6 +25,8 @@ public class SaveStateEventListener implements EventListener {
             } catch (IOException e) {
                 System.out.println("Failed to save state: " + e.getMessage());
             }
+        } else if (event instanceof StateUpdatedEvent) {
+            this.manager = ((StateUpdatedEvent) event).getNewManager();
         }
     }
 }

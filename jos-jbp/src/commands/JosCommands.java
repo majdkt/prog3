@@ -1,4 +1,4 @@
-package all;
+package commands;
 
 import domainLogic.Manager;
 

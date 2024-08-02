@@ -5,6 +5,8 @@ import domainLogic.Manager;
 import eventSystem.Event;
 import eventSystem.events.ReadUsedTagsEvent;
 import eventSystem.events.ReadUnusedTagsEvent;
+import eventSystem.events.StateUpdatedEvent;
+
 import java.util.Map;
 
 public class ReadUsedTagsEventListener implements EventListener {
@@ -21,6 +23,8 @@ public class ReadUsedTagsEventListener implements EventListener {
             tagStatus.entrySet().stream()
                     .filter(Map.Entry::getValue) // Filter only true tags
                     .forEach(entry -> System.out.println(entry.getKey()));
+        } else if (event instanceof StateUpdatedEvent) {
+            this.manager = ((StateUpdatedEvent) event).getNewManager();
         }
     }
 }

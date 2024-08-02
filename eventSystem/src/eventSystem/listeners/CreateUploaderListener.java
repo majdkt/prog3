@@ -3,6 +3,7 @@ package eventSystem.listeners;
 import domainLogic.Manager;
 import eventSystem.Event;
 import eventSystem.events.CreateUploaderEvent;
+import eventSystem.events.StateUpdatedEvent;
 
 public class CreateUploaderListener implements EventListener {
     private Manager manager;
@@ -17,6 +18,8 @@ public class CreateUploaderListener implements EventListener {
             CreateUploaderEvent createUploaderEvent = (CreateUploaderEvent) event;
             String uploaderName = createUploaderEvent.getUploaderName();
             manager.createUploader(uploaderName);
+        }else if (event instanceof StateUpdatedEvent) {
+            this.manager = ((StateUpdatedEvent) event).getNewManager();
         }
     }
 }

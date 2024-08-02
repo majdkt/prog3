@@ -2,6 +2,7 @@ package eventSystem.listeners;
 
 import domainLogic.Manager;
 import eventSystem.Event;
+import eventSystem.events.StateUpdatedEvent;
 import eventSystem.events.UpdateAccessCountEvent;
 
 public class UpdateAccessCountEventListener implements EventListener {
@@ -16,6 +17,8 @@ public class UpdateAccessCountEventListener implements EventListener {
         if (event instanceof UpdateAccessCountEvent) {
             UpdateAccessCountEvent updateAccessCountEvent = (UpdateAccessCountEvent) event;
             manager.updateAccessCount(updateAccessCountEvent.getAddress());
+        } else if (event instanceof StateUpdatedEvent) {
+            this.manager = ((StateUpdatedEvent) event).getNewManager();
         }
     }
 }

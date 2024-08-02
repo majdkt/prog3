@@ -1,16 +1,15 @@
 package eventSystem.listeners;
 
+import commands.JbpCommands;
 import domainLogic.Manager;
-import all.JbpCommands;
 import eventSystem.Event;
 import eventSystem.events.SaveStateJBPEvent;
-
 
 import java.io.IOException;
 
 public class SaveStateJBPEventListener implements EventListener {
     private Manager manager;
-    private JbpCommands jbpCommands = new JbpCommands();
+    private final JbpCommands jpbCommands = new JbpCommands();
 
     public SaveStateJBPEventListener(Manager manager) {
         this.manager = manager;
@@ -20,12 +19,11 @@ public class SaveStateJBPEventListener implements EventListener {
     public void handleEvent(Event event) {
         if (event instanceof SaveStateJBPEvent) {
             try {
-                jbpCommands.saveState(manager);
+                jpbCommands.saveStateJBP(manager);
                 System.out.println("State saved successfully using JBP.");
             } catch (IOException e) {
-                System.out.println("Failed to save state: " + e.getMessage());
+                System.out.println("Failed to save state using JBP: " + e.getMessage());
             }
         }
     }
 }
-

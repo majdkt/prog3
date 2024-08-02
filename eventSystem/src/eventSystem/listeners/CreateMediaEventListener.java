@@ -3,6 +3,7 @@ package eventSystem.listeners;
 import domainLogic.Manager;
 import eventSystem.Event;
 import eventSystem.events.CreateMediaEvent;
+import eventSystem.events.StateUpdatedEvent;
 
 public class CreateMediaEventListener implements EventListener {
     private Manager manager;
@@ -26,6 +27,8 @@ public class CreateMediaEventListener implements EventListener {
                         createMediaEvent.getResolution(),
                         createMediaEvent.getAvailability()
                 );
-            }
+            } else if (event instanceof StateUpdatedEvent) {
+            this.manager = ((StateUpdatedEvent) event).getNewManager();
+        }
         }
 }

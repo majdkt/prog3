@@ -1,17 +1,21 @@
 package eventSystem.listeners;
 
-import all.JosCommands;
+import commands.JosCommands;
 import domainLogic.Manager;
 import eventSystem.Event;
+import eventSystem.EventDispatcher;
 import eventSystem.events.LoadStateJOSEvent;
+import eventSystem.events.StateUpdatedEvent;
 
 import java.io.IOException;
 
-public class LoadStateEventListener implements EventListener {
+public class LoadStateJOSEventListener implements EventListener {
+    private EventDispatcher eventDispatcher;
     private Manager manager;
-    private final JosCommands josCommands = new JosCommands(); // Instance of JosCommandss
+    private final JosCommands josCommands = new JosCommands();
 
-    public LoadStateEventListener(Manager manager) {
+    public LoadStateJOSEventListener(EventDispatcher eventDispatcher, Manager manager) {
+        this.eventDispatcher = eventDispatcher;
         this.manager = manager;
     }
 
@@ -21,7 +25,8 @@ public class LoadStateEventListener implements EventListener {
             try {
                 Manager loadedManager = josCommands.loadState();
                 if (loadedManager != null) {
-                    this.manager = loadedManager;
+                    manager = loadedManager;
+                    eventDispatcher.dispatch(new StateUpdatedEvent(loadedManager));
                     System.out.println("State loaded successfully.");
                 } else {
                     System.out.println("Failed to load state or no state was saved.");

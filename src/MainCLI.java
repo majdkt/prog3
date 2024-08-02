@@ -19,12 +19,12 @@ public class MainCLI {
         eventDispatcher.addListener(new DeleteEventListener(manager));
         eventDispatcher.addListener(new DeleteUploaderEventListener(manager));
         eventDispatcher.addListener(new SaveStateEventListener(manager));
-        eventDispatcher.addListener(new LoadStateEventListener(manager));
+        eventDispatcher.addListener(new LoadStateJOSEventListener(eventDispatcher,manager));
         eventDispatcher.addListener(new CreateUploaderListener(manager));
         eventDispatcher.addListener(new ReadUsedTagsEventListener(manager));
         eventDispatcher.addListener(new ReadUnusedTagsEventListener(manager));
         eventDispatcher.addListener(new SaveStateJBPEventListener(manager));
-        eventDispatcher.addListener(new LoadStateJBPEventListener(manager));
+        eventDispatcher.addListener(new LoadStateJBPEventListener(eventDispatcher,manager));
 
         // Start the menu
         Menu menu = new Menu(eventDispatcher);
