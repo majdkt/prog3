@@ -16,7 +16,8 @@ public class CreateMediaEventListener implements EventListener {
     public void handleEvent(Event event) {
         if (event instanceof CreateMediaEvent) {
             CreateMediaEvent createMediaEvent = (CreateMediaEvent) event;
-            // Ensure uploader exists before creating media
+            try {
+                // Ensure uploader exists before creating media
                 manager.create(
                         createMediaEvent.getUploaderName(),
                         createMediaEvent.getMediaType(),
@@ -27,8 +28,11 @@ public class CreateMediaEventListener implements EventListener {
                         createMediaEvent.getResolution(),
                         createMediaEvent.getAvailability()
                 );
-            } else if (event instanceof StateUpdatedEvent) {
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        } else if (event instanceof StateUpdatedEvent) {
             this.manager = ((StateUpdatedEvent) event).getNewManager();
         }
-        }
+    }
 }
