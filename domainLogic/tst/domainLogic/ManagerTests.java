@@ -2,6 +2,7 @@ package domainLogic;
 
 import contract.MediaContent;
 import contract.Tag;
+import contract.UnknownMediaContent;
 import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
@@ -53,6 +54,18 @@ class ManagerTests {
         assertEquals(address1, result, "The address should be the first one in the queue.");
         assertFalse(availableAddresses.contains(address1), "The address should be removed from the queue.");
         assertTrue(availableAddresses.contains(address2), "The second address should still be in the queue.");
+    }
+
+    @Test
+    void testGetMediaDetailsWithUnknownType() {
+        // Arrange
+        MediaContent unknownContent = new UnknownMediaContent();
+
+        // Act
+        String details = manager.getMediaDetails(unknownContent);
+
+        // Assert
+        assertEquals("", details, "Details should be an empty string for unknown media content types.");
     }
 
     @Test

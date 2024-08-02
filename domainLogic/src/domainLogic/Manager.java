@@ -167,7 +167,7 @@ public class Manager implements Serializable {
     }
 
 
-    private String getMediaDetails(MediaContent content) {
+    String getMediaDetails(MediaContent content) {
         if (content instanceof AudioImpl) {
             Audio audio = (AudioImpl) content;
             return String.format("Audio File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
