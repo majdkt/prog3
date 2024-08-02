@@ -185,10 +185,10 @@ public class Manager implements Serializable {
                     audioVideo.getAddress(), audioVideo.getSize()/ 1.0, audioVideo.getSamplingRate(), audioVideo.getResolution(),
                     audioVideo.getAccessCount(), audioVideo.getUploader().getName(), audioVideo.getAvailability().toDays(), audioVideo.getCost(),
                     audioVideo.getTags());
-        } else {
-            return "Unknown media type";
         }
+        return "";
     }
+
 
     public synchronized void updateAccessCount(String address) {
         MediaContent media = contentMap.get(address);
