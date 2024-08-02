@@ -6,10 +6,7 @@ import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,6 +20,7 @@ class ManagerTests {
     private int defaultResolution;
     private Duration defaultAvailability;
     private String uploaderName;
+    private Queue<String> availableAddresses;
 
     @BeforeEach
     void setUp() {
@@ -35,7 +33,47 @@ class ManagerTests {
         defaultAvailability = Duration.ofDays(30);
         uploaderName = "testUploader";
         manager.createUploader(uploaderName);
+        availableAddresses = new LinkedList<>();
+        manager.availableAddresses = availableAddresses;
     }
+
+
+    @Test
+    void testGetNextAddressWhenQueueIsNotEmpty() {
+        // Arrange
+        String address1 = "address1";
+        String address2 = "address2";
+        availableAddresses.offer(address1);
+        availableAddresses.offer(address2);
+
+        // Act
+        String result = manager.getNextAddress();
+
+        // Assert
+        assertEquals(address1, result, "The address should be the first one in the queue.");
+        assertFalse(availableAddresses.contains(address1), "The address should be removed from the queue.");
+        assertTrue(availableAddresses.contains(address2), "The second address should still be in the queue.");
+    }
+
+    @Test
+    void testCreateWithNewUploader() {
+        String newUploader = "newUploader";
+        manager.create(newUploader, "Video", defaultTags, 10_000_000, defaultCost, defaultSamplingRate, defaultResolution, defaultAvailability);
+        assertTrue(manager.uploaderExists(newUploader), "The new uploader should be added to the uploaderSet.");
+    }
+
+    @Test
+    void testReadByMediaTypeForAudioVideo() {
+        // Act
+        manager.create(uploaderName,"AudioVideo",defaultTags,10_000_000, defaultCost, defaultSamplingRate, defaultResolution, defaultAvailability);
+        List<String> mediaDetails = manager.readByMediaType("AudioVideo");
+
+        // Assert
+        assertEquals(1, mediaDetails.size(), "There should be one 'AudioVideo' media item.");
+        assertTrue(mediaDetails.get(0).contains("AudioVideo File"), "The media details should contain 'AudioVideo File'.");
+        // Further assertions can be added based on the format of media details returned
+    }
+
 
     @Test
     void createAudioSuccessfully() {
@@ -208,16 +246,12 @@ class ManagerTests {
 
     @Test
     void doNotAddExistingUploader() {
-        // Arrange
-        String existingUploaderName = "existingUploader";
-        manager.createUploader(existingUploaderName);  // Add uploader initially
+        manager.createUploader(uploaderName);
+        Map<String, Integer> uploaderMediaCount = manager.readByUploader();
+        // Check that the uploader count map contains exactly one entry for the uploader
+        assertEquals(1, uploaderMediaCount.size(), "Existing uploader should not be duplicated.");
+        }
 
-        // Act
-        manager.create(existingUploaderName, "Video", defaultTags, 10_000_000, defaultCost, 0, defaultResolution, defaultAvailability);
 
-        // Assert
-        // We expect the uploader count to be 1 as the uploader should not be duplicated
-        assertEquals(1, manager.readByUploader().size(), "Existing uploader should not be duplicated.");
-    }
 
 }

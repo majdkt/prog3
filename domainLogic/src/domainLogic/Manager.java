@@ -102,7 +102,7 @@ public class Manager implements Serializable {
         currentTotalSize += size;
     }
 
-    private String getNextAddress() {
+    String getNextAddress() {
         if (availableAddresses.isEmpty()) {
             return String.valueOf(addressCounter++);
         } else {
@@ -165,6 +165,7 @@ public class Manager implements Serializable {
         }
         return mediaDetails;
     }
+
 
     private String getMediaDetails(MediaContent content) {
         if (content instanceof AudioImpl) {
