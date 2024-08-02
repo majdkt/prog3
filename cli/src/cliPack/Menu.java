@@ -65,9 +65,20 @@ public class Menu {
                 return;
             }
 
-            // Split into first 5 parts, then handle optional parameters separately
+            // Check if input is a single word (assumed to be an uploader name)
             String[] details = input.split(" ", 6);
+            if (details.length == 1) {
+                String uploaderName = details[0];
+                CheckUploaderExistenceEvent checkEvent = new CheckUploaderExistenceEvent(uploaderName);
+                eventDispatcher.dispatch(checkEvent);
 
+                if (!checkEvent.exists()) {
+                    eventDispatcher.dispatch(new CreateUploaderEvent(uploaderName));
+                }
+                continue;
+            }
+
+            // Split into first 5 parts, then handle optional parameters separately
             if (details.length < 5) {
                 System.out.println("Invalid media details format. Minimum format is: [Media-Typ] [P-Name] [kommaseparierte Tags, einzelnes Komma für keine] [Größe] [Abrufkosten] [[Optionale Parameter]]");
                 continue;
