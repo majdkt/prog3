@@ -10,14 +10,14 @@ import java.util.regex.Pattern;
 
 public class Menu {
     private EventDispatcher eventDispatcher;
-    private Scanner scanner = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
 
     public Menu(EventDispatcher eventDispatcher) {
         this.eventDispatcher = eventDispatcher;
         this.scanner = new Scanner(System.in);
     }
 
-    private void processCommand(String command) {
+    void processCommand(String command) {
         switch (command) {
             case ":c":
                 handleCreate();
@@ -53,14 +53,12 @@ public class Menu {
             processCommand(command);
         }
     }
-    private void handleCreate() {
+    void handleCreate() {
         while (true) {
             String input = scanner.nextLine().trim();
-
             if (input.equalsIgnoreCase("done")) {
                 return;
             }
-
             if (input.startsWith(":")) {
                 processCommand(input);
                 return;
@@ -185,7 +183,7 @@ public class Menu {
         return Pattern.matches("\\d+", str);
     }
 
-    private void handleRead() {
+    void handleRead() {
         System.out.println("(content <type>, tag used(i), tag unused(e), uploader, content <type>) ");
 
         while (true) {

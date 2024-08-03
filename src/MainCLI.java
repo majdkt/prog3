@@ -2,14 +2,36 @@ import eventSystem.EventDispatcher;
 import domainLogic.Manager;
 import cliPack.Menu;
 import eventSystem.listeners.*;
+import serverClient.ServerLogic;
 
 public class MainCLI {
     public static void main(String[] args) {
-        int t = Integer.parseInt(args[0]);
-        EventDispatcher eventDispatcher = new EventDispatcher();
-        Manager manager = new Manager(t);
+        if (args.length != 2) {
+            System.out.println("Usage: java MainCLI <protocol> <capacity>");
+            System.exit(1);
+        }
 
-        // Add Listeners for specific events
+        String protocol = args[0];
+        int capacity;
+
+        try {
+            capacity = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid capacity format. It should be an integer.");
+            System.exit(1);
+            return;
+        }
+
+        EventDispatcher eventDispatcher = new EventDispatcher();
+        Manager manager = new Manager(capacity);
+
+        // Start the server in a separate thread
+        Thread serverThread = new Thread(() -> {
+            ServerLogic server = new ServerLogic(12345, protocol, manager);
+            server.start();
+        });
+        serverThread.start();
+
         eventDispatcher.addListener(new CreateMediaEventListener(manager));
         eventDispatcher.addListener(new ReadContentEventListener(manager));
         eventDispatcher.addListener(new ReadByTagEventListener(manager));
@@ -19,15 +41,15 @@ public class MainCLI {
         eventDispatcher.addListener(new DeleteEventListener(manager));
         eventDispatcher.addListener(new DeleteUploaderEventListener(manager));
         eventDispatcher.addListener(new SaveStateEventListener(manager));
-        eventDispatcher.addListener(new LoadStateJOSEventListener(eventDispatcher,manager));
+        eventDispatcher.addListener(new LoadStateJOSEventListener(eventDispatcher, manager));
         eventDispatcher.addListener(new CreateUploaderListener(manager));
         eventDispatcher.addListener(new ReadUsedTagsEventListener(manager));
         eventDispatcher.addListener(new ReadUnusedTagsEventListener(manager));
         eventDispatcher.addListener(new SaveStateJBPEventListener(manager));
-        eventDispatcher.addListener(new LoadStateJBPEventListener(eventDispatcher,manager));
+        eventDispatcher.addListener(new LoadStateJBPEventListener(eventDispatcher, manager));
 
-        // Start the menu
         Menu menu = new Menu(eventDispatcher);
         menu.run();
     }
 }
+

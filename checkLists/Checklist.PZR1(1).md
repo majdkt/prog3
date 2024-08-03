@@ -6,35 +6,35 @@ Die empfohlenen Realisierungen sind **fett** gesetzt und ergeben 50 Punkte.
 Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nicht zulässig.
 
 ## Vorrausetzungen für das Bestehen
-- [ ] Quellen angegeben
-- [ ] zip Archiv mit dem Projekt im root
-- [ ] IntelliJ-Projekt (kein Gradle, Maven o.ä.)
-- [ ] keine weiteren Bibliotheken außer JUnit5, Mockito und JavaFX (und deren Abhängigkeiten)
-- [ ] keine Umlaute, Sonderzeichen, etc. in Datei- und Pfadnamen
-- [ ] Trennung zwischen Test- und Produktiv-Code
-- [ ] kompilierbar
-- [ ] geforderte main-Methoden nur im default package des module belegProg3
-- [ ] keine vorgetäuschte Funktionalität (inkl. leere Tests)
+- [x] Quellen angegeben
+- [x] zip Archiv mit dem Projekt im root
+- [x] IntelliJ-Projekt (kein Gradle, Maven o.ä.)
+- [x] keine weiteren Bibliotheken außer JUnit5, Mockito und JavaFX (und deren Abhängigkeiten)
+- [x] keine Umlaute, Sonderzeichen, etc. in Datei- und Pfadnamen
+- [x] Trennung zwischen Test- und Produktiv-Code
+- [x] kompilierbar
+- [x] geforderte main-Methoden nur im default package des module belegProg3
+- [x] keine vorgetäuschte Funktionalität (inkl. leere Tests)
 
 ## Entwurf (10)
 - [x] **Benennung** (2)
 - [x] **Zuständigkeit** (2)
 - [x] **Paketierung** (2)
 - [x] Schichtenaufteilung (via modules) (2)
-- [ ] Architekturdiagramm (1)
+- [x] Architekturdiagramm (1)
 - [ ] keine Duplikate (1)
 
 ## Tests (34)
 - [x] **Testqualität** (9)
-- [x] **Testabdeckung GL (inkl. Abhängigkeiten)** (9) _Abdeckung in Prozent angeben_
-- [ ] Testabdeckung Rest (6)
-  - [ ] Einfügen von Produzent*innen über das CLI _Tests angeben_
-  - [ ] Anzeigen von Produzent*innen über das CLI _Tests angeben_
+- [x] **Testabdeckung GL (inkl. Abhängigkeiten)** (9) _Abdeckung 100%_
+- [x] Testabdeckung Rest (6)
+  - [x] Einfügen von Produzent*innen über das CLI _MenuTest_
+  - [x] Anzeigen von Produzent*innen über das CLI _MenuTest_
   - [x] ein Beobachter _MockitoTests_
-  - [x] deterministische Funktionalität der Simulationen _Tests angeben_
-  - [x] Speichern via JOS oder JBP _Tests angeben_
-  - [x] Laden via JOS oder JBP _Tests angeben_
-- [ ] **mindestens 5 Unittests, die Mockito verwenden** (5)
+  - [ ] deterministische Funktionalität der Simulationen _Tests angeben_
+  - [x] Speichern via JOS oder JBP _JosCommandsTest_
+  - [x] Laden via JOS oder JBP _JosCommandsTest_
+- [x] **mindestens 5 Unittests, die Mockito verwenden** (5)
 - [x] mindestens 4 Spy- / Verhaltens-Tests (4)
 - [x] **keine unbeabsichtigt fehlschlagenden Test** (1)
 
@@ -49,7 +49,7 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
 - [x] **Simulation** (2)
   * ohne race conditions, ohne sleep
 - [x] **I/O** (2)
-- [ ] **Net** (2)
+- [x] **Net** (2)
 
 ## Funktionalität (20)
 - [x] vollständige GL (2)
@@ -63,7 +63,7 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
 - [x] Simulation 2 (1)
 - [x] Simulation 3 (1)
 - [ ] sowohl JBP als auch JOS (2)
-- [ ] sowohl TCP als auch UDP (2)
+- [x] sowohl TCP als auch UDP (2)
 - [ ] Server unterstützt konkurierende Clients für TCP oder UDP (2)
 
 ## zusätzliche Anforderungen GUI (5)

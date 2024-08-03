@@ -7,9 +7,8 @@
       <module fileurl="file://$PROJECT_DIR$/contract/contract.iml" filepath="$PROJECT_DIR$/contract/contract.iml" />
       <module fileurl="file://$PROJECT_DIR$/domainLogic/domainLogic.iml" filepath="$PROJECT_DIR$/domainLogic/domainLogic.iml" />
       <module fileurl="file://$PROJECT_DIR$/eventSystem/eventSystem.iml" filepath="$PROJECT_DIR$/eventSystem/eventSystem.iml" />
-      <module fileurl="file://$PROJECT_DIR$/gui/gui.iml" filepath="$PROJECT_DIR$/gui/gui.iml" />
       <module fileurl="file://$PROJECT_DIR$/jos-jbp/jos-jbp.iml" filepath="$PROJECT_DIR$/jos-jbp/jos-jbp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/serverClient/serverClient.iml" filepath="$PROJECT_DIR$/serverClient/serverClient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/net/net.iml" filepath="$PROJECT_DIR$/net/net.iml" />
     </modules>
   </component>
 </project>
