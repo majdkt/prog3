@@ -36,7 +36,7 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
   - [ ] Laden via JOS oder JBP _Tests angeben_
 - [ ] **mindestens 5 Unittests, die Mockito verwenden** (5)
 - [ ] mindestens 4 Spy- / Verhaltens-Tests (4)
-- [ ] **keine unbeabsichtigt fehlschlagenden Test** (1)
+- [x] **keine unbeabsichtigt fehlschlagenden Test** (1)
 
 ## Fehlerfreiheit (10)
 - [x] **Kapselung** (5)

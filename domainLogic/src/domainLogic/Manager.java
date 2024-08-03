@@ -1,6 +1,7 @@
 package domainLogic;
 
 import contract.*;
+import contract.Observer;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -10,7 +11,8 @@ import java.util.*;
 public class Manager implements Serializable {
     private static final long serialVersionUID = 1L;
     public final long MAX_TOTAL_CAPACITY;
-    Map<String, MediaContent> contentMap = new HashMap<>();
+    private final List<Observer> observers = new ArrayList<>();
+    public Map<String, MediaContent> contentMap = new HashMap<>();
     private Set<String> uploaderSet = new HashSet<>();
     Queue<String> availableAddresses = new LinkedList<>();
     long currentTotalSize = 0;
@@ -20,14 +22,30 @@ public class Manager implements Serializable {
         this.MAX_TOTAL_CAPACITY = maxTotalCapacity;
     }
 
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    private void notifyObservers(String message) {
+        for (Observer observer : observers) {
+            observer.update(message);
+        }
+    }
+
     // Uploader management methods
     public synchronized void createUploader(String uploaderName) {
         uploaderSet.add(uploaderName);
+        notifyObservers("Uploader created: " + uploaderName);
     }
 
     public synchronized void deleteUploader(String uploaderName) {
         if (!uploaderSet.contains(uploaderName)) {
-            throw new IllegalArgumentException("Uploader not found."); // should I keep exceptions ?
+            notifyObservers("Failed to delete uploader: Uploader not found.");
+            throw new IllegalArgumentException("Uploader not found.");
         }
 
         // Calculate the total size of media uploaded by the uploader
@@ -38,6 +56,7 @@ public class Manager implements Serializable {
         currentTotalSize -= sizeToDelete;
         uploaderSet.remove(uploaderName);
         contentMap.values().removeIf(content -> content.getUploader().getName().equals(uploaderName));
+        notifyObservers("Uploader deleted: " + uploaderName);
     }
 
     public boolean uploaderExists(String uploaderName) {
@@ -51,10 +70,10 @@ public class Manager implements Serializable {
     // Media management methods
     public synchronized void create(String uploaderName, String mediaType, Set<Tag> tags, long size, BigDecimal cost, int samplingRate, int resolution, Duration availability) {
         if (!uploaderExists(uploaderName)) {
-            uploaderSet.add(uploaderName);
+            createUploader(uploaderName);
         }
-        // Check if adding this media would exceed the total capacity
         if (currentTotalSize + size > MAX_TOTAL_CAPACITY) {
+            notifyObservers("Failed to add media: Max capacity exceeded.");
             throw new IllegalArgumentException("Max capacity exceeded. Cannot upload media.");
         }
 
@@ -96,11 +115,13 @@ public class Manager implements Serializable {
                     resolution
             );
         } else {
+            notifyObservers("Failed to add media: Invalid media type.");
             throw new IllegalArgumentException("Invalid media type.");
         }
 
         contentMap.put(address, mediaContent);
         currentTotalSize += size;
+        notifyObservers("Media added: " + getMediaDetails(mediaContent));
     }
 
     String getNextAddress() {
@@ -119,7 +140,6 @@ public class Manager implements Serializable {
         return mediaDetails.toString();
     }
 
-
     public synchronized Map<Tag, Boolean> readByTag() {
         Map<Tag, Boolean> tagStatus = new HashMap<>();
 
@@ -129,7 +149,6 @@ public class Manager implements Serializable {
             }
         }
 
-        // Ensure all tags are accounted for in the response
         for (Tag tag : Tag.values()) {
             if (!tagStatus.containsKey(tag)) {
                 tagStatus.put(tag, false);
@@ -138,7 +157,6 @@ public class Manager implements Serializable {
 
         return tagStatus;
     }
-
 
     public synchronized Map<String, Integer> readByUploader() {
         Map<String, Integer> uploaderMediaCount = new HashMap<>();
@@ -191,11 +209,11 @@ public class Manager implements Serializable {
         return "";
     }
 
-
     public synchronized void updateAccessCount(String address) {
         MediaContent media = contentMap.get(address);
         if (media != null) {
             media.setAccessCount(media.getAccessCount() + 1);
+            notifyObservers("Access count updated: " + getMediaDetails(media));
         }
     }
 
@@ -204,6 +222,9 @@ public class Manager implements Serializable {
         if (removedMedia != null) {
             currentTotalSize -= removedMedia.getSize();
             availableAddresses.add(address);
+            notifyObservers("Media deleted: " + getMediaDetails(removedMedia));
+        } else {
+            notifyObservers("Failed to delete media: Media not found.");
         }
     }
 }

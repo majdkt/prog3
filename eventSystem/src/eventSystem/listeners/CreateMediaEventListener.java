@@ -17,7 +17,6 @@ public class CreateMediaEventListener implements EventListener {
         if (event instanceof CreateMediaEvent) {
             CreateMediaEvent createMediaEvent = (CreateMediaEvent) event;
             try {
-                // Ensure uploader exists before creating media
                 manager.create(
                         createMediaEvent.getUploaderName(),
                         createMediaEvent.getMediaType(),
