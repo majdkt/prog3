@@ -1,76 +1,96 @@
 package domainLogic;
 
+import contract.MediaContent;
 import contract.Tag;
-import org.junit.jupiter.api.*;
+import contract.Uploader;
+import contract.Video;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class VideoImplTests {
 
-    private Set<Tag> defaultTags;
-    private BigDecimal defaultCost;
-    private int defaultResolution;
-    private Duration defaultAvailability;
-    private String uploaderName;
+    private VideoImpl video;
+    private Uploader uploader;
+    private Collection<Tag> tags;
 
     @BeforeEach
-    void setUp() {
-        defaultTags = new HashSet<>();
-        defaultTags.add(Tag.News);
-        defaultCost = BigDecimal.valueOf(10);
-        defaultResolution = 1080;
-        defaultAvailability = Duration.ofDays(0);
-        uploaderName = "testUploader";
+    public void setUp() {
+        uploader = new Uploader() {
+            @Override
+            public String getName() {
+                return "TestUploader";
+            }
+        };
+
+        tags = new ArrayList<>();
+        tags.add(Tag.News);
+
+        video = new VideoImpl("testAddress", tags, 100, 1_000_000, uploader, Duration.ofDays(10), BigDecimal.valueOf(9.99), 1080);
     }
 
     @Test
-    void testVideoImplGetResolution() {
-        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
-        assertEquals(defaultResolution, video.getResolution(), "Resolution should match the default value");
+    public void testGetUploader() {
+        assertEquals(uploader, video.getUploader());
     }
 
     @Test
-    void testVideoImplGetAddress() {
-        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
-        assertEquals("address1", video.getAddress(), "Address should match the provided value");
+    public void testGetAvailability() {
+        // The availability is the time elapsed since the video was uploaded
+        Duration expectedDuration = Duration.between(video.uploadDate, LocalDateTime.now());
+        assertTrue(expectedDuration.minus(video.getAvailability()).isZero());
     }
 
     @Test
-    void testVideoImplGetTags() {
-        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
-        assertEquals(defaultTags, video.getTags(), "Tags should match the provided value");
+    public void testGetCost() {
+        assertEquals(BigDecimal.valueOf(9.99), video.getCost());
     }
 
     @Test
-    void testVideoImplGetAccessCount() {
-        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
-        assertEquals(0, video.getAccessCount(), "Initial access count should be 0");
+    public void testGetAddress() {
+        assertEquals("testAddress", video.getAddress());
     }
 
     @Test
-    void testVideoImplGetSize() {
-        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
-        assertEquals(10_000_000, video.getSize(), "Size should match the provided value");
+    public void testGetTags() {
+        assertEquals(tags, video.getTags());
     }
 
     @Test
-    void testVideoImplGetUploader() {
-        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
-        assertEquals(uploaderName, video.getUploader().getName(), "Uploader name should match the provided value");
+    public void testGetAccessCount() {
+        assertEquals(100, video.getAccessCount());
     }
-
-
 
     @Test
-    void testVideoImplGetCost() {
-        VideoImpl video = new VideoImpl("address1", defaultTags, 0, 10_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost, defaultResolution);
-        assertEquals(defaultCost, video.getCost(), "Cost should match the provided value");
+    public void testGetSize() {
+        assertEquals(1_000_000, video.getSize());
     }
 
+    @Test
+    public void testGetResolution() {
+        assertEquals(1080, video.getResolution());
+    }
+
+    @Test
+    public void testSetAccessCount() {
+        video.setAccessCount(200);
+        assertEquals(200, video.getAccessCount());
+    }
+
+    @Test
+    public void testToString() {
+        String expectedString = String.format(
+                "Video File [Address: %s, Size: %.2f MB, Resolution: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
+                "testAddress", 1_000_000 / 1_000_000.0, 1080, 100, "TestUploader",
+                video.getAvailability().toDays(), BigDecimal.valueOf(9.99), tags);
+        assertEquals(expectedString, video.toString());
+    }
 }

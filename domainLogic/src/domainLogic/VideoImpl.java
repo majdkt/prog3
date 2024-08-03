@@ -21,7 +21,7 @@ public class VideoImpl implements Video, Serializable, MediaContent {
     private long accessCount;
     private long size;
     private int resolution;
-    private LocalDateTime uploadDate;
+    LocalDateTime uploadDate;
 
 
     public VideoImpl(String address, Collection<Tag> tags, long accessCount, long size,

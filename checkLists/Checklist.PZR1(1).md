@@ -17,16 +17,16 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
 - [ ] keine vorgetäuschte Funktionalität (inkl. leere Tests)
 
 ## Entwurf (10)
-- [ ] **Benennung** (2)
-- [ ] **Zuständigkeit** (2)
-- [ ] **Paketierung** (2)
-- [ ] Schichtenaufteilung (via modules) (2)
+- [x] **Benennung** (2)
+- [x] **Zuständigkeit** (2)
+- [x] **Paketierung** (2)
+- [x] Schichtenaufteilung (via modules) (2)
 - [ ] Architekturdiagramm (1)
 - [ ] keine Duplikate (1)
 
 ## Tests (34)
-- [ ] **Testqualität** (9)
-- [ ] **Testabdeckung GL (inkl. Abhängigkeiten)** (9) _Abdeckung in Prozent angeben_
+- [x] **Testqualität** (9)
+- [x] **Testabdeckung GL (inkl. Abhängigkeiten)** (9) _Abdeckung in Prozent angeben_
 - [ ] Testabdeckung Rest (6)
   - [ ] Einfügen von Produzent*innen über das CLI _Tests angeben_
   - [ ] Anzeigen von Produzent*innen über das CLI _Tests angeben_
@@ -39,12 +39,12 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
 - [ ] **keine unbeabsichtigt fehlschlagenden Test** (1)
 
 ## Fehlerfreiheit (10)
-- [ ] **Kapselung** (5)
-- [ ] **keine Ablauffehler** (5)
+- [x] **Kapselung** (5)
+- [x] **keine Ablauffehler** (5)
 
 ## Basisfunktionalität (10)
-- [ ] **CRUD** (2)
-- [ ] **CLI** (2)
+- [x] **CRUD** (2)
+- [x] **CLI** (2)
   * Syntax gemäß Anforderungen
 - [ ] **Simulation** (2)
   * ohne race conditions, ohne sleep

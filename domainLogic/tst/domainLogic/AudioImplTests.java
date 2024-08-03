@@ -1,93 +1,93 @@
 package domainLogic;
 
 import contract.Tag;
-import org.junit.jupiter.api.*;
+import contract.Uploader;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AudioImplTests {
+ class AudioImplTests {
 
-    private Set<Tag> defaultTags;
-    private BigDecimal defaultCost;
-    private int defaultSamplingRate;
-    private Duration defaultAvailability;
-    private String uploaderName;
+    private AudioImpl audio;
+    private Uploader uploader;
+    private Collection<Tag> tags;
 
     @BeforeEach
-    void setUp() {
-        defaultTags = new HashSet<>();
-        defaultTags.add(Tag.News);
-        defaultCost = BigDecimal.valueOf(10);
-        defaultSamplingRate = 44100;
-        defaultAvailability = Duration.ofDays(0);
-        uploaderName = "testUploader";
+    public void setUp() {
+        uploader = new Uploader() {
+            @Override
+            public String getName() {
+                return "TestUploader";
+            }
+        };
+
+        tags = new ArrayList<>();
+        tags.add(Tag.Animal);
+
+        audio = new AudioImpl(44100, "testAddress", tags, 100, 1_000_000, uploader, Duration.ofDays(10), BigDecimal.valueOf(4.99));
     }
 
     @Test
-    void testAudioImplGetSamplingRate() {
-        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
-        assertEquals(defaultSamplingRate, audio.getSamplingRate(), "Sampling rate should match the default value");
+    public void testGetSamplingRate() {
+        assertEquals(44100, audio.getSamplingRate());
     }
 
     @Test
-    void testAudioImplGetAddress() {
-        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
-        assertEquals("address1", audio.getAddress(), "Address should match the provided value");
+    public void testGetAddress() {
+        assertEquals("testAddress", audio.getAddress());
     }
 
     @Test
-    void testAudioImplGetTags() {
-        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
-        assertEquals(defaultTags, audio.getTags(), "Tags should match the provided value");
+    public void testGetTags() {
+        assertEquals(tags, audio.getTags());
     }
 
     @Test
-    void testAudioImplGetAccessCount() {
-        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
-        assertEquals(0, audio.getAccessCount(), "Initial access count should be 0");
+    public void testGetAccessCount() {
+        assertEquals(100, audio.getAccessCount());
     }
 
     @Test
-    void testAudioImplGetSize() {
-        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
-        assertEquals(5_000_000, audio.getSize(), "Size should match the provided value");
+    public void testSetAccessCount() {
+        audio.setAccessCount(200);
+        assertEquals(200, audio.getAccessCount());
     }
 
     @Test
-    void testAudioImplGetUploader() {
-        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
-        assertEquals(uploaderName, audio.getUploader().getName(), "Uploader name should match the provided value");
+    public void testGetSize() {
+        assertEquals(1_000_000, audio.getSize());
     }
 
     @Test
-    void testAudioImplGetAvailabilityPeriod() {
-        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
-        assertEquals(defaultAvailability, audio.getAvailability(), "Availability period should match the provided value");
+    public void testGetUploader() {
+        assertEquals(uploader, audio.getUploader());
     }
 
     @Test
-    void testAudioImplGetUploadTime() {
-        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
-        assertNotNull(audio.getUploadDate(), "Upload time should not be null");
-        assertTrue(audio.getUploadDate().isBefore(LocalDateTime.now()), "Upload time should be before the current time");
+    public void testGetAvailability() {
+        // The availability is the time elapsed since the audio was uploaded
+        Duration expectedDuration = Duration.between(audio.getUploadDate(), LocalDateTime.now());
+        assertTrue(expectedDuration.minus(audio.getAvailability()).isZero());
     }
 
     @Test
-    void testAudioImplGetCost() {
-        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
-        assertEquals(defaultCost, audio.getCost(), "Cost should match the provided value");
+    public void testGetCost() {
+        assertEquals(BigDecimal.valueOf(4.99), audio.getCost());
     }
 
     @Test
-    void testAudioImplIncrementAccessCount() {
-        AudioImpl audio = new AudioImpl(defaultSamplingRate, "address1", defaultTags, 0, 5_000_000, new UploaderImpl(uploaderName), defaultAvailability, defaultCost);
-        audio.setAccessCount(audio.getAccessCount()+1);
-        assertEquals(1, audio.getAccessCount(), "Access count should increment by 1");
+    public void testToString() {
+        String expectedString = String.format(
+                "Audio File [Address: %s, Size: %.2f MB, Sampling Rate: %d, Access Count: %d, Uploader: %s, Availability: %d Days, Cost: %.2f, Tags: %s]",
+                "testAddress", 1_000_000 / 1_000_000.0, 44100, 100, "TestUploader",
+                audio.getAvailability().toDays(), BigDecimal.valueOf(4.99), tags);
+        assertEquals(expectedString, audio.toString());
     }
 }
