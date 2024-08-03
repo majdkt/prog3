@@ -1,4 +1,3 @@
-import contract.ConsoleObserver;
 import contract.Tag;
 import domainLogic.Manager;
 
@@ -24,8 +23,6 @@ public class Simulation3 {
         long interval = Long.parseLong(args[2]);
 
         Manager manager = new Manager(maxCapacity);
-        ConsoleObserver observer = new ConsoleObserver();
-        manager.addObserver(observer);
 
         // Create thread pools
         ExecutorService insertExecutor = Executors.newFixedThreadPool(numberOfThreads);
@@ -55,17 +52,17 @@ public class Simulation3 {
                         Duration availability = Duration.ofDays(RANDOM.nextInt(30) + 1);
 
                         synchronized (manager) {
+                            while (manager.getCurrentTotalSize() + size > maxCapacity) {
+                                System.out.println(Thread.currentThread().getName() + " Waiting to insert...");
+                                manager.wait();
+                            }
                             try {
-                                while (manager.getCurrentTotalSize() + size > maxCapacity) {
-                                    System.out.println(Thread.currentThread().getName() + " Waiting to insert...");
-                                    manager.wait();
-                                }
                                 manager.create(uploaderName, mediaType, tags, size, cost, samplingRate, resolution, availability);
                                 System.out.println(Thread.currentThread().getName() + " Media added.");
-                                manager.notifyAll();
                             } catch (IllegalArgumentException e) {
-                                System.out.println(Thread.currentThread().getName() + " Failed to Add Media: " + e.getMessage());
+                                System.out.println(Thread.currentThread().getName() + " Failed to add media: " + e.getMessage());
                             }
+                            manager.notifyAll();
                         }
 
                         // Simulate time for insertion process
