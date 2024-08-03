@@ -4,6 +4,7 @@ import contract.Tag;
 import eventSystem.Event;
 import eventSystem.EventDispatcher;
 import eventSystem.events.*;
+import eventSystem.listeners.AlternativCLIEventListener;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -166,7 +167,6 @@ public class Menu {
 
 
     private void handleDelete() {
-        eventDispatcher.dispatch(new AlternativCLIEvent());
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
 
@@ -213,6 +213,7 @@ public class Menu {
                     }
                     break;
                 case "tag":
+                    eventDispatcher.dispatch(new AlternativCLIEvent());
                     if (parts.length == 2) {
                         String tagType = parts[1].trim();
                         if (tagType.equalsIgnoreCase("i")) {
@@ -220,6 +221,9 @@ public class Menu {
                         } else if (tagType.equalsIgnoreCase("e")) {
                             eventDispatcher.dispatch(new ReadUnusedTagsEvent());
                         }
+                    }
+                    if (parts.length == 1) {
+                        eventDispatcher.dispatch(new ReadByTagEvent());
                     }
 
                     break;
