@@ -16,7 +16,6 @@ public class AlternativCLIEventListener implements EventListener {
     public void handleEvent(Event event) {
         if (event instanceof AlternativCLIEvent) {
             System.out.println("Sorry, this feature is not available in Alternativ CLI");
-            System.out.println("Press enter to go back to commands-mode");
         }
     }
 }
