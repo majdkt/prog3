@@ -30,12 +30,12 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
 - [ ] Testabdeckung Rest (6)
   - [ ] Einfügen von Produzent*innen über das CLI _Tests angeben_
   - [ ] Anzeigen von Produzent*innen über das CLI _Tests angeben_
-  - [ ] ein Beobachter _Tests angeben_
-  - [ ] deterministische Funktionalität der Simulationen _Tests angeben_
+  - [x] ein Beobachter _MockitoTests_
+  - [x] deterministische Funktionalität der Simulationen _Tests angeben_
   - [ ] Speichern via JOS oder JBP _Tests angeben_
   - [ ] Laden via JOS oder JBP _Tests angeben_
 - [ ] **mindestens 5 Unittests, die Mockito verwenden** (5)
-- [ ] mindestens 4 Spy- / Verhaltens-Tests (4)
+- [x] mindestens 4 Spy- / Verhaltens-Tests (4)
 - [x] **keine unbeabsichtigt fehlschlagenden Test** (1)
 
 ## Fehlerfreiheit (10)

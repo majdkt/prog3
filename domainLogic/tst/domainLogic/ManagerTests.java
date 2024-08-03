@@ -1,6 +1,7 @@
 package domainLogic;
 
 import contract.MediaContent;
+import contract.Observer;
 import contract.Tag;
 import contract.UnknownMediaContent;
 import org.junit.jupiter.api.*;
@@ -27,7 +28,7 @@ class ManagerTests {
     void setUp() {
         manager = new Manager(MAX_CAPACITY);
         defaultTags = new HashSet<>();
-        defaultTags.add(Tag.News);
+        defaultTags.add(Tag.News); // Update to match actual Tag values
         defaultCost = BigDecimal.valueOf(10);
         defaultSamplingRate = 44100;
         defaultResolution = 1080;
@@ -38,19 +39,15 @@ class ManagerTests {
         manager.availableAddresses = availableAddresses;
     }
 
-
     @Test
     void testGetNextAddressWhenQueueIsNotEmpty() {
-        // Arrange
         String address1 = "address1";
         String address2 = "address2";
         availableAddresses.offer(address1);
         availableAddresses.offer(address2);
 
-        // Act
         String result = manager.getNextAddress();
 
-        // Assert
         assertEquals(address1, result, "The address should be the first one in the queue.");
         assertFalse(availableAddresses.contains(address1), "The address should be removed from the queue.");
         assertTrue(availableAddresses.contains(address2), "The second address should still be in the queue.");
@@ -58,13 +55,10 @@ class ManagerTests {
 
     @Test
     void testGetMediaDetailsWithUnknownType() {
-        // Arrange
         MediaContent unknownContent = new UnknownMediaContent();
 
-        // Act
         String details = manager.getMediaDetails(unknownContent);
 
-        // Assert
         assertEquals("", details, "Details should be an empty string for unknown media content types.");
     }
 
@@ -77,16 +71,12 @@ class ManagerTests {
 
     @Test
     void testReadByMediaTypeForAudioVideo() {
-        // Act
-        manager.create(uploaderName,"AudioVideo",defaultTags,10_000_000, defaultCost, defaultSamplingRate, defaultResolution, defaultAvailability);
+        manager.create(uploaderName, "AudioVideo", defaultTags, 10_000_000, defaultCost, defaultSamplingRate, defaultResolution, defaultAvailability);
         List<String> mediaDetails = manager.readByMediaType("AudioVideo");
 
-        // Assert
         assertEquals(1, mediaDetails.size(), "There should be one 'AudioVideo' media item.");
         assertTrue(mediaDetails.get(0).contains("AudioVideo File"), "The media details should contain 'AudioVideo File'.");
-        // Further assertions can be added based on the format of media details returned
     }
-
 
     @Test
     void createAudioSuccessfully() {
@@ -99,7 +89,6 @@ class ManagerTests {
         manager.create(uploaderName, "Video", defaultTags, 10_000_000, defaultCost, 0, defaultResolution, defaultAvailability);
         assertEquals(10_000_000, manager.getCurrentTotalSize());
     }
-
 
     @Test
     void createAudioVideoSuccessfully() {
@@ -166,14 +155,14 @@ class ManagerTests {
     void readByTagWithExistingTag() {
         manager.create(uploaderName, "Video", defaultTags, 10_000_000, defaultCost, 0, defaultResolution, defaultAvailability);
         Map<Tag, Boolean> tags = manager.readByTag();
-        assertTrue(tags.get(Tag.News));
+        assertTrue(tags.get(Tag.News)); // Update to match actual Tag values
     }
 
     @Test
     void readByTagWithNonExistingTag() {
         manager.create(uploaderName, "Video", defaultTags, 10_000_000, defaultCost, 0, defaultResolution, defaultAvailability);
         Map<Tag, Boolean> tags = manager.readByTag();
-        assertFalse(tags.get(Tag.Music));
+        assertFalse(tags.get(Tag.Music)); // Update to match actual Tag values
     }
 
     @Test
@@ -204,14 +193,12 @@ class ManagerTests {
         assertTrue(manager.read().contains("Access Count: 1"));
     }
 
-    // New test to check if uploader exists
     @Test
     void uploaderExistsCheck() {
         assertTrue(manager.uploaderExists(uploaderName));
         assertFalse(manager.uploaderExists("nonexistentUploader"));
     }
 
-    // New test to ensure the deletion of non-existent uploader throws an exception
     @Test
     void deleteNonExistentUploaderThrowsException() {
         assertThrows(IllegalArgumentException.class, () ->

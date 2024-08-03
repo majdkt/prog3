@@ -11,7 +11,8 @@ import java.util.*;
 public class Manager implements Serializable {
     private static final long serialVersionUID = 1L;
     public final long MAX_TOTAL_CAPACITY;
-    private final List<Observer> observers = new ArrayList<>();
+
+    public List<Observer> observers = new ArrayList<>();
     public Map<String, MediaContent> contentMap = new HashMap<>();
     private Set<String> uploaderSet = new HashSet<>();
     Queue<String> availableAddresses = new LinkedList<>();
@@ -26,21 +27,15 @@ public class Manager implements Serializable {
         observers.add(observer);
     }
 
-    public void removeObserver(Observer observer) {
-        observers.remove(observer);
-    }
-
-    private void notifyObservers(String message) {
+    public void notifyObservers(String message) {
         for (Observer observer : observers) {
             observer.update(message);
         }
     }
 
-    // Uploader management methods
     public synchronized void createUploader(String uploaderName) {
         uploaderSet.add(uploaderName);
-        notifyObservers("Uploader created: " + uploaderName);
-    }
+        notifyObservers("Uploader created: " + uploaderName);}
 
     public synchronized void deleteUploader(String uploaderName) {
         if (!uploaderSet.contains(uploaderName)) {
