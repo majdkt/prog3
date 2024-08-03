@@ -71,6 +71,34 @@ public class MockitoTests {
         manager.deleteUploader(uploaderName);
         verify(mockObserver1).update("Uploader deleted: " + uploaderName);
     }
+    @Test
+    public void testCapacityExceeded() {
+        String uploaderName = "Uploader1";
+        Set<Tag> tags = new HashSet<>();
+        tags.add(Tag.News);
 
+        // Create media with a size that would exceed capacity
+        manager.create(uploaderName, "Audio", tags, 100001, BigDecimal.valueOf(10), 44100, 0, Duration.ofDays(30));
+
+        // Verify that the correct notification was sent
+        verify(mockObserver1).update("Failed to add media: Max capacity exceeded.");
+    }
+
+    @Test
+    public void testUpdateAccessCount() {
+        String uploaderName = "Uploader1";
+        String mediaAddress = "1";
+        Set<Tag> tags = new HashSet<>();
+        tags.add(Tag.News);
+
+        // Add media
+        manager.create(uploaderName, "Audio", tags, 100, BigDecimal.valueOf(10), 44100, 0, Duration.ofDays(30));
+
+        // Update access count
+        manager.updateAccessCount(mediaAddress);
+
+        // Verify that the observer was notified
+        verify(mockObserver1).update(contains("Access count updated: " + mediaAddress));
+    }
 
 }

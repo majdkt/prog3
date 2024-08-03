@@ -34,7 +34,7 @@ public class UnknownMediaContent implements MediaContent {
 
     @Override
     public Uploader getUploader() {
-        return getUploader();
+        return null;
     }
 
     public Duration getAvailability() {
