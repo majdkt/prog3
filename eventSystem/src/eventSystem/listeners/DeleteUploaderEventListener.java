@@ -16,8 +16,14 @@ public class DeleteUploaderEventListener implements EventListener {
     public void handleEvent(Event event) {
         if (event instanceof DeleteUploaderEvent) {
             DeleteUploaderEvent deleteUploaderEvent = (DeleteUploaderEvent) event;
-            manager.deleteUploader(deleteUploaderEvent.getUploaderName());
-        }else if (event instanceof StateUpdatedEvent) {
+            try {
+                if (manager.uploaderExists(deleteUploaderEvent.getUploaderName())) {
+                    manager.deleteUploader(deleteUploaderEvent.getUploaderName());
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: " + e.getMessage()); // Handle the exception
+            }
+        } else if (event instanceof StateUpdatedEvent) {
             this.manager = ((StateUpdatedEvent) event).getNewManager();
         }
     }

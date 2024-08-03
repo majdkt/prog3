@@ -1,10 +1,8 @@
 package cliPack;
 
 import contract.Tag;
-import eventSystem.Event;
 import eventSystem.EventDispatcher;
 import eventSystem.events.*;
-import eventSystem.listeners.AlternativCLIEventListener;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -16,6 +14,7 @@ public class Menu {
 
     public Menu(EventDispatcher eventDispatcher) {
         this.eventDispatcher = eventDispatcher;
+        this.scanner = new Scanner(System.in);
     }
 
     private void processCommand(String command) {
@@ -173,6 +172,7 @@ public class Menu {
         if (isNumeric(input)) {
             eventDispatcher.dispatch(new DeleteEvent(input));
         } else {
+            eventDispatcher.dispatch(new AlternativCLIEvent());
             eventDispatcher.dispatch(new DeleteUploaderEvent(input));
         }
     }

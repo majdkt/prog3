@@ -13,7 +13,6 @@ public class AlternativCLI {
         // Add Listeners for specific events
         eventDispatcher.addListener(new CreateMediaEventListener(manager));
         eventDispatcher.addListener(new ReadContentEventListener(manager));
-        //eventDispatcher.addListener(new ReadByTagEventListener(manager));
         eventDispatcher.addListener(new ReadByUploaderEventListener(manager));
         eventDispatcher.addListener(new ReadByMediaTypeEventListener(manager));
         eventDispatcher.addListener(new UpdateAccessCountEventListener(manager));
@@ -21,6 +20,9 @@ public class AlternativCLI {
         eventDispatcher.addListener(new SaveStateEventListener(manager));
         eventDispatcher.addListener(new LoadStateJOSEventListener(eventDispatcher, manager));
         eventDispatcher.addListener(new CreateUploaderListener(manager));
+        eventDispatcher.addListener(new DeleteEventListener(manager));
+        //eventDispatcher.addListener(new DeleteUploaderEventListener(manager));
+        //eventDispatcher.addListener(new ReadByTagEventListener(manager));
         //eventDispatcher.addListener(new ReadUsedTagsEventListener(manager));
         //eventDispatcher.addListener(new ReadUnusedTagsEventListener(manager));
         eventDispatcher.addListener(new SaveStateJBPEventListener(manager));
