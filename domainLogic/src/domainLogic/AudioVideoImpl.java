@@ -10,6 +10,7 @@ import java.time.temporal.Temporal;
 import java.util.Set;
 
 public class AudioVideoImpl implements Audio, Video, MediaContent, Serializable, AudioVideo {
+    private static final long serialVersionUID = 1L;
     private final int samplingRate;
     private String address;
     private final Set<Tag> tags;

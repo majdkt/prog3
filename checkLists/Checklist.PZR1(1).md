@@ -48,14 +48,14 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
   * Syntax gemäß Anforderungen
 - [ ] **Simulation** (2)
   * ohne race conditions, ohne sleep
-- [ ] **I/O** (2)
+- [x] **I/O** (2)
 - [ ] **Net** (2)
 
 ## Funktionalität (20)
 - [x] vollständige GL (2)
 - [x] threadsichere GL (1)
 - [x] vollständiges CLI (2)
-- [ ] alternatives CLI (1)
+- [x] alternatives CLI (1)
   * _angeben welche Funktionalität im alternativen CLI deaktiviert_
 - [x] ausdifferenziertes event-System mit mindestens 3 events (2)
 - [ ] observer (2)

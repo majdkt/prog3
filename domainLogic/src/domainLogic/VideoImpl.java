@@ -13,6 +13,7 @@ import java.util.Collection;
 
 
 public class VideoImpl implements Video, Serializable, MediaContent {
+    private static final long serialVersionUID = 1L;
     private Uploader uploader;
     private Duration availability;
     private BigDecimal cost;

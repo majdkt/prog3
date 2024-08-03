@@ -8,7 +8,8 @@ import java.time.Duration;
 import java.util.*;
 
 public class Manager implements Serializable {
-    public final long MAX_TOTAL_CAPACITY; // Max capacity in bytes
+    private static final long serialVersionUID = 1L;
+    public final long MAX_TOTAL_CAPACITY;
     Map<String, MediaContent> contentMap = new HashMap<>();
     private Set<String> uploaderSet = new HashSet<>();
     Queue<String> availableAddresses = new LinkedList<>();
