@@ -4,7 +4,7 @@ import cliPack.Menu;
 import eventSystem.listeners.*;
 import serverClient.ServerLogic;
 
-public class MainCLI {
+public class Server1 {
     public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("Usage: java MainCLI <protocol> <capacity>");

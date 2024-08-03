@@ -1,9 +1,0 @@
-- Anzeige Modus beachte Anforderungen alle Fälle abdecken
-- Listeners für jedes Event
-- App darf nicht abstürtzen, handle errors in Manager and events
-- Mok and spy tests
-- All lines müssen getestet werden
-- Tags should show 2 option, list of true and list of false [Done]
-- save [JOS|JBP]
-- load [JOS|JBP]
-- options should be shown like this even if JBP doesnt exist

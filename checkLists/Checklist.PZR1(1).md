@@ -64,7 +64,7 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
 - [x] Simulation 3 (1)
 - [ ] sowohl JBP als auch JOS (2)
 - [x] sowohl TCP als auch UDP (2)
-- [ ] Server unterstützt konkurierende Clients für TCP oder UDP (2)
+- [ ] CLI unterstützt konkurierende Clients für TCP oder UDP (2)
 
 ## zusätzliche Anforderungen GUI (5)
 - [ ] Basis-GUI (CRUD) (1)
