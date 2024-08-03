@@ -58,10 +58,10 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
 - [x] alternatives CLI (1)
   * _angeben welche Funktionalität im alternativen CLI deaktiviert_
 - [x] ausdifferenziertes event-System mit mindestens 3 events (2)
-- [ ] observer (2)
+- [x] observer (2)
 - [x] angemessene Aufzählungstypen (2)
 - [x] Simulation 2 (1)
-- [ ] Simulation 3 (1)
+- [x] Simulation 3 (1)
 - [ ] sowohl JBP als auch JOS (2)
 - [ ] sowohl TCP als auch UDP (2)
 - [ ] Server unterstützt konkurierende Clients für TCP oder UDP (2)
