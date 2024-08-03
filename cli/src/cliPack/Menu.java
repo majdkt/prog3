@@ -1,6 +1,7 @@
 package cliPack;
 
 import contract.Tag;
+import eventSystem.Event;
 import eventSystem.EventDispatcher;
 import eventSystem.events.*;
 
@@ -165,8 +166,8 @@ public class Menu {
 
 
     private void handleDelete() {
+        eventDispatcher.dispatch(new AlternativCLIEvent());
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter uploader name or media address to delete:");
         String input = scanner.nextLine();
 
         if (isNumeric(input)) {
