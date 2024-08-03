@@ -4,10 +4,7 @@ import domainLogic.Manager;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 public class Simulation2 {
@@ -45,11 +42,13 @@ public class Simulation2 {
                     int resolution = RANDOM.nextInt(1080);
                     Duration availability = Duration.ofDays(RANDOM.nextInt(30) + 1);
 
-                    System.out.println(Thread.currentThread().getName() + " Attempting to add media...");
-                    try {
-                        manager.create(uploaderName, mediaType, tags, size, cost, samplingRate, resolution, availability);
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(Thread.currentThread().getName() + " Failed to Add Media: " + e.getMessage());
+                    synchronized (manager) {
+                        System.out.println(Thread.currentThread().getName() + " Attempting to add media...");
+                        try {
+                            manager.create(uploaderName, mediaType, tags, size, cost, samplingRate, resolution, availability);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(Thread.currentThread().getName() + " Failed to Add Media: " + e.getMessage());
+                        }
                     }
                 } finally {
                     insertLatch.countDown();
@@ -68,21 +67,19 @@ public class Simulation2 {
         for (int i = 0; i < numberOfThreads; i++) {
             new Thread(() -> {
                 try {
-                    System.out.println(Thread.currentThread().getName() + " Attempting to delete media...");
-                    String mediaAddress = null;
-
                     synchronized (manager) {
+                        System.out.println(Thread.currentThread().getName() + " Attempting to delete media...");
+                        String mediaAddress = null;
+
                         if (!manager.contentMap.isEmpty()) {
                             mediaAddress = manager.contentMap.keySet().iterator().next();
                         }
-                    }
 
-                    if (mediaAddress != null) {
-                        synchronized (manager) {
+                        if (mediaAddress != null) {
                             manager.deleteMedia(mediaAddress);
+                        } else {
+                            System.out.println(Thread.currentThread().getName() + " No Media to Delete");
                         }
-                    } else {
-                        System.out.println(Thread.currentThread().getName() + " No Media to Delete");
                     }
                 } finally {
                     deleteLatch.countDown();

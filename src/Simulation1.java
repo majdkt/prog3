@@ -50,8 +50,6 @@ public class Simulation1 {
                         System.out.println(Thread.currentThread().getName() + " Failed to Add Media: " + e.getMessage());
                     }
 
-                    Thread.sleep(100); // Kurze Pause für die Simulation
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -81,8 +79,6 @@ public class Simulation1 {
                     } else {
                         System.out.println(Thread.currentThread().getName() + " No Media to Delete");
                     }
-
-                    Thread.sleep(200); // Kurze Pause für die Simulation
 
                 } catch (Exception e) {
                     e.printStackTrace();

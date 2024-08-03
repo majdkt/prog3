@@ -46,7 +46,7 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
 - [x] **CRUD** (2)
 - [x] **CLI** (2)
   * Syntax gemäß Anforderungen
-- [ ] **Simulation** (2)
+- [x] **Simulation** (2)
   * ohne race conditions, ohne sleep
 - [x] **I/O** (2)
 - [ ] **Net** (2)
@@ -60,7 +60,7 @@ Ergänzende Anmerkungen bitte immer _kursiv_ setzen. Andere Änderungen sind nic
 - [x] ausdifferenziertes event-System mit mindestens 3 events (2)
 - [ ] observer (2)
 - [x] angemessene Aufzählungstypen (2)
-- [ ] Simulation 2 (1)
+- [x] Simulation 2 (1)
 - [ ] Simulation 3 (1)
 - [ ] sowohl JBP als auch JOS (2)
 - [ ] sowohl TCP als auch UDP (2)
